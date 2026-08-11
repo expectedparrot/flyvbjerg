@@ -1,0 +1,16 @@
+{
+  "collection_id": "mlb-expansion-franchise",
+  "title": "Modern MLB expansion franchise launches",
+  "state": "exploratory",
+  "candidate_unit": "one MLB expansion franchise",
+  "as_of": "2026-08-11",
+  "historical_window": {"start": "1991", "end": "2008"},
+  "candidate_count": 4,
+  "reference_class_ready": false,
+  "reasons_not_ready": [
+    "Only the four most recent expansion franchises are included.",
+    "Financial launch cost, stadium finance, market demand, and operating economics are not yet collected.",
+    "Attendance requires venue-capacity and schedule context.",
+    "The target lacks a city, venue plan, ownership structure, launch year, and decision objective."
+  ]
+}

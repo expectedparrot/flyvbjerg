@@ -1,0 +1,15 @@
+{
+  "class_id": "upwork-product-launches",
+  "title": "Upwork customer-facing product launches",
+  "status": "draft",
+  "company": "Upwork Inc.",
+  "candidate_unit": "named customer-facing product or feature",
+  "period": {"start": "2023-07-01", "end": "2024-10-31"},
+  "as_of": "2026-08-11",
+  "completeness": "exploratory_first_pass",
+  "notes": [
+    "The unit of analysis is not approved.",
+    "This pass is seeded from selected primary Upwork materials, not an exhaustive search.",
+    "No common success metric has been approved."
+  ]
+}

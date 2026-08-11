@@ -1,0 +1,6 @@
+{"searched_at":"2026-08-11","agent":"codex","query":"site:mlb.com history MLB expansion 1993 Rockies Marlins inaugural season expansion draft","purpose":"identify 1993 cohort launch events","status":"completed"}
+{"searched_at":"2026-08-11","agent":"codex","query":"site:mlb.com history Arizona Diamondbacks Tampa Bay Devil Rays expansion 1998","purpose":"identify 1998 cohort launch events","status":"completed"}
+{"searched_at":"2026-08-11","agent":"codex","query":"site:baseball-reference.com 1993 Colorado Rockies Florida Marlins attendance wins inaugural season","purpose":"collect first-season outcomes","status":"completed"}
+{"searched_at":"2026-08-11","agent":"codex","query":"site:baseball-reference.com 1998 Arizona Diamondbacks Tampa Bay Devil Rays attendance wins","purpose":"collect first-season outcomes","status":"completed"}
+{"searched_at":"2026-08-11","agent":"codex","query":"site:mlb.com 1998 expansion fee Diamondbacks Devil Rays $130 million","purpose":"find league entry fee evidence","status":"completed"}
+

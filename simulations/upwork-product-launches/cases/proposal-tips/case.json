@@ -1,0 +1,13 @@
+{
+  "case_id": "proposal-tips",
+  "name": "Proposal Tips",
+  "entity_type": "product_feature",
+  "audience": "freelancers",
+  "membership": "candidate",
+  "first_public_launch_date": "2023-07-11",
+  "first_public_launch_stage": "beta",
+  "source_ids": ["src-2023-07-ai-launch", "src-2023-fy-results", "src-2024-spring-updates"],
+  "aliases": [],
+  "parent_or_platform": "Uma (by April 2024)",
+  "open_questions": ["What does 'secure work at a faster rate' mean operationally?", "Was Proposal Tips retained as a distinct product after Uma branding?"]
+}

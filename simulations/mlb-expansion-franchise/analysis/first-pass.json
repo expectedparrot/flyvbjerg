@@ -1,0 +1,14 @@
+{
+  "analysis_id": "mlb-modern-expansion-first-pass",
+  "status": "illustrative_not_frozen",
+  "subjects": ["colorado-rockies", "florida-marlins", "arizona-diamondbacks", "tampa-bay-devil-rays"],
+  "dependence": {"clusters": ["mlb-expansion-1993", "mlb-expansion-1998"], "warning": "Four franchises arise from only two expansion programs."},
+  "distributions": {
+    "inaugural-wins": {"values": [67,64,65,63], "min": 63, "median": 64.5, "max": 67},
+    "inaugural-attendance": {"values": [4483350,3064847,3610290,2506293], "min": 2506293, "median": 3337568.5, "max": 4483350, "warning": "Not normalized for capacity, home dates, or market."},
+    "seasons-through-first-postseason": {"values": [3,5,2,11], "min": 2, "median": 4, "max": 11}
+  },
+  "reference_distribution_ready": false,
+  "reason": "Claims remain candidates, captures are URL-only, n=4, and cohort dependence is material."
+}
+

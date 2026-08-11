@@ -1,0 +1,19 @@
+{"resolution_id":"res-1993-cohort","item_id":"item-1993-award","kind":"group_created","record_id":"mlb-expansion-1993"}
+{"resolution_id":"res-rockies-award","item_id":"item-1993-award","kind":"event_created","record_id":"evt-rockies-awarded"}
+{"resolution_id":"res-marlins-award","item_id":"item-1993-award","kind":"event_created","record_id":"evt-marlins-awarded"}
+{"resolution_id":"res-1993-fee-claim","item_id":"item-1993-award","kind":"deferred_claim","reason":"The source states a shared $190 million expansion fee; per-franchise allocation and payment terms need stronger evidence before structuring."}
+{"resolution_id":"res-1992-draft-event","item_id":"item-1992-draft","kind":"event_created","record_id":"evt-1992-expansion-draft"}
+{"resolution_id":"res-rockies-case","item_id":"item-rockies-launch","kind":"case_created","record_id":"colorado-rockies"}
+{"resolution_id":"res-rockies-first-game","item_id":"item-rockies-launch","kind":"event_created","record_id":"evt-rockies-first-game"}
+{"resolution_id":"res-rockies-home-opener","item_id":"item-rockies-launch","kind":"deferred_event","reason":"Home opener belongs in a later venue-demand pass."}
+{"resolution_id":"res-marlins-case","item_id":"item-marlins-launch","kind":"case_created","record_id":"florida-marlins"}
+{"resolution_id":"res-marlins-first-game","item_id":"item-marlins-launch","kind":"event_created","record_id":"evt-marlins-first-game"}
+{"resolution_id":"res-marlins-wins-claim","item_id":"item-marlins-launch","kind":"claim_created","record_id":"claim-marlins-inaugural"}
+{"resolution_id":"res-1998-cohort","item_id":"item-1998-award","kind":"group_created","record_id":"mlb-expansion-1998"}
+{"resolution_id":"res-rays-award","item_id":"item-1998-award","kind":"event_created","record_id":"evt-rays-awarded"}
+{"resolution_id":"res-dbacks-award","item_id":"item-1998-award","kind":"event_created","record_id":"evt-dbacks-awarded"}
+{"resolution_id":"res-1997-draft-event","item_id":"item-1997-draft","kind":"event_created","record_id":"evt-1997-expansion-draft"}
+{"resolution_id":"res-rays-case","item_id":"item-rays-launch","kind":"case_created","record_id":"tampa-bay-devil-rays"}
+{"resolution_id":"res-rays-first-game","item_id":"item-rays-launch","kind":"event_created","record_id":"evt-rays-first-game"}
+{"resolution_id":"res-dbacks-case","item_id":"item-dbacks-launch","kind":"case_created","record_id":"arizona-diamondbacks"}
+{"resolution_id":"res-dbacks-first-game","item_id":"item-dbacks-launch","kind":"event_created","record_id":"evt-dbacks-first-game"}

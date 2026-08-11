@@ -1,0 +1,10 @@
+{
+  "target_id": "prospective-mlb-expansion-team",
+  "name": "Prospective MLB expansion franchise",
+  "status": "underspecified",
+  "forecast_origin": "2026-08-11",
+  "terminal_event": "first regular-season MLB game",
+  "known": {"league": "Major League Baseball", "kind": "expansion_not_relocation"},
+  "unknown": ["city", "ownership_group", "stadium_plan", "league_award_date", "inaugural_season", "expansion_fee", "decision_to_inform"],
+  "adjustment_allowed": false
+}

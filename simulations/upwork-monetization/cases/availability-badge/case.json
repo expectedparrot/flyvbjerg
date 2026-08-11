@@ -1,0 +1,1 @@
+{"case_id":"availability-badge","name":"Availability Badge","entity_type":"paid_marketplace_signal","audience":"freelancers","membership":"candidate","created_from":["item-availability-outcome"],"introduced":null,"open_questions":["Find original launch and price mechanics.","Determine design behind the reported invite comparisons."]}

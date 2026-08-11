@@ -1,0 +1,2 @@
+{"metric_id":"seasons-through-first-postseason","version":1,"kind":"numeric","unit":"seasons_inclusive","role":"outcome","subject_kinds":["case"],"eligible_entity_types":["mlb_expansion_franchise"],"time_basis":"inaugural season is season 1; first postseason season is terminal","period_basis":"franchise_lifetime","bounds":{"min":1,"max":null},"censoring_policy":"right-censor if no postseason by analysis cutoff"}
+

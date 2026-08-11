@@ -1,0 +1,4 @@
+{"event_id":"evt-contract-fee-introduced","type":"pricing_introduced","date":"2023-04","date_precision":"month","case_ids":["contract-initiation-fee"],"source_id":"src-2023-10k","item_ids":["item-contract-initiation"]}
+{"event_id":"evt-flat-fee-effective","type":"pricing_restructured","date":"2023-05-03","date_precision":"day","case_ids":["flat-freelancer-service-fee"],"source_id":"src-q1-2023-letter","item_ids":["item-flat-fee-launch"]}
+{"event_id":"evt-fplus-q2-2024-repackage","type":"price_and_package_changed","date":"2024Q2","date_precision":"quarter","case_ids":["freelancer-plus","connects-monetization"],"related_external_products":["upwork-chat-pro"],"source_id":"src-q2-2024-remarks","item_ids":["item-fplus-repackage"]}
+

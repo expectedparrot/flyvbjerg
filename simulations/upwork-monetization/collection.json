@@ -1,0 +1,11 @@
+{
+  "collection_id": "upwork-monetization",
+  "title": "Upwork pricing and monetization mechanisms",
+  "state": "exploratory",
+  "company": "Upwork Inc.",
+  "research_question": "What pricing changes and monetization mechanisms did Upwork introduce or materially change from 2023 through 2024, and what later evidence did Upwork disclose about their effects or commercial performance?",
+  "period": {"start": "2023-01-01", "end": "2024-12-31"},
+  "as_of": "2026-08-11",
+  "capture_completeness": "url_only",
+  "reference_class_ready": false
+}

@@ -1,0 +1,1 @@
+{"metric_id":"inaugural-wins","version":1,"kind":"numeric","unit":"regular_season_wins","role":"outcome","subject_kinds":["case"],"eligible_entity_types":["mlb_expansion_franchise"],"time_basis":"inaugural MLB regular season","period_basis":"season","bounds":{"min":0,"max":162},"allocation_policy":"not_applicable"}

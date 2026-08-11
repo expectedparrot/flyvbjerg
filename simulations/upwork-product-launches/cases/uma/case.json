@@ -1,0 +1,13 @@
+{
+  "case_id": "uma",
+  "name": "Uma",
+  "entity_type": "umbrella_ai_platform_and_companion",
+  "audience": "clients_and_freelancers",
+  "membership": "candidate",
+  "first_public_launch_date": "2024-04-30",
+  "first_public_launch_stage": "partial_rollout",
+  "source_ids": ["src-2024-spring-updates", "src-2024-fall-updates", "src-2024-q3-results"],
+  "aliases": ["Upwork's Mindful AI"],
+  "parent_or_platform": null,
+  "open_questions": ["Is Uma itself a product or a technology spanning products?", "Can product-level outcomes be separated from outcomes of features Uma powers?"]
+}

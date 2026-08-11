@@ -1,0 +1,13 @@
+{
+  "case_id": "upwork-chat-pro",
+  "name": "Upwork Chat Pro",
+  "entity_type": "integrated_application",
+  "audience": "freelancers",
+  "membership": "candidate",
+  "first_public_launch_date": "2023-11-06",
+  "first_public_launch_stage": "beta_waitlist",
+  "source_ids": ["src-2023-11-chat-pro", "src-2023-fy-results", "src-2024-q1-results", "src-2024-spring-updates", "src-2024-q2-results"],
+  "aliases": [],
+  "parent_or_platform": "Uma (by April 2024)",
+  "open_questions": ["Does a waitlist premiere count as launch?", "How should bundling into Freelancer Plus change product identity and launch stage?"]
+}

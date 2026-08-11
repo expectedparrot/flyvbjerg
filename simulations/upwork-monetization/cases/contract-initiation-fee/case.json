@@ -1,0 +1,1 @@
+{"case_id":"contract-initiation-fee","name":"Contract initiation fee","entity_type":"transaction_fee","audience":"clients","membership":"candidate","created_from":["item-contract-initiation"],"introduced":"2023-04","open_questions":["What fee levels and later price changes occurred?","Was rollout simultaneous across clients and geographies?"]}

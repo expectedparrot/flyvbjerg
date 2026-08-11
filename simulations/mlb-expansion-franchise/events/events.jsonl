@@ -1,0 +1,11 @@
+{"event_id":"evt-rockies-awarded","type":"franchise_awarded","date":"1991-07-05","subjects":[{"kind":"case","id":"colorado-rockies"}],"source_id":"src-rockies-timeline"}
+{"event_id":"evt-marlins-awarded","type":"franchise_awarded","date":"1991-07-05","subjects":[{"kind":"case","id":"florida-marlins"}],"source_id":"src-rockies-timeline"}
+{"event_id":"evt-1992-expansion-draft","type":"expansion_draft","date":"1992-11-17","subjects":[{"kind":"group","id":"mlb-expansion-1993"}],"source_id":"src-mlb-expansion-drafts"}
+{"event_id":"evt-rockies-first-game","type":"inaugural_regular_season_game","date":"1993-04-05","subjects":[{"kind":"case","id":"colorado-rockies"}],"source_id":"src-rockies-timeline"}
+{"event_id":"evt-marlins-first-game","type":"inaugural_regular_season_game","date":"1993-04-05","subjects":[{"kind":"case","id":"florida-marlins"}],"source_id":"src-marlins-origin"}
+{"event_id":"evt-dbacks-awarded","type":"franchise_awarded","date":"1995-03-09","subjects":[{"kind":"case","id":"arizona-diamondbacks"}],"source_id":"src-rays-timeline"}
+{"event_id":"evt-rays-awarded","type":"franchise_awarded","date":"1995-03-09","subjects":[{"kind":"case","id":"tampa-bay-devil-rays"}],"source_id":"src-rays-timeline"}
+{"event_id":"evt-1997-expansion-draft","type":"expansion_draft","date":"1997-11-18","subjects":[{"kind":"group","id":"mlb-expansion-1998"}],"source_id":"src-rays-timeline"}
+{"event_id":"evt-dbacks-first-game","type":"inaugural_regular_season_game","date":"1998-03-31","subjects":[{"kind":"case","id":"arizona-diamondbacks"}],"source_id":"src-dbacks-timeline"}
+{"event_id":"evt-rays-first-game","type":"inaugural_regular_season_game","date":"1998-03-31","subjects":[{"kind":"case","id":"tampa-bay-devil-rays"}],"source_id":"src-rays-timeline"}
+

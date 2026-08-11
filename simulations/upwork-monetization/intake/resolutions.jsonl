@@ -1,0 +1,17 @@
+{"resolution_id":"res-flat-fee-case","item_id":"item-flat-fee-launch","kind":"case_created","record_id":"flat-freelancer-service-fee"}
+{"resolution_id":"res-flat-fee-event","item_id":"item-flat-fee-launch","kind":"event_created","record_id":"evt-flat-fee-effective"}
+{"resolution_id":"res-contract-fee-case","item_id":"item-contract-initiation","kind":"case_created","record_id":"contract-initiation-fee"}
+{"resolution_id":"res-contract-fee-event","item_id":"item-contract-initiation","kind":"event_created","record_id":"evt-contract-fee-introduced"}
+{"resolution_id":"res-claim-q2-2023-take-rate","item_id":"item-q2-2023-take-rate","kind":"claims_created","record_ids":["claim-q2-2023-take-rate","claim-q2-2023-attribution"]}
+{"resolution_id":"res-availability-case","item_id":"item-availability-outcome","kind":"case_created","record_id":"availability-badge"}
+{"resolution_id":"res-availability-claims","item_id":"item-availability-outcome","kind":"claims_created","record_ids":["claim-availability-invites","claim-availability-acceptance"]}
+{"resolution_id":"res-boosted-proposals-case","item_id":"item-boosted-proposal-outcome","kind":"case_created","record_id":"boosted-proposals"}
+{"resolution_id":"res-boosted-proposals-claim","item_id":"item-boosted-proposal-outcome","kind":"claim_created","record_id":"claim-boosted-hire-lift"}
+{"resolution_id":"res-freelancer-plus-case","item_id":"item-q1-2024-portfolio","kind":"case_created","record_id":"freelancer-plus"}
+{"resolution_id":"res-q1-2024-portfolio-claims","item_id":"item-q1-2024-portfolio","kind":"claims_created","record_ids":["claim-q1-2024-portfolio-growth","claim-q1-2024-fplus-subscribers","claim-q1-2024-fplus-growth"]}
+{"resolution_id":"res-fplus-repackage-event","item_id":"item-fplus-repackage","kind":"event_created","record_id":"evt-fplus-q2-2024-repackage"}
+{"resolution_id":"res-fplus-attribution-claim","item_id":"item-fplus-repackage","kind":"claim_created","record_id":"claim-fplus-repackage-attribution"}
+{"resolution_id":"res-q2-2024-growth-claims","item_id":"item-q2-2024-growth","kind":"claims_created","record_ids":["claim-q2-2024-portfolio-growth","claim-q2-2024-connects-growth"]}
+{"resolution_id":"res-q3-2024-growth-claims","item_id":"item-q3-2024-growth","kind":"claims_created","record_ids":["claim-q3-2024-portfolio-growth","claim-q3-2024-fplus-growth"]}
+{"resolution_id":"res-fy-2024-growth-claims","item_id":"item-fy-2024-growth","kind":"claims_created","record_ids":["claim-fy-2024-portfolio-growth","claim-fy-2024-fplus-growth"]}
+
