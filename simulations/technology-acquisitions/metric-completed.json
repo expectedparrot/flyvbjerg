@@ -1,0 +1,7 @@
+{
+  "label": "Definitive acquisition agreement completed",
+  "definition": "Equals 1 for legal completion and 0 only for an affirmatively documented termination of the definitive agreement. Pending and unresolved transactions are not zero.",
+  "subject_kinds": ["case"],
+  "allowed_values": [0, 1],
+  "zero_policy": "Zero requires an affirmative termination event."
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Timing allowance for a newly announced public-company separation",
+  "decision": "How much time should a decision-maker allow from announcement to first independence and to completion of the full separation plan?",
+  "inside_view_months": 18,
+  "thresholds_months": [12, 18, 24, 30],
+  "unknown": ["regulatory complexity", "tax rulings", "number of planned successors", "plan revisions", "legal-separation versus first-trading convention"]
+}

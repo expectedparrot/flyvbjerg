@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import statistics
+import math
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -43,8 +44,27 @@ def derive_metric(root: Path, collection: str, metric_id: str, version: int | No
     gaps: list[dict[str, Any]] = []
     for subject in subjects:
         starts = [event for event in events if subject in event.get("case_ids", []) and event.get("type") == derivation.get("start_event_type")]
-        ends = [event for event in events if subject in event.get("case_ids", []) and event.get("type") == derivation.get("end_event_type")]
-        if len(starts) != 1 or len(ends) != 1:
+        end_types = derivation.get("end_event_types") or [derivation.get("end_event_type")]
+        end_types = [item for item in end_types if item]
+        ends = [event for event in events if subject in event.get("case_ids", []) and event.get("type") in end_types]
+        if len(starts) != 1 or not ends:
+            gaps.append({"subject_id": subject, "code": "AMBIGUOUS_OR_MISSING_ENDPOINT", "start_count": len(starts), "end_count": len(ends)})
+            continue
+        if derivation.get("selection") == "first_terminal_event":
+            try:
+                start_day = _parse_day(starts[0].get("date"), starts[0]["event_id"])
+                eligible_ends = sorted(
+                    (event for event in ends if _parse_day(event.get("date"), event["event_id"]) >= start_day),
+                    key=lambda event: _parse_day(event.get("date"), event["event_id"]),
+                )
+            except ValidationError as exc:
+                gaps.append({"subject_id": subject, "code": "INSUFFICIENT_DATE_PRECISION", "message": exc.message})
+                continue
+            if not eligible_ends:
+                gaps.append({"subject_id": subject, "code": "MISSING_TERMINAL_EVENT_AFTER_START", "start_count": 1, "end_count": len(ends)})
+                continue
+            ends = [eligible_ends[0]]
+        elif len(ends) != 1:
             gaps.append({"subject_id": subject, "code": "AMBIGUOUS_OR_MISSING_ENDPOINT", "start_count": len(starts), "end_count": len(ends)})
             continue
         try:
@@ -60,6 +80,7 @@ def derive_metric(root: Path, collection: str, metric_id: str, version: int | No
             "method": "calculated",
             "status": "candidate",
             "input_event_ids": [starts[0]["event_id"], ends[0]["event_id"]],
+            "terminal_event_type": ends[0].get("type"),
         }
         if dry_run:
             observation["observation_id"] = None
@@ -81,14 +102,19 @@ def _stats(values: list[float]) -> dict[str, Any]:
     if not values:
         return {"count": 0, "values": []}
     ordered = sorted(values)
-    return {"count": len(values), "values": values, "min": min(values), "median": statistics.median(values), "max": max(values), "mean": statistics.fmean(values), "quantile_convention": "not_computed_v0.1"}
+    probabilities = (0.1, 0.25, 0.5, 0.75, 0.9)
+    quantiles = {str(probability): ordered[max(0, math.ceil(probability * len(ordered)) - 1)] for probability in probabilities}
+    return {"count": len(values), "values": values, "min": min(values), "median": statistics.median(values), "max": max(values), "mean": statistics.fmean(values), "quantiles": quantiles, "quantile_convention": "nearest_rank"}
 
 
 def create_analysis(root: Path, collection: str, name: str, metric_id: str, target: str | None = None, target_version: int | None = None, clusters: list[str] | None = None) -> tuple[dict[str, Any], list[str]]:
     base = collection_root(root, collection)
     definition = metric(root, collection, metric_id)
     decisions = _latest_decisions(base)
-    observations = [item for item in list_records(root, collection, "observation") if item.get("metric", {}).get("id") == metric_id]
+    observations = [
+        item for item in list_records(root, collection, "observation")
+        if item.get("metric", {}).get("id") == metric_id and item.get("metric", {}).get("version") == definition["version"]
+    ]
     accepted = [item for item in observations if item.get("status") == "accepted" or decisions.get(("observation", item["observation_id"])) == "accepted"]
     subject_ids = sorted({item.get("subject", {}).get("id") for item in accepted})
     coverage = [item for item in list_records(root, collection, "coverage") if item.get("metric_id") == metric_id]
@@ -127,7 +153,8 @@ def create_analysis(root: Path, collection: str, name: str, metric_id: str, targ
         "observation_ids": [item["observation_id"] for item in accepted],
         "n_subjects": len(subject_ids),
         "dependence_clusters": cluster_records,
-        "n_clusters": len(cluster_records) if cluster_records else len(subject_ids),
+        "dependence_status": "assessed_with_clusters" if cluster_records else "not_assessed",
+        "n_clusters": len(cluster_records) if cluster_records else None,
         "required_context_gaps": context_gaps,
         "distribution": _stats(values),
         "created_at": now(),
@@ -160,3 +187,73 @@ def cluster_sensitivity(root: Path, analysis_id: str) -> dict[str, Any]:
         results.append({"omitted_group_id": cluster["group_id"], "distribution": _stats(remaining)})
     return {"analysis_id": analysis_id, "kind": "leave_one_cluster_out", "full_values": values, "results": results}
 
+
+def _analysis_subject_values(root: Path, analysis: dict[str, Any]) -> dict[str, float]:
+    base = collection_root(root, analysis["collection_id"])
+    observations = {item["observation_id"]: item for item in records(base / "observations")}
+    result: dict[str, float] = {}
+    for observation_id in analysis["observation_ids"]:
+        observation = observations[observation_id]
+        value = observation.get("value")
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            result[observation["subject"]["id"]] = value
+    return result
+
+
+def threshold_analysis(root: Path, analysis_id: str, operator: str, value: float) -> dict[str, Any]:
+    operations = {
+        "lt": lambda candidate: candidate < value,
+        "le": lambda candidate: candidate <= value,
+        "eq": lambda candidate: candidate == value,
+        "ge": lambda candidate: candidate >= value,
+        "gt": lambda candidate: candidate > value,
+    }
+    if operator not in operations:
+        raise ValidationError(f"Unsupported threshold operator: {operator}; choose lt, le, eq, ge, or gt")
+    analysis = load_analysis(root, analysis_id)
+    by_subject = _analysis_subject_values(root, analysis)
+    matching = sorted(subject for subject, candidate in by_subject.items() if operations[operator](candidate))
+    nonmatching = sorted(set(by_subject) - set(matching))
+    missing = sorted(set(analysis["subject_ids"]) - set(by_subject))
+    count = len(by_subject)
+    return {
+        "analysis_id": analysis_id,
+        "threshold": {"operator": operator, "value": value},
+        "count_matching": len(matching),
+        "count_observed": count,
+        "frequency": len(matching) / count if count else None,
+        "matching_subject_ids": matching,
+        "nonmatching_subject_ids": nonmatching,
+        "missing_subject_ids": missing,
+        "dependence_status": analysis.get("dependence_status", "not_assessed"),
+        "n_clusters": analysis.get("n_clusters"),
+    }
+
+
+def locate_value(root: Path, analysis_id: str, value: float, label: str | None = None) -> dict[str, Any]:
+    analysis = load_analysis(root, analysis_id)
+    by_subject = _analysis_subject_values(root, analysis)
+    values = list(by_subject.values())
+    if not values:
+        raise ValidationError("Analysis has no numeric observations")
+    median = analysis["distribution"]["median"]
+    below = sorted(subject for subject, candidate in by_subject.items() if candidate < value)
+    equal = sorted(subject for subject, candidate in by_subject.items() if candidate == value)
+    above = sorted(subject for subject, candidate in by_subject.items() if candidate > value)
+    return {
+        "analysis_id": analysis_id,
+        "label": label,
+        "value": value,
+        "empirical_rank": (len(below) + len(equal)) / len(values),
+        "empirical_rank_convention": "fraction_less_than_or_equal",
+        "reference_median": median,
+        "difference_from_median": value - median,
+        "ratio_to_median": value / median if median else None,
+        "observed_support": {"min": min(values), "max": max(values)},
+        "within_observed_support": min(values) <= value <= max(values),
+        "subjects_below": below,
+        "subjects_equal": equal,
+        "subjects_above": above,
+        "dependence_status": analysis.get("dependence_status", "not_assessed"),
+        "n_clusters": analysis.get("n_clusters"),
+    }

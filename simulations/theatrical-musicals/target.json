@@ -1,0 +1,6 @@
+{
+  "name": "Theatrical economics of a stage-musical film adaptation",
+  "decision": "What base-rate range and downside allowance should a producer or financier use for a new theatrically released stage-musical adaptation?",
+  "thresholds_gross_multiple": [1.0, 2.0, 2.5],
+  "unknown": ["production budget range", "marketing spend", "distributor and exhibitor shares", "ancillary revenue", "participations", "release strategy", "pandemic effects"]
+}

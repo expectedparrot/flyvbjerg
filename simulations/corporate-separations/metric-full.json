@@ -1,0 +1,12 @@
+{
+  "label": "Days from announcement to full separation plan completion",
+  "definition": "Elapsed calendar days from the public separation announcement until all separations in the latest documented version of the plan are complete.",
+  "subject_kinds": ["case"],
+  "derivation": {
+    "kind": "event_interval",
+    "start_event_type": "separation_announced",
+    "end_event_type": "full_plan_completed",
+    "date_precision_required": "day"
+  },
+  "zero_policy": "An incomplete, revised, missing, or ambiguous plan endpoint remains missing and is never zero."
+}

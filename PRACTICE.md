@@ -237,10 +237,15 @@ Never store only the derived percentage when the inputs are available.
 
 #### D3. Follow a source policy
 
-Prefer sources closest to the underlying event and baseline: official records,
-contemporaneous plans, audited reports, contracts, or detailed postmortems.
-Secondary summaries can identify cases or corroborate facts but should not
-silently override stronger sources.
+Use the best available evidence for the task. Sources closest to the underlying
+event and baseline—official records, contemporaneous plans, audited reports,
+contracts, or detailed postmortems—are preferable when readily available.
+Wikipedia and similar tertiary sources are valid for company histories,
+identities, ownership, products, chronology, and reported actions. Seek stronger
+support when a claim is disputed, causal, quantitative, determines cohort
+membership, or asserts an absence. No source's silence establishes that an
+event did not occur, and a weaker source must not silently override a stronger
+one.
 
 For conflicts:
 

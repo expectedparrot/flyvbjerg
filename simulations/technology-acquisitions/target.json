@@ -1,0 +1,7 @@
+{
+  "name": "Timing and completion risk for a newly announced large technology acquisition",
+  "decision": "How much calendar time and closing-risk allowance should a decision-maker use for a newly announced large technology acquisition?",
+  "inside_view_months": 12,
+  "thresholds_months": [6, 12, 18, 24],
+  "unknown": ["transaction value", "regulatory overlap", "jurisdictions", "management closing guidance"]
+}

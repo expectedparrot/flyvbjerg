@@ -21,8 +21,11 @@ search, browse, scrape, or download. It preserves registered sources and
 captures, unresolved intake, persistent cases, events, claims, metrics,
 decisions, missingness, dependence clusters, and frozen analyses.
 
-The [worked browser tutorial](https://expectedparrot.github.io/flyvbjerg/)
-follows real Upwork product evidence through the intake-first workflow.
+The [worked browser example](https://expectedparrot.github.io/flyvbjerg/)
+builds an outside view of theatrical stage-musical adaptations from reported
+budgets and worldwide box office. The earlier
+[Upwork product-launch tutorial](https://expectedparrot.github.io/flyvbjerg/upwork-product-launches.html)
+remains available as a secondary example of the intake-first workflow.
 
 ## Copy and paste into a coding agent
 
@@ -56,6 +59,28 @@ Treat extracted claims and observations as candidates until explicitly
 accepted. Preserve absence states, required metric context, target versions,
 and dependence clusters. Never turn a missing or malformed result into a zero
 or negative finding.
+
+Use the best available evidence for the task. Wikipedia and similar tertiary
+sources are valid for company histories, identities, ownership, products,
+chronology, and reported actions. Prefer stronger sources when readily
+available or when a claim is disputed, causal, quantitative, determines cohort
+membership, or asserts an absence. Never treat a source's silence as evidence
+that an event did not occur. See `flyvbjerg guide --topic evidence`.
+
+Decision-facing analysis can position a target value and evaluate thresholds
+without changing the locked reference distribution:
+
+```bash
+flyvbjerg locate ANALYSIS --value 365 --label management_estimate
+flyvbjerg threshold ANALYSIS --operator le --value 365
+flyvbjerg plot ANALYSIS --kind ecdf --target-value 365 --output distribution.svg
+```
+
+Analysis distributions report nearest-rank empirical quantiles. When no
+dependence groups are supplied, dependence is reported as `not_assessed` and
+cluster count remains null rather than defaulting to the subject count.
+Plots are deterministic SVG artifacts accompanied by JSON receipts identifying
+their source analysis and content hash.
 
 Flyvbjerg may construct native EDSL Jobs from registered captures, but it must
 not execute them. Inspect Jobs and estimated cost, then stop for my approval
@@ -128,6 +153,54 @@ Distinct cases are not automatically independent. Analysis sets record shared
 program or intervention clusters, report both case and cluster counts, and
 support leave-one-cluster-out sensitivity.
 
+## Business and government applications
+
+Flyvbjerg is useful when a decision-maker faces a recurring class of projects
+or events, has an inside-view forecast, and can reconstruct historical cases
+without selecting membership based on what happened later. The table below
+gives 20 promising applications and realistic starting points for evidence.
+
+| Application | Decision supported | Possible data sources |
+|---|---|---|
+| M&A completion risk | Closing-time allowance, regulatory exposure, and termination risk | SEC filings and 8-Ks; company announcements; FTC, DOJ, CMA, and European Commission decisions; Wikipedia transaction histories; LSEG, Bloomberg, PitchBook, or S&P Capital IQ |
+| New-product launches | Launch schedule, adoption range, and commercial downside | Company press releases and product blogs; earnings calls and filings; app stores; product documentation and changelogs; retailer data; archived websites; Wikipedia company histories |
+| Enterprise software implementations | Duration, cost growth, scope reduction, and abandonment risk | Internal PMO and procurement systems; vendor case studies; audit reports; litigation; public contract records; Government Accountability Office and inspector-general reports |
+| Factory and capacity expansions | Construction time, capital overrun, and ramp-to-utilization allowance | Company filings and investor presentations; permitting databases; environmental reviews; local planning records; trade press; satellite or facility data |
+| Corporate restructurings and spin-offs | Time to first independence, full completion, and plan revision | SEC Form 10 filings and 8-Ks; investor-relations releases; exchange notices; annual reports; Wikipedia company histories; financial news archives |
+| Technology-disruption responses | Timing and portfolio of incumbent responses to a new technology | Wikipedia company and technology histories; annual reports; patents; product announcements; trade journals; archived company sites; earnings transcripts |
+| Startup and corporate-venture portfolios | Follow-on funding, commercialization, acquisition, or shutdown base rates | Crunchbase, PitchBook, Dealroom, and SEC Form D; accelerator and corporate-venture portfolios; company websites; app stores; web archives; press databases |
+| Drug-development programs | Phase-transition time, approval probability, delay, and attrition | ClinicalTrials.gov; FDA Drugs@FDA and advisory materials; EMA records; trial registries; company pipelines and filings; publications and conference abstracts |
+| Retail-market expansion | Store-opening pace, maturity economics, and closure risk | Company filings; store locators and archived websites; municipal permits; commercial real-estate databases; foot-traffic providers; OpenStreetMap; local news |
+| Film, media, and entertainment investments | Budget exposure, release risk, and revenue scenarios | Wikipedia film histories; Box Office Mojo and The Numbers; studio releases; trade publications; production tax-credit records; Nielsen and streaming disclosures |
+| Large outsourcing contracts | Transition time, service attainment, renegotiation, and termination risk | Internal contract and service-management systems; procurement notices; contract awards; court filings; customer and vendor announcements; audit reports |
+| Cybersecurity incidents | Containment and recovery time, disclosure lag, and loss exposure | SEC cyber disclosures; state breach notices; CISA advisories; company incident reports; insurer and forensic reports; court filings; outage telemetry |
+| Supplier and technology migrations | Switching duration, dual-running cost, disruption, and failure risk | Internal procurement and operations records; ERP change logs; vendor announcements; regulatory filings; recalls; customer-status pages; postmortems |
+| Turnaround and restructuring plans | Liquidity runway, milestone attainment, asset-sale timing, and bankruptcy risk | Bankruptcy dockets; restructuring-support agreements; SEC filings; lender presentations; rating-agency reports; court-appointed examiner and monitor reports |
+| Major litigation and regulatory proceedings | Duration, legal-cost allowance, settlement, judgment, and remedy risk | PACER and state court dockets; agency enforcement databases; consent decrees; company filings; legal research services; Wikipedia case histories |
+| Public infrastructure projects | Cost and schedule overrun, opening delay, scope change, and demand risk | Agency capital plans; procurement portals; environmental-impact statements; legislative audits; GAO reports; World Bank and OECD project data; local news |
+| Government IT modernization | Procurement-to-deployment time, contract growth, partial delivery, and cancellation | USAspending.gov and SAM.gov; agency dashboards; GAO and inspector-general reports; congressional testimony; state procurement systems; contract documents |
+| Emergency and disaster recovery | Time to restore utilities, housing, transport, schools, and public services | FEMA OpenFEMA; NOAA and USGS; utility outage data; insurance claims; state emergency reports; satellite imagery; after-action reports; academic disaster datasets |
+| Policy implementation | Time from enactment to rules and operation, litigation delay, and compliance uptake | Congress.gov and state legislatures; Federal Register and Regulations.gov; agency guidance; court dockets; implementation dashboards; inspector-general and GAO reports |
+| Public procurement and defense acquisition | Award time, protest delay, development duration, unit-cost growth, and cancellation | SAM.gov, USAspending.gov, and FPDS; GAO bid-protest decisions; Selected Acquisition Reports; Congressional Budget Office and CRS; inspector-general reports |
+
+These domains tend to reuse a small set of analytical patterns:
+
+- elapsed time from announcement, authorization, or award to a milestone or
+  competing terminal state;
+- original estimate versus realized cost;
+- the fraction attaining a milestone by a decision threshold;
+- scope, schedule, or intended-outcome revision;
+- completion, cancellation, termination, or supersession;
+- the location of a current estimate in an empirical distribution; and
+- sensitivity to cohort boundaries, metric versions, missingness, and
+  dependence assumptions.
+
+Public sources can support a useful first pass, but internal operational data
+often produce the most decision-relevant reference class. In either case,
+source availability must not become an implicit outcome filter: register cases
+from an outcome-independent enumeration, preserve unresolved and censored
+cases, and represent unsupported measurements as missing rather than zero.
+
 ## EDSL boundary
 
 Flyvbjerg uses native EDSL objects for bounded extraction, coding, and
@@ -156,8 +229,10 @@ correct automatically or convert management attribution into causal evidence.
 
 ## Documentation
 
-- [Worked tutorial](https://expectedparrot.github.io/flyvbjerg/)
-- [Local tutorial source](docs/index.html)
+- [Primary worked example: theatrical musical adaptations](https://expectedparrot.github.io/flyvbjerg/)
+- [Secondary worked example: Upwork product launches](https://expectedparrot.github.io/flyvbjerg/upwork-product-launches.html)
+- [Local primary example](docs/index.html)
+- [Local Upwork tutorial](docs/upwork-product-launches.html)
 - [Specification](SPEC.md)
 - [Practice notes](PRACTICE.md)
 - [Agent operating contract](AGENTS.md)

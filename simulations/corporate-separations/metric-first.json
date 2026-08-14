@@ -1,0 +1,12 @@
+{
+  "label": "Days from announcement to first independent company",
+  "definition": "Elapsed calendar days from the public separation announcement to the first planned business becoming legally separate or beginning regular-way public trading under the endpoint rule.",
+  "subject_kinds": ["case"],
+  "derivation": {
+    "kind": "event_interval",
+    "start_event_type": "separation_announced",
+    "end_event_type": "first_separation_completed",
+    "date_precision_required": "day"
+  },
+  "zero_policy": "A missing or ambiguous endpoint remains missing and is never zero."
+}
