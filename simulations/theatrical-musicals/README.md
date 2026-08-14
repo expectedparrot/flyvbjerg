@@ -19,7 +19,10 @@ python rebuild.py /tmp/theatrical-musicals-audit
 The runner uses Flyvbjerg's public CLI, calls `flyvbjerg next` after every
 material stage, performs no browsing, and never constructs or executes an EDSL
 Job. It finishes by validating the reconstructed ledger and printing its case,
-observation, and distribution summary.
+observation, distribution, and budget-bound sensitivity summary. It also
+creates an immutable comparison between the conservative and optimistic
+analyses, evaluates the 2.0x and 2.5x thresholds, and writes a comparison plot
+with a JSON receipt.
 
 ## The central caution
 

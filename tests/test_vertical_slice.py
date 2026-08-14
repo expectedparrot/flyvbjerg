@@ -3,10 +3,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from flyvbjerg.analysis import add_metric, cluster_sensitivity, create_analysis, derive_metric, locate_value, threshold_analysis
 from flyvbjerg.cli import app
+from flyvbjerg.comparison import create_comparison, load_comparison, threshold_comparison
+from flyvbjerg.comparison_plotting import create_comparison_plot
 from flyvbjerg.domain import add_case, add_decision, add_record
 from flyvbjerg.processing import approve_plan, build_plan, create_plan
 from flyvbjerg.plotting import create_plot
@@ -236,3 +239,76 @@ def test_bounded_edsl_build_uses_registered_capture_and_never_runs(tmp_path: Pat
     assert manifest["executes_models"] is False
     assert Path(manifest["jobs_path"]).exists()
     assert any(item["role"] == "edsl_jobs" for item in artifacts)
+
+
+def test_frozen_analysis_comparison_thresholds_and_plot(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    root, _ = initialize(tmp_path)
+    versioned_write(root / "targets" / "film", {"target_id": "film", "name": "Film", "status": "ready_for_analysis"}, id_field="target_id")
+    collection = seed_mlb(root)
+    for metric_id, values in (
+        ("low", {"rockies": 0.8, "marlins": 1.8, "rays": 2.6}),
+        ("high", {"rockies": 1.2, "marlins": 2.2, "rays": 2.9}),
+    ):
+        definition, _ = add_metric(root, collection, {"metric_id": metric_id, "kind": "ratio", "role": "outcome", "unit": "x"})
+        for subject, value in values.items():
+            observation, _ = add_record(root, collection, "observation", {"subject": {"kind": "case", "id": subject}, "metric": {"id": metric_id, "version": definition["version"]}, "value": value, "status": "candidate"})
+            add_decision(root, collection, "observation", observation["observation_id"], "accepted", "verified")
+            add_record(root, collection, "coverage", {"subject": {"kind": "case", "id": subject}, "metric_id": metric_id, "state": "observed", "reason": "verified"})
+
+    low, _ = create_analysis(root, collection, "Conservative", "low")
+    high, _ = create_analysis(root, collection, "Optimistic", "high")
+    assert invoke(["next"])["next_steps"][0]["id"] == "compare_analyses"
+    comparison, artifact = create_comparison(root, collection, "Budget bounds", [low["analysis_id"], high["analysis_id"]])
+    assert Path(artifact["path"]).exists()
+    assert comparison["subject_sets_equal"] is True
+    assert comparison["metrics_equal"] is False
+    assert comparison["common_subject_ids"] == ["marlins", "rays", "rockies"]
+    assert comparison["distribution_deltas"][1]["median_from_baseline"] == pytest.approx(0.4)
+    assert load_comparison(root, comparison["comparison_id"])["analysis_ids"] == [low["analysis_id"], high["analysis_id"]]
+
+    sensitivity, threshold_artifact = threshold_comparison(root, comparison["comparison_id"], "ge", [1.0, 2.5])
+    assert Path(threshold_artifact["path"]).exists()
+    first, second = sensitivity["results"]
+    assert first["conclusion"] == "assumption_sensitive"
+    assert [item["subject_id"] for item in first["classification_switches"]] == ["rockies"]
+    assert second["classification_invariant"] is True
+    assert second["conclusion"] == "robust"
+
+    output = tmp_path / "comparison.svg"
+    receipt, artifacts = create_comparison_plot(root, comparison["comparison_id"], output)
+    assert receipt["analysis_ids"] == [low["analysis_id"], high["analysis_id"]]
+    assert output.read_text(encoding="utf-8").startswith("<svg")
+    assert output.with_suffix(".comparison-plot.json").exists()
+    assert len(artifacts) == 2
+
+    incomplete_definition, _ = add_metric(root, collection, {"metric_id": "incomplete", "kind": "ratio", "role": "outcome", "unit": "x"})
+    for subject, value in (("rockies", 0.8), ("marlins", "not_disclosed"), ("rays", 2.6)):
+        observation, _ = add_record(root, collection, "observation", {"subject": {"kind": "case", "id": subject}, "metric": {"id": "incomplete", "version": incomplete_definition["version"]}, "value": value, "status": "candidate"})
+        add_decision(root, collection, "observation", observation["observation_id"], "accepted", "verified")
+        add_record(root, collection, "coverage", {"subject": {"kind": "case", "id": subject}, "metric_id": "incomplete", "state": "observed" if isinstance(value, float) else "not_disclosed", "reason": "test coverage"})
+    incomplete, _ = create_analysis(root, collection, "Incomplete", "incomplete")
+    missing_comparison, _ = create_comparison(root, collection, "Missingness", [low["analysis_id"], incomplete["analysis_id"]])
+    missing_threshold, _ = threshold_comparison(root, missing_comparison["comparison_id"], "ge", [1.0])
+    missing_result = missing_threshold["results"][0]
+    assert missing_result["conclusion"] == "assumption_sensitive"
+    assert missing_result["missingness_changes"] == [{
+        "subject_id": "marlins",
+        "baseline_analysis_id": low["analysis_id"],
+        "comparison_analysis_id": incomplete["analysis_id"],
+        "baseline_missing": False,
+        "comparison_missing": True,
+    }]
+
+
+def test_comparison_cli_contract(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    invoke(["init"])
+    invoke(["collection", "new", "history", "History"])
+    # Command-level validation is structured and refuses a one-analysis comparison.
+    result = runner.invoke(app, ["comparison", "create", "history", "--name", "Invalid", "--analysis", "missing"])
+    assert result.exit_code == 1
+    envelope = json.loads(result.stdout)
+    assert envelope["status"] == "error"
+    assert envelope["errors"][0]["code"] == "VALIDATION_ERROR"
+    assert "at least two analyses" in envelope["errors"][0]["message"]

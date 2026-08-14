@@ -86,6 +86,22 @@ cluster count remains null rather than defaulting to the subject count.
 Plots are deterministic SVG artifacts accompanied by JSON receipts identifying
 their source analysis and content hash.
 
+Frozen analyses can be compared without modifying either input. Comparisons
+record cohort, metric, target, quantile, and dependence differences; threshold
+receipts identify the cases whose classifications change:
+
+```bash
+flyvbjerg comparison create COLLECTION --name budget-sensitivity \
+  --analysis CONSERVATIVE --analysis OPTIMISTIC
+flyvbjerg comparison threshold COMPARISON --operator ge \
+  --value 2.0 --value 2.5
+flyvbjerg comparison plot COMPARISON --output comparison.svg
+```
+
+A threshold is labeled `robust` only when subject sets, missingness, case
+classifications, and frequencies are invariant across every compared analysis. Otherwise it is
+`assumption_sensitive`, with the switching case IDs and values preserved.
+
 Flyvbjerg may construct native EDSL Jobs from registered captures, but it must
 not execute them. Inspect Jobs and estimated cost, then stop for my approval
 before any paid `ep run` unless I have already authorized it. Never display or

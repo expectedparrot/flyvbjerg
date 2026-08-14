@@ -12,6 +12,8 @@ from typer._click.exceptions import UsageError as ClickUsageError
 
 from . import __version__
 from .analysis import add_metric, cluster_sensitivity, create_analysis, derive_metric, load_analysis, locate_value, metric, threshold_analysis
+from .comparison import create_comparison, load_comparison, threshold_comparison
+from .comparison_plotting import create_comparison_plot
 from .domain import add_capture, add_case, add_decision, add_record, get_case, get_record, list_records
 from .envelope import Envelope
 from .errors import FlyvbjergError, ValidationError
@@ -34,10 +36,11 @@ metric_app = typer.Typer(no_args_is_help=True)
 observation_app = typer.Typer(no_args_is_help=True)
 coverage_app = typer.Typer(no_args_is_help=True)
 analysis_app = typer.Typer(no_args_is_help=True)
+comparison_app = typer.Typer(no_args_is_help=True)
 sensitivity_app = typer.Typer(no_args_is_help=True)
 process_app = typer.Typer(no_args_is_help=True)
 
-for name, child in (("target", target_app), ("collection", collection_app), ("source", source_app), ("capture", capture_app), ("intake", intake_app), ("case", case_app), ("event", event_app), ("relationship", relationship_app), ("group", group_app), ("claim", claim_app), ("metric", metric_app), ("observation", observation_app), ("coverage", coverage_app), ("analysis", analysis_app), ("sensitivity", sensitivity_app), ("process", process_app)):
+for name, child in (("target", target_app), ("collection", collection_app), ("source", source_app), ("capture", capture_app), ("intake", intake_app), ("case", case_app), ("event", event_app), ("relationship", relationship_app), ("group", group_app), ("claim", claim_app), ("metric", metric_app), ("observation", observation_app), ("coverage", coverage_app), ("analysis", analysis_app), ("comparison", comparison_app), ("sensitivity", sensitivity_app), ("process", process_app)):
     app.add_typer(child, name=name)
 
 
@@ -78,7 +81,7 @@ def init_command(path: Path = Path(".")) -> None:
 
 @app.command()
 def guide(topic: str | None = None) -> None:
-    stages = ["target", "collection", "intake", "triage", "metrics", "decisions", "analysis", "optional_edsl", "forecast"]
+    stages = ["target", "collection", "intake", "triage", "metrics", "decisions", "analysis", "comparison", "optional_edsl", "forecast"]
     guidance = {
         "evidence": (
             "Use the best available evidence for the task. Wikipedia and similar tertiary sources are valid for company histories, "
@@ -93,6 +96,11 @@ def guide(topic: str | None = None) -> None:
         "claims": (
             "Extracted claims remain candidates until explicitly accepted or rejected. Qualitative claims may be accepted without "
             "inventing a metric; promotion to an observation remains a separate compatibility-checked action."
+        ),
+        "comparison": (
+            "Compare two or more frozen analyses without mutating them. Preserve cohort, metric, target, quantile, missingness, "
+            "and dependence differences. Threshold comparison receipts identify case-level classification switches and label a "
+            "conclusion robust only when subject sets, missingness, classifications, and frequencies are invariant."
         ),
     }
     selected = topic or "lifecycle"
@@ -133,6 +141,7 @@ def with_decisions(root: Path, collection: str, kind: str, record: dict[str, Any
 def next_state(root: Path) -> Envelope:
     targets = list((root / "targets").glob("*/v*.json"))
     collections = records(root / "collections", "*/collection.json")
+    unresolved = 0
     if not targets:
         step = {"id": "create_target", "purpose": "Describe the decision to inform", "command": "flyvbjerg target create TARGET --name NAME", "mutates_state": True, "requires_network": False, "requires_user_approval": False}
     elif not collections:
@@ -146,9 +155,19 @@ def next_state(root: Path) -> Envelope:
         step = {"id": "review_intake", "purpose": "Resolve or defer registered intake", "command": f"flyvbjerg intake list {collections[0]['collection_id']}", "mutates_state": False, "requires_network": False, "requires_user_approval": False}
         if unresolved == 0:
             step = {"id": "register_evidence", "purpose": "Register evidence found by the agent", "command": f"flyvbjerg source add {collections[0]['collection_id']} --url URL", "mutates_state": True, "requires_network": False, "requires_user_approval": False}
+            for candidate_collection in collections:
+                candidate_base = root / "collections" / candidate_collection["collection_id"]
+                analyses = list(candidate_base.glob("analysis-sets/*/analysis.json"))
+                comparisons = list(candidate_base.glob("comparison-sets/*/comparison.json"))
+                if len(analyses) >= 2 and not comparisons:
+                    analysis_ids = [read_json(path)["analysis_id"] for path in analyses[:2]]
+                    step = {"id": "compare_analyses", "purpose": "Test whether conclusions survive alternative frozen analyses", "command": f"flyvbjerg comparison create {candidate_collection['collection_id']} --name NAME --analysis {analysis_ids[0]} --analysis {analysis_ids[1]}", "mutates_state": True, "requires_network": False, "requires_user_approval": False}
+                    break
     data = {"workspace": read_json(root / "workspace.json"), "target_count": len({p.parent.name for p in targets}), "collection_count": len(collections)}
     if collections:
         data["unresolved_intake_count"] = unresolved
+        data["analysis_count"] = len(list((root / "collections").glob("*/analysis-sets/*/analysis.json")))
+        data["comparison_count"] = len(list((root / "collections").glob("*/comparison-sets/*/comparison.json")))
     return Envelope(command="flyvbjerg next", data=data, next_steps=[step])
 
 
@@ -209,7 +228,7 @@ def collection_new(collection_id: str, title: str) -> None:
         root = discover(); base = collection_root(root, collection_id, require=False)
         record = {"collection_id": collection_id, "title": title, "status": "exploratory", "definition_version": 0, "created_at": now()}
         artifact = atomic_write(base / "collection.json", record)
-        for directory in ("intake/sources", "intake/captures", "intake/items", "intake/resolutions", "claims", "cases", "groups", "events", "relationships", "metrics", "observations", "coverage", "decisions", "analysis-sets", "runs", "forecasts"):
+        for directory in ("intake/sources", "intake/captures", "intake/items", "intake/resolutions", "claims", "cases", "groups", "events", "relationships", "metrics", "observations", "coverage", "decisions", "analysis-sets", "comparison-sets", "runs", "forecasts"):
             (base / directory).mkdir(parents=True, exist_ok=True)
         return artifact_envelope("flyvbjerg collection new", record, artifact)
     emit("flyvbjerg collection new", action)
@@ -484,6 +503,35 @@ def analysis_create(collection: str, name: str = typer.Option(...), metric_id: s
 @analysis_app.command("show")
 def analysis_show(analysis_id: str) -> None:
     emit("flyvbjerg analysis show", lambda: load_analysis(discover(), analysis_id))
+
+
+@comparison_app.command("create")
+def comparison_create(collection: str, name: str = typer.Option(...), analysis_id: list[str] = typer.Option(..., "--analysis")) -> None:
+    def action() -> Envelope:
+        record, artifact = create_comparison(discover(), collection, name, analysis_id)
+        return artifact_envelope("flyvbjerg comparison create", record, artifact)
+    emit("flyvbjerg comparison create", action)
+
+
+@comparison_app.command("show")
+def comparison_show(comparison_id: str) -> None:
+    emit("flyvbjerg comparison show", lambda: load_comparison(discover(), comparison_id))
+
+
+@comparison_app.command("threshold")
+def comparison_threshold(comparison_id: str, operator: str = typer.Option(...), value: list[float] = typer.Option(...)) -> None:
+    def action() -> Envelope:
+        record, artifact = threshold_comparison(discover(), comparison_id, operator, value)
+        return artifact_envelope("flyvbjerg comparison threshold", record, artifact)
+    emit("flyvbjerg comparison threshold", action)
+
+
+@comparison_app.command("plot")
+def comparison_plot(comparison_id: str, output: Path = typer.Option(...)) -> None:
+    def action() -> Envelope:
+        receipt, artifacts = create_comparison_plot(discover(), comparison_id, output)
+        return Envelope(command="flyvbjerg comparison plot", data=receipt, artifacts=artifacts)
+    emit("flyvbjerg comparison plot", action)
 
 
 @app.command("rate")

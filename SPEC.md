@@ -587,6 +587,16 @@ deterministic SVG. Each plot has a JSON receipt identifying the locked analysis,
 marker values, and output hash. Plot annotations expose sample size,
 missingness, dependence status, and quantile convention.
 
+An **analysis comparison** is an immutable record referencing two or more
+frozen analysis sets from the same collection. It reports common and differing
+subjects, metrics, targets, dependence states, quantile conventions, and
+distribution deltas. Threshold comparison is a separate immutable receipt: it
+records results for every analysis and identifies each common subject whose
+classification changes. A threshold conclusion is `robust` only when subject
+sets, missingness, classifications, and frequencies are invariant; otherwise it is
+`assumption_sensitive`. Comparison plots are deterministic SVGs with receipts
+hashing the source comparison.
+
 A **forecast** applies an analysis-set distribution to a target. The unadjusted
 outside view and any target-specific adjustment are separate stored objects.
 Forecasting is useful but not required for the first vertical slice.
@@ -630,6 +640,9 @@ Forecasting is useful but not required for the first vertical slice.
     analysis-sets/<analysis-id>/
       analysis.json
       distribution.json
+    comparison-sets/<comparison-id>/
+      comparison.json
+      thresholds/<comparison-threshold-id>.json
     runs/<run-id>/
       plan.json
       prompts.jsonl
@@ -957,6 +970,13 @@ flyvbjerg rate ANALYSIS
 flyvbjerg sensitivity ANALYSIS \
   --leave-one-out|--leave-one-cluster-out|--by FIELD
 flyvbjerg export ANALYSIS --format json|csv|md
+
+flyvbjerg comparison create COLLECTION --name NAME \
+  --analysis ANALYSIS --analysis ANALYSIS [...]
+flyvbjerg comparison show COMPARISON
+flyvbjerg comparison threshold COMPARISON --operator OP \
+  --value NUMBER [--value NUMBER ...]
+flyvbjerg comparison plot COMPARISON --output PATH
 
 flyvbjerg forecast new ANALYSIS --name NAME --target TARGET \
   [--target-version N]

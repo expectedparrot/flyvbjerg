@@ -57,13 +57,16 @@ def test_musical_tutorial_rebuilds_through_cli(tmp_path: Path) -> None:
     assert summary["excluded_count"] == 2
     assert summary["observation_count"] == 90
     assert summary["distribution"]["median"] == 1.45435
+    assert summary["threshold_conclusions"] == {"2.0": "assumption_sensitive", "2.5": "robust"}
     assert summary["validation"]["valid"] is True
-    assert summary["validation"]["json_records"] == 358
+    assert summary["validation"]["json_records"] == 362
 
     collection = workspace / ".flyvbjerg" / "collections" / "theatrical_musicals"
     assert len(list((collection / "cases").glob("*/case.json"))) == 18
     assert len(list((collection / "observations").glob("*.json"))) == 90
     assert len(list((collection / "intake" / "items").glob("*.json"))) == 20
+    assert len(list((collection / "comparison-sets").glob("*/comparison.json"))) == 1
+    assert (workspace / "plots" / "budget-bound-comparison.svg").exists()
     assert not list(workspace.rglob("*.ep")), "tutorial must not construct or execute EDSL jobs"
 
 

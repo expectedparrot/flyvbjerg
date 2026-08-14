@@ -278,6 +278,25 @@ flyvbjerg locate analysis_bca59aad72a74ac3 \
       <tr><td class="good">At least 2.5x</td><td>7/18 (38.9%)</td><td>Strong theatrical recovery proxy.</td></tr>
     </tbody></table>
     <p>At a looser 2.0x boundary, budget ranges move the count from 7/18 to 9/18. At 1.0x and 2.5x, the classifications are unchanged by budget uncertainty.</p>
+    <h3>Make that sensitivity auditable</h3>
+    <p>Create separate frozen analyses for the conservative and optimistic bounds, then compare them. The comparison never rewrites either analysis.</p>
+    <pre class="command"><code>flyvbjerg comparison create theatrical_musicals \
+  --name "Production-budget bound sensitivity" \
+  --analysis CONSERVATIVE_ANALYSIS \
+  --analysis OPTIMISTIC_ANALYSIS
+
+flyvbjerg comparison threshold COMPARISON_ID \
+  --operator ge --value 2.0 --value 2.5
+
+flyvbjerg comparison plot COMPARISON_ID \
+  --output plots/budget-bound-comparison.svg
+flyvbjerg next</code></pre>
+    <table><thead><tr><th>Threshold</th><th>Conservative</th><th>Optimistic</th><th>Package conclusion</th></tr></thead><tbody>
+      <tr><td>At least 2.0x</td><td>7/18</td><td>9/18</td><td class="bad">Assumption-sensitive: Annie and Dreamgirls switch.</td></tr>
+      <tr><td>At least 2.5x</td><td>7/18</td><td>7/18</td><td class="good">Robust across budget bounds.</td></tr>
+    </tbody></table>
+    <img class="hero-art" src="musical-budget-bound-comparison.svg" alt="Comparison of conservative and optimistic worldwide gross-multiple distributions" width="1000" height="371">
+    <p>The comparison receipt also states that both analyses use the same 18 subjects, target version, and quantile convention; the metric IDs differ because they encode opposite budget bounds. This is the distinction a decision-maker needs: the 2.5x conclusion survives the reported budget uncertainty, while the 2.0x conclusion does not.</p>
   </section>
 
   <section id="plots">

@@ -105,8 +105,13 @@ def rebuild(workspace: Path, *, verbose: bool = True) -> dict[str, Any]:
             cli.run("coverage", "set", COLLECTION, "--subject-kind", "case", "--subject", item["id"], "--metric", metric_id, "--state", "observed", "--reason", "Accepted observation with complete inputs.")
     cli.next("measurement and evidence decisions")
 
-    analysis = cli.run("analysis", "create", COLLECTION, "--name", "Conservative worldwide gross multiple", "--metric", "gross_multiple_low", "--target", "theatrical_musical", "--target-version", "1")["data"]
-    cli.next("frozen analysis")
+    conservative = cli.run("analysis", "create", COLLECTION, "--name", "Conservative worldwide gross multiple", "--metric", "gross_multiple_low", "--target", "theatrical_musical", "--target-version", "1")["data"]
+    optimistic = cli.run("analysis", "create", COLLECTION, "--name", "Optimistic worldwide gross multiple", "--metric", "gross_multiple_high", "--target", "theatrical_musical", "--target-version", "1")["data"]
+    cli.next("frozen analyses")
+    comparison = cli.run("comparison", "create", COLLECTION, "--name", "Production-budget bound sensitivity", "--analysis", conservative["analysis_id"], "--analysis", optimistic["analysis_id"])["data"]
+    thresholds = cli.run("comparison", "threshold", comparison["comparison_id"], "--operator", "ge", "--value", "2.0", "--value", "2.5")["data"]
+    cli.run("comparison", "plot", comparison["comparison_id"], "--output", str(workspace / "plots" / "budget-bound-comparison.svg"))
+    cli.next("comparison sensitivity")
     validation = cli.run("validate")["data"]
     return {
         "workspace": str(workspace),
@@ -114,8 +119,10 @@ def rebuild(workspace: Path, *, verbose: bool = True) -> dict[str, Any]:
         "included_count": len(included),
         "excluded_count": len(excluded),
         "observation_count": len(included) * len(METRICS),
-        "analysis_id": analysis["analysis_id"],
-        "distribution": analysis["distribution"],
+        "analysis_ids": [conservative["analysis_id"], optimistic["analysis_id"]],
+        "comparison_id": comparison["comparison_id"],
+        "threshold_conclusions": {str(item["threshold"]["value"]): item["conclusion"] for item in thresholds["results"]},
+        "distribution": conservative["distribution"],
         "validation": validation,
     }
 
