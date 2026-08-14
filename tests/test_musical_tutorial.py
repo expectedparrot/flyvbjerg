@@ -76,3 +76,7 @@ def test_tutorial_documentation_points_to_canonical_runner() -> None:
     assert "rebuild.py" in html
     assert "flyvbjerg next" in html
     assert "ep run" not in html
+    assert "cat &gt; target.json" in html
+    assert "--from metric-" not in html
+    for unexplained_placeholder in ("INTAKE_ID", "OBSERVATION_ID", "CALCULATED_ID", "CONSERVATIVE_ANALYSIS", "OPTIMISTIC_ANALYSIS", "COMPARISON_ID"):
+        assert unexplained_placeholder not in html

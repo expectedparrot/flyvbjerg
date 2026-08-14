@@ -51,6 +51,21 @@ def test_evidence_guide_allows_best_available_sources(tmp_path: Path, monkeypatc
     assert "evidence" in evidence["available_topics"]
 
 
+def test_metric_can_be_fully_defined_inline(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    invoke(["init"])
+    invoke(["collection", "new", "films", "Films"])
+    created = invoke([
+        "metric", "add", "films", "gross_multiple", "--kind", "ratio", "--role", "outcome", "--unit", "x",
+        "--subject-kind", "case", "--label", "Gross multiple", "--definition", "Gross divided by budget",
+        "--zero-policy", "Missing inputs remain missing",
+    ])["data"]
+    assert created["subject_kinds"] == ["case"]
+    assert created["label"] == "Gross multiple"
+    assert created["definition"] == "Gross divided by budget"
+    assert created["zero_policy"] == "Missing inputs remain missing"
+
+
 def test_effective_intake_status_and_next(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.chdir(tmp_path)
     invoke(["init"])

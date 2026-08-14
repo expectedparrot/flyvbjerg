@@ -876,7 +876,9 @@ metric unless the metric explicitly permits that claim kind and causal strength.
 ### 6.8 Metrics, observations, and coverage
 
 ```bash
-flyvbjerg metric add COLLECTION ID --kind KIND --role ROLE [OPTIONS]
+flyvbjerg metric add COLLECTION ID --kind KIND --role ROLE [--unit UNIT] \
+  [--label TEXT] [--definition TEXT] [--zero-policy TEXT] \
+  [--subject-kind KIND ...] [--from FILE]
 flyvbjerg metric revise COLLECTION ID [OPTIONS]
 flyvbjerg metric list COLLECTION
 flyvbjerg metric show COLLECTION ID [--version N]

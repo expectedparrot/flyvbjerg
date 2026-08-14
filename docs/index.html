@@ -81,12 +81,38 @@
     <pre class="command"><code>mkdir theatrical-musicals
 cd theatrical-musicals
 flyvbjerg init
+
+cat &gt; target.json &lt;&lt;'JSON'
+{
+  "decision": "What base-rate range and downside allowance should a producer or financier use for a new theatrically released stage-musical adaptation?",
+  "thresholds_gross_multiple": [1.0, 2.0, 2.5],
+  "unknown": [
+    "production budget range",
+    "marketing spend",
+    "distributor and exhibitor shares",
+    "ancillary revenue",
+    "participations",
+    "release strategy",
+    "pandemic effects"
+  ]
+}
+JSON
+
 flyvbjerg target create theatrical_musical \
   --name "Theatrical musical adaptation economics" \
   --from target.json
 flyvbjerg collection new theatrical_musicals \
   "US theatrical stage-musical film adaptations, 2006–2025 seed cohort"
 flyvbjerg next</code></pre>
+    <p><code>target.json</code> is created in the command block; it is not supplied by Flyvbjerg. The CLI combines its decision context with the stable target ID and display name given on the command line.</p>
+    <details open><summary>See what the target command creates</summary><pre class="output"><code>{
+  "target_id": "theatrical_musical",
+  "name": "Theatrical musical adaptation economics",
+  "version": 1,
+  "decision": "What base-rate range and downside allowance should a producer or financier use for a new theatrically released stage-musical adaptation?",
+  "thresholds_gross_multiple": [1.0, 2.0, 2.5],
+  "unknown": ["production budget range", "marketing spend", "... five more"]
+}</code></pre></details>
     <details><summary>Show representative next step</summary><pre class="output"><code>{
   "command": "flyvbjerg next",
   "status": "ok",
@@ -110,8 +136,15 @@ flyvbjerg next</code></pre>
     <pre class="command"><code>flyvbjerg intake add theatrical_musicals wiki_la_la_land \
   membership_candidate \
   "Original screen musical rather than an adaptation" \
-  --proposed-name "La La Land"
-flyvbjerg intake defer theatrical_musicals INTAKE_ID \
+  --proposed-name "La La Land"</code></pre>
+    <details open><summary>See the generated intake identifier</summary><pre class="output"><code>{
+  "item_id": "item_7b8f...",
+  "kind": "membership_candidate",
+  "proposed_names": ["La La Land"],
+  "status": "untriaged"
+}</code></pre></details>
+    <p>Copy the returned <code>item_id</code> into the decision command. In the command below, <code>item_7b8f...</code> means the identifier emitted immediately above:</p>
+    <pre class="command"><code>flyvbjerg intake defer theatrical_musicals item_7b8f... \
   --reason original_screen_musical
 flyvbjerg next</code></pre>
     <div class="callout danger"><strong>Do not require observed outcomes for membership.</strong> If an eligible film lacks a budget or gross, retain its case and mark that measurement missing. Otherwise data availability becomes a hidden selection rule.</div>
@@ -148,6 +181,7 @@ flyvbjerg source add theatrical_musicals \
   "kind": "encyclopedia",
   "retrieved": "2026-08-14T02:36:45Z"
 }</code></pre></details>
+    <p>These are two examples, not the entire source set. Each of the 20 rows in <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/cohort.json"><code>cohort.json</code></a> contains the exact Wikipedia URL used for that candidate; the rebuild registers all 20 using this command.</p>
     <div class="callout"><strong>A URL is not a capture.</strong> If the agent has a permitted local file, <code>flyvbjerg capture add</code> can hash and preserve it. Flyvbjerg still never downloads it.</div>
   </section>
 
@@ -160,6 +194,7 @@ flyvbjerg case add theatrical_musicals \
 flyvbjerg case add theatrical_musicals \
   --id wicked --name "Wicked" --type theatrical_film</code></pre>
     <p>The seed has 18 film cases, from <em>Dreamgirls</em> through <em>Wicked</em>. Identity is separate from measurement: a later source correction updates evidence attached to a film, not the film itself.</p>
+    <div class="callout warning"><strong>Where the other 15 come from.</strong> The three commands above show the operation without printing the same line 18 times. The complete <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/cohort.json">20-candidate input</a> lists every title, URL, membership fact, inclusion decision, exclusion reason, and—only for included films—financial fields. The checked-in rebuild applies the same source, intake, and case commands to every row. All results below use those 18 included cases, not only the three displayed here.</div>
     <div class="diagram">theatrical_musicals
 ├── dreamgirls
 ├── hairspray
@@ -179,10 +214,38 @@ flyvbjerg case add theatrical_musicals \
     <div class="artifact"><code>worldwide_gross_musd</code><p>Reported worldwide theatrical gross, nominal $m.</p></div>
     <div class="artifact"><code>gross_multiple_low</code><p>Conservative multiple: gross ÷ high budget.</p></div>
     <div class="artifact"><code>gross_multiple_high</code><p>Optimistic multiple: gross ÷ low budget.</p></div>
-    <pre class="command"><code>flyvbjerg metric add theatrical_musicals gross_multiple_low \
-  --kind ratio --role outcome --unit x --from metric-multiple-low.json
+    <p>Construct all five definitions directly. Nothing in this block depends on a pre-existing file:</p>
+    <pre class="command"><code>flyvbjerg metric add theatrical_musicals budget_low_musd \
+  --kind numeric --role input --unit million_usd --subject-kind case \
+  --label "Reported production budget lower bound" \
+  --definition "Lower reported production-budget bound, nominal USD millions." \
+  --zero-policy "Missing or malformed budget data remain missing and are never zero."
+
+flyvbjerg metric add theatrical_musicals budget_high_musd \
+  --kind numeric --role input --unit million_usd --subject-kind case \
+  --label "Reported production budget upper bound" \
+  --definition "Upper reported production-budget bound, nominal USD millions." \
+  --zero-policy "Missing or malformed budget data remain missing and are never zero."
+
+flyvbjerg metric add theatrical_musicals worldwide_gross_musd \
+  --kind numeric --role outcome --unit million_usd --subject-kind case \
+  --label "Worldwide theatrical box-office gross" \
+  --definition "Reported worldwide theatrical gross, nominal USD millions." \
+  --zero-policy "Missing or malformed box-office data remain missing and are never zero."
+
+flyvbjerg metric add theatrical_musicals gross_multiple_low \
+  --kind ratio --role outcome --unit x --subject-kind case \
+  --label "Conservative worldwide gross multiple" \
+  --definition "Worldwide gross divided by the upper production-budget bound." \
+  --zero-policy "Missing inputs remain missing; a failed calculation is never zero."
+
 flyvbjerg metric add theatrical_musicals gross_multiple_high \
-  --kind ratio --role outcome --unit x --from metric-multiple-high.json</code></pre>
+  --kind ratio --role outcome --unit x --subject-kind case \
+  --label "Optimistic worldwide gross multiple" \
+  --definition "Worldwide gross divided by the lower production-budget bound." \
+  --zero-policy "Missing inputs remain missing; a failed calculation is never zero."
+
+flyvbjerg next</code></pre>
     <div class="callout warning"><strong>Zero policy.</strong> Missing or malformed inputs remain missing. A failed lookup or division is never recorded as zero gross or a negative outcome.</div>
   </section>
 
@@ -204,16 +267,25 @@ flyvbjerg observation add theatrical_musicals \
 flyvbjerg observation add theatrical_musicals \
   --subject-kind case --subject cats --metric gross_multiple_high \
   --value 0.9437 --source wiki_cats --period 2019 --method calculated</code></pre>
-    <p>All five remain candidates. Deterministic arithmetic can still use the wrong source, units, bound, or formula.</p>
+    <details open><summary>See how an observation ID is created</summary><pre class="output"><code>{
+  "observation_id": "obs_cats_multiple_low...",
+  "subject": {"kind": "case", "id": "cats"},
+  "metric": {"id": "gross_multiple_low", "version": 1},
+  "value": 0.755,
+  "method": "calculated",
+  "status": "candidate"
+}</code></pre></details>
+    <p>All five remain candidates. Deterministic arithmetic can still use the wrong source, units, bound, or formula. Cats demonstrates the complete five-observation pattern. The canonical cohort input exposes the three reported financial fields for every included film; the rebuild calculates both bounds and submits the same five commands for all 18 films, producing the 90 observations used below.</p>
   </section>
 
   <section id="decisions">
     <h2><span class="chapter">9</span>Review the evidence explicitly</h2>
-    <pre class="command"><code>flyvbjerg observation decide theatrical_musicals OBSERVATION_ID \
+    <p>Each <code>observation add</code> response contains an <code>observation_id</code>. Use that returned value—not a name guessed from the film or metric—in the review command:</p>
+    <pre class="command"><code>flyvbjerg observation decide theatrical_musicals obs_reported_value... \
   --accept \
   --reason "Reported field supported by the registered page; range bounds preserved separately."
 
-flyvbjerg observation decide theatrical_musicals CALCULATED_ID \
+flyvbjerg observation decide theatrical_musicals obs_cats_multiple_low... \
   --accept \
   --reason "Inspected calculation from reported gross and the upper budget bound."</code></pre>
     <details><summary>Show representative decision</summary><pre class="output"><code>{
@@ -240,6 +312,11 @@ flyvbjerg observation decide theatrical_musicals CALCULATED_ID \
     <pre class="command"><code>flyvbjerg analysis create theatrical_musicals \
   --name "Conservative worldwide gross multiple" \
   --metric gross_multiple_low \
+  --target theatrical_musical --target-version 1
+
+flyvbjerg analysis create theatrical_musicals \
+  --name "Optimistic worldwide gross multiple" \
+  --metric gross_multiple_high \
   --target theatrical_musical --target-version 1</code></pre>
     <details><summary>Show the locked distribution</summary><pre class="output"><code>{
   "analysis_id": "analysis_bca59aad72a74ac3",
@@ -255,6 +332,13 @@ flyvbjerg observation decide theatrical_musicals CALCULATED_ID \
     "quantile_convention": "nearest_rank"
   }
 }</code></pre></details>
+    <details open><summary>See the second generated analysis identifier</summary><pre class="output"><code>{
+  "analysis_id": "analysis_02e3bebcf0b44753",
+  "name": "Optimistic worldwide gross multiple",
+  "n_subjects": 18,
+  "distribution": {"median": 1.881, "mean": 2.7995}
+}</code></pre></details>
+    <p>These two returned IDs identify immutable snapshots. Later threshold, plot, and comparison commands refer to those exact snapshots.</p>
     <p>The 2.73x mean is pulled upward by <em>Mamma Mia!</em> at 13.58x. The conventional median and nearest-rank P50 are both visible; neither is silently substituted for the other.</p>
   </section>
 
@@ -277,13 +361,23 @@ flyvbjerg locate analysis_bca59aad72a74ac3 \
     <p>Create separate frozen analyses for the conservative and optimistic bounds, then compare them. The comparison never rewrites either analysis.</p>
     <pre class="command"><code>flyvbjerg comparison create theatrical_musicals \
   --name "Production-budget bound sensitivity" \
-  --analysis CONSERVATIVE_ANALYSIS \
-  --analysis OPTIMISTIC_ANALYSIS
-
-flyvbjerg comparison threshold COMPARISON_ID \
+  --analysis analysis_bca59aad72a74ac3 \
+  --analysis analysis_02e3bebcf0b44753</code></pre>
+    <details open><summary>See the generated comparison identifier</summary><pre class="output"><code>{
+  "comparison_id": "comparison_f2eceafbb79647db",
+  "analysis_ids": [
+    "analysis_bca59aad72a74ac3",
+    "analysis_02e3bebcf0b44753"
+  ],
+  "subject_sets_equal": true,
+  "targets_equal": true,
+  "metrics_equal": false
+}</code></pre></details>
+    <p>Use the returned <code>comparison_id</code> for both sensitivity calculations and the plot:</p>
+    <pre class="command"><code>flyvbjerg comparison threshold comparison_f2eceafbb79647db \
   --operator ge --value 2.0 --value 2.5
 
-flyvbjerg comparison plot COMPARISON_ID \
+flyvbjerg comparison plot comparison_f2eceafbb79647db \
   --output plots/budget-bound-comparison.svg
 flyvbjerg next</code></pre>
     <table><thead><tr><th>Threshold</th><th>Conservative</th><th>Optimistic</th><th>Package conclusion</th></tr></thead><tbody>
@@ -309,8 +403,9 @@ flyvbjerg plot analysis_bca59aad72a74ac3 \
   <section id="files">
     <h2><span class="chapter">14</span>Reproduce and audit the work</h2>
     <p>The analytical story above is the user-facing result. Underneath it, Flyvbjerg preserves enough structure to answer practical challenges: Which source supported this value? Was it reviewed? Which films were excluded, and why? Did a corrected budget change the conclusion?</p>
-    <p>The checked-in <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/cohort.json"><code>cohort.json</code></a> is the canonical input for this worked example. A maintainer or skeptical reviewer can reconstruct the entire workspace with one command:</p>
-    <pre class="command"><code>python simulations/theatrical-musicals/rebuild.py \
+    <p>The checked-in <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/cohort.json"><code>cohort.json</code></a> is the canonical input for this worked example. A maintainer or skeptical reviewer can reconstruct the entire workspace from the root of a Flyvbjerg repository checkout. This is a separate location from the temporary <code>theatrical-musicals</code> workspace created in chapter 2:</p>
+    <pre class="command"><code>cd /path/to/flyvbjerg
+python simulations/theatrical-musicals/rebuild.py \
   /tmp/theatrical-musicals-audit</code></pre>
     <p>The rebuild performs no browsing or paid model execution. It replays the public Flyvbjerg commands, checks the workflow after each material stage, validates the resulting ledger, and regenerates the comparison artifacts.</p>
     <div class="diagram">simulations/theatrical-musicals/
@@ -364,7 +459,7 @@ flyvbjerg next</code></pre>
   toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Hide tutorial contents':'Show tutorial contents'});
   nav.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{if(matchMedia('(max-width: 960px)').matches){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.textContent='Show tutorial contents'}}));
   const escapeHtml=text=>text.replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[char]));
-  const shellToken=/(#[^\n]*|"[^"\n]*"|'[^'\n]*'|--?[A-Za-z][\w-]*|\b(?:flyvbjerg|ep|mkdir|cd)\b)/g;
+  const shellToken=/(#[^\n]*|"[^"\n]*"|'[^'\n]*'|--?[A-Za-z][\w-]*|\b(?:flyvbjerg|ep|mkdir|cd|cat)\b)/g;
   document.querySelectorAll('pre.command code').forEach(code=>{
     const source=code.textContent;
     let cursor=0,html='';

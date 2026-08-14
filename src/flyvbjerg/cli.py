@@ -448,9 +448,9 @@ def claim_promote(collection: str, claim_id: str, metric_id: str = typer.Option(
 
 
 @metric_app.command("add")
-def metric_add(collection: str, metric_id: str, kind: str = typer.Option(...), role: str = typer.Option(...), unit: str | None = None, from_file: Path | None = typer.Option(None, "--from")) -> None:
+def metric_add(collection: str, metric_id: str, kind: str = typer.Option(...), role: str = typer.Option(...), unit: str | None = None, label: str | None = None, definition: str | None = None, zero_policy: str | None = None, subject_kind: list[str] | None = typer.Option(None, "--subject-kind"), from_file: Path | None = typer.Option(None, "--from")) -> None:
     def action() -> Envelope:
-        record, artifact = add_metric(discover(), collection, payload(from_file, {"metric_id": metric_id, "kind": kind, "role": role, "unit": unit}))
+        record, artifact = add_metric(discover(), collection, payload(from_file, {"metric_id": metric_id, "kind": kind, "role": role, "unit": unit, "label": label, "definition": definition, "zero_policy": zero_policy, "subject_kinds": subject_kind}))
         return artifact_envelope("flyvbjerg metric add", record, artifact)
     emit("flyvbjerg metric add", action)
 
