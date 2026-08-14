@@ -19,6 +19,13 @@ budget and box-office outcomes are collected. This documented 18-film seed
 cohort was assembled from Wikipedia film histories and is not yet certified as
 an exhaustive census.
 
+The checked-in `cohort.json` preserves the enumeration audit trail. Each of its
+20 candidates has stage-provenance and release evidence plus an explicit
+membership decision. The two excluded candidates have an exclusion reason and
+no budget or box-office fields. During reconstruction, all 20 candidates enter
+Flyvbjerg intake; inclusions resolve to cases and exclusions remain preserved as
+deferred intake rather than disappearing from the denominator audit.
+
 ## Financial outcome
 
 Wikipedia-reported production-budget bounds and worldwide theatrical gross are

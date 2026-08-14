@@ -5,6 +5,22 @@ adaptations of stage musicals released in the United States from 2006–2024.
 The cohort was fixed from provenance and release facts before collecting
 financial outcomes, so membership does not depend on success or failure.
 
+## Rebuild the audit workspace
+
+`cohort.json` is the canonical checked-in research fixture. It contains 20
+membership candidates: 18 inclusions and two exclusions with explicit reasons.
+Excluded candidates have no financial outcome fields. Rebuild the ignored
+Flyvbjerg workspace in any empty directory with:
+
+```bash
+python rebuild.py /tmp/theatrical-musicals-audit
+```
+
+The runner uses Flyvbjerg's public CLI, calls `flyvbjerg next` after every
+material stage, performs no browsing, and never constructs or executes an EDSL
+Job. It finishes by validating the reconstructed ledger and printing its case,
+observation, and distribution summary.
+
 ## The central caution
 
 Worldwide box-office gross divided by production budget is observable and

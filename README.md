@@ -23,7 +23,11 @@ decisions, missingness, dependence clusters, and frozen analyses.
 
 The [worked browser example](https://expectedparrot.github.io/flyvbjerg/)
 builds an outside view of theatrical stage-musical adaptations from reported
-budgets and worldwide box office. The earlier
+budgets and worldwide box office. Its checked-in
+[`cohort.json`](simulations/theatrical-musicals/cohort.json) preserves the
+outcome-independent enumeration, and
+[`rebuild.py`](simulations/theatrical-musicals/rebuild.py) reconstructs and
+validates the full audit workspace through the public CLI. The earlier
 [Upwork product-launch tutorial](https://expectedparrot.github.io/flyvbjerg/upwork-product-launches.html)
 remains available as a secondary example of the intake-first workflow.
 

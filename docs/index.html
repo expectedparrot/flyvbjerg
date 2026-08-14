@@ -78,6 +78,11 @@
 
   <section id="workspace">
     <h2><span class="chapter">2</span>Start a workspace and version the target</h2>
+    <p>The checked-in <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/cohort.json"><code>cohort.json</code></a> is the canonical input. To execute the entire tutorial against a new workspace, run:</p>
+    <pre class="command"><code>python simulations/theatrical-musicals/rebuild.py \
+  /tmp/theatrical-musicals-audit</code></pre>
+    <p>The runner prints every Flyvbjerg command, calls <code>flyvbjerg next</code> after each material stage, and ends with validation and distribution summaries. It performs no browsing and never constructs or executes an EDSL Job.</p>
+    <p>The corresponding opening stage is:</p>
     <pre class="command"><code>mkdir theatrical-musicals
 cd theatrical-musicals
 flyvbjerg init
@@ -106,6 +111,14 @@ flyvbjerg next</code></pre>
       <div class="card"><h3>Included</h3><p><em>Hairspray</em>, <em>Les Misérables</em>, <em>Cats</em>, <em>In the Heights</em>, <em>Wicked</em>, and other films satisfying stage provenance and release rules.</p></div>
       <div class="card"><h3>Excluded</h3><p><em>La La Land</em> is an original screen musical. <em>Mamma Mia! Here We Go Again</em> is a sequel rather than a direct adaptation of the stage book.</p></div>
     </div>
+    <p>Enumeration is itself ledger data. The fixture records 20 candidates before measurement: 18 inclusions and two exclusions. The runner places every candidate in intake, resolves inclusions to cases, and defers exclusions with stable reason codes such as <code>original_screen_musical</code>. Excluded rows contain no budget or gross fields.</p>
+    <pre class="command"><code>flyvbjerg intake add theatrical_musicals wiki_la_la_land \
+  membership_candidate \
+  "Original screen musical rather than an adaptation" \
+  --proposed-name "La La Land"
+flyvbjerg intake defer theatrical_musicals INTAKE_ID \
+  --reason original_screen_musical
+flyvbjerg next</code></pre>
     <div class="callout danger"><strong>Do not require observed outcomes for membership.</strong> If an eligible film lacks a budget or gross, retain its case and mark that measurement missing. Otherwise data availability becomes a hidden selection rule.</div>
   </section>
 
