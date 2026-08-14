@@ -5,10 +5,11 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from flyvbjerg.analysis import add_metric, cluster_sensitivity, create_analysis, derive_metric
+from flyvbjerg.analysis import add_metric, cluster_sensitivity, create_analysis, derive_metric, locate_value, threshold_analysis
 from flyvbjerg.cli import app
 from flyvbjerg.domain import add_case, add_decision, add_record
 from flyvbjerg.processing import approve_plan, build_plan, create_plan
+from flyvbjerg.plotting import create_plot
 from flyvbjerg.workspace import atomic_write, collection_root, initialize, versioned_write
 
 
@@ -36,6 +37,68 @@ def test_agent_cli_orientation_and_target_gaps(tmp_path: Path, monkeypatch) -> N
     assert gaps["data"]["ready_for_analysis"] is False
     step = invoke(["next"])["next_steps"][0]
     assert step["requires_network"] is False
+
+
+def test_evidence_guide_allows_best_available_sources(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    invoke(["init"])
+    evidence = invoke(["guide", "--topic", "evidence"])["data"]
+    assert "Wikipedia" in evidence["guidance"]
+    assert "silence" in evidence["guidance"]
+    assert "evidence" in evidence["available_topics"]
+
+
+def test_effective_intake_status_and_next(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    invoke(["init"])
+    invoke(["target", "create", "decision", "--name", "Decision"])
+    invoke(["collection", "new", "history", "History"])
+    invoke(["source", "add", "history", "--url", "https://example.test", "--source-id", "source"])
+    first = invoke(["intake", "add", "history", "source", "history", "First"])["data"]
+    second = invoke(["intake", "add", "history", "source", "history", "Second"])["data"]
+    invoke(["intake", "defer", "history", first["item_id"], "--reason", "Out of scope"])
+    invoke(["intake", "resolve-case", "history", second["item_id"], "--new-case", "company", "--name", "Company"])
+    items = invoke(["intake", "list", "history"])["data"]
+    assert {item["status"] for item in items} == {"deferred", "resolved"}
+    next_result = invoke(["next"])
+    assert next_result["data"]["unresolved_intake_count"] == 0
+    assert next_result["next_steps"][0]["id"] == "register_evidence"
+
+
+def test_qualitative_claim_decision_and_sourced_case_update(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    invoke(["init"])
+    invoke(["collection", "new", "history", "History"])
+    invoke(["source", "add", "history", "--url", "https://en.wikipedia.org/wiki/Example", "--kind", "encyclopedia", "--source-id", "wiki"])
+    invoke(["case", "add", "history", "--id", "company", "--name", "Company"])
+    claim = invoke(["claim", "add", "history", "--scope-kind", "case", "--scope", "company", "--claim-kind", "qualitative_assessment", "--source", "wiki", "--value", '"Entered an adjacent market"'])["data"]
+    decision = invoke(["claim", "decide", "history", claim["claim_id"], "--accept", "--reason", "Supported descriptive history"])["data"]
+    assert decision["subject_kind"] == "claim"
+    assert decision["decision"] == "accepted"
+    shown = invoke(["claim", "show", "history", claim["claim_id"]])["data"]
+    assert shown["effective_status"] == "accepted"
+    assert invoke(["claim", "list", "history", "--status", "accepted"])["data"][0]["claim_id"] == claim["claim_id"]
+    update = tmp_path / "case-update.json"
+    update.write_text(json.dumps({"context": {"principal_line": "legacy product", "threat_anchor": "2000"}}), encoding="utf-8")
+    changed = invoke(["case", "update", "history", "company", "--from", str(update), "--source", "wiki"])["data"]
+    assert changed["context"]["principal_line"] == "legacy product"
+    assert changed["source_ids"] == ["wiki"]
+
+
+def test_intake_can_resolve_to_claim_and_relationship(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    invoke(["init"])
+    invoke(["collection", "new", "history", "History"])
+    invoke(["source", "add", "history", "--url", "https://example.test", "--source-id", "source"])
+    invoke(["case", "add", "history", "--id", "old", "--name", "Old"])
+    invoke(["case", "add", "history", "--id", "new", "--name", "New"])
+    claim_item = invoke(["intake", "add", "history", "source", "action", "Entered market"])["data"]
+    relationship_item = invoke(["intake", "add", "history", "source", "identity", "Old became New"])["data"]
+    claim_resolution = invoke(["intake", "resolve-claim", "history", claim_item["item_id"], "--scope-kind", "case", "--scope", "old", "--claim-kind", "qualitative_assessment", "--value", '"Entered market"'])["data"]
+    relationship_resolution = invoke(["intake", "resolve-relationship", "history", relationship_item["item_id"], "--from", "old", "--type", "became", "--to", "new"])["data"]
+    assert claim_resolution["resolution_kind"] == "claim"
+    assert relationship_resolution["resolution_kind"] == "relationship"
+    assert invoke(["intake", "list", "history", "--status", "resolved"])["data"]
 
 
 def seed_mlb(root: Path) -> str:
@@ -86,9 +149,66 @@ def test_event_derivation_context_and_clusters(tmp_path: Path) -> None:
     assert warnings and "rays" in warnings[0]
     assert analysis["n_subjects"] == 3
     assert analysis["n_clusters"] == 2
+    assert analysis["dependence_status"] == "assessed_with_clusters"
+    assert analysis["distribution"]["quantile_convention"] == "nearest_rank"
+    assert analysis["distribution"]["quantiles"]["0.5"] == 3_064_847
     assert analysis["target"]["version"] == 1
     sensitivity = cluster_sensitivity(root, analysis["analysis_id"])
     assert len(sensitivity["results"]) == 2
+    threshold = threshold_analysis(root, analysis["analysis_id"], "le", 3_100_000)
+    assert threshold["count_matching"] == 2
+    assert threshold["frequency"] == 2 / 3
+    located = locate_value(root, analysis["analysis_id"], 3_100_000, "inside view")
+    assert located["empirical_rank"] == 2 / 3
+    assert located["label"] == "inside view"
+    for kind in ("ecdf", "ordered"):
+        output = tmp_path / f"attendance-{kind}.svg"
+        receipt, artifacts = create_plot(root, analysis["analysis_id"], kind, output, target_value=3_100_000, threshold=3_100_000)
+        assert receipt["kind"] == kind
+        assert output.read_text(encoding="utf-8").startswith("<svg")
+        assert output.with_suffix(".plot.json").exists()
+        assert len(artifacts) == 2
+
+
+def test_multi_terminal_event_derivation_and_unassessed_dependence(tmp_path: Path) -> None:
+    root, _ = initialize(tmp_path)
+    collection = seed_mlb(root)
+    add_record(root, collection, "event", {"type": "cancelled", "case_ids": ["rays"], "date": "1996-01-01", "date_precision": "day", "source_id": "src-mlb"})
+    definition, _ = add_metric(root, collection, {
+        "metric_id": "award-to-terminal-days",
+        "kind": "numeric",
+        "role": "duration",
+        "unit": "days",
+        "derivation": {
+            "kind": "event_interval",
+            "start_event_type": "franchise_awarded",
+            "end_event_types": ["inaugural_regular_season_game", "cancelled"],
+            "selection": "first_terminal_event",
+        },
+    })
+    derived = derive_metric(root, collection, definition["metric_id"], subjects=["rays"])
+    assert derived["created"][0]["terminal_event_type"] == "cancelled"
+    observation = derived["created"][0]
+    add_decision(root, collection, "observation", observation["observation_id"], "accepted", "verified")
+    add_record(root, collection, "coverage", {"subject": {"kind": "case", "id": "rays"}, "metric_id": definition["metric_id"], "state": "observed", "reason": "derived"})
+    analysis, _ = create_analysis(root, collection, "Terminal", definition["metric_id"])
+    assert analysis["dependence_status"] == "not_assessed"
+    assert analysis["n_clusters"] is None
+
+
+def test_analysis_uses_only_latest_metric_version(tmp_path: Path) -> None:
+    root, _ = initialize(tmp_path)
+    collection = seed_mlb(root)
+    first, _ = add_metric(root, collection, {"metric_id": "score", "kind": "numeric", "role": "outcome"})
+    old, _ = add_record(root, collection, "observation", {"subject": {"kind": "case", "id": "rockies"}, "metric": {"id": "score", "version": first["version"]}, "value": 1, "status": "candidate"})
+    add_decision(root, collection, "observation", old["observation_id"], "accepted", "verified")
+    second, _ = add_metric(root, collection, {"metric_id": "score", "kind": "numeric", "role": "outcome"})
+    new, _ = add_record(root, collection, "observation", {"subject": {"kind": "case", "id": "rockies"}, "metric": {"id": "score", "version": second["version"]}, "value": 2, "status": "candidate"})
+    add_decision(root, collection, "observation", new["observation_id"], "accepted", "verified")
+    add_record(root, collection, "coverage", {"subject": {"kind": "case", "id": "rockies"}, "metric_id": "score", "state": "observed", "reason": "verified"})
+    analysis, _ = create_analysis(root, collection, "Latest only", "score")
+    assert analysis["metric"]["version"] == 2
+    assert analysis["distribution"]["values"] == [2]
 
 
 def test_error_is_a_single_json_envelope(tmp_path: Path, monkeypatch) -> None:

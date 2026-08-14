@@ -1,0 +1,12 @@
+{
+  "label": "Days from first separation to full plan completion",
+  "definition": "Elapsed calendar days between the first planned independent-company milestone and completion of all separations in the latest documented plan.",
+  "subject_kinds": ["case"],
+  "derivation": {
+    "kind": "event_interval",
+    "start_event_type": "first_separation_completed",
+    "end_event_type": "full_plan_completed",
+    "date_precision_required": "day"
+  },
+  "zero_policy": "Zero is valid only when the registered first-separation and full-plan events share the same supported date. A missing endpoint remains missing."
+}

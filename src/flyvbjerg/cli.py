@@ -11,11 +11,12 @@ from typer._click.exceptions import Exit as ClickExit
 from typer._click.exceptions import UsageError as ClickUsageError
 
 from . import __version__
-from .analysis import add_metric, cluster_sensitivity, create_analysis, derive_metric, load_analysis, metric
+from .analysis import add_metric, cluster_sensitivity, create_analysis, derive_metric, load_analysis, locate_value, metric, threshold_analysis
 from .domain import add_capture, add_case, add_decision, add_record, get_case, get_record, list_records
 from .envelope import Envelope
 from .errors import FlyvbjergError, ValidationError
 from .processing import approve_plan, audit_run, build_plan, create_plan, find_run, register_results
+from .plotting import create_plot
 from .workspace import atomic_write, collection_root, discover, initialize, json_value, load_version, now, read_input, read_json, records, versioned_write
 
 app = typer.Typer(no_args_is_help=True, pretty_exceptions_enable=False)
@@ -78,7 +79,55 @@ def init_command(path: Path = Path(".")) -> None:
 @app.command()
 def guide(topic: str | None = None) -> None:
     stages = ["target", "collection", "intake", "triage", "metrics", "decisions", "analysis", "optional_edsl", "forecast"]
-    emit("flyvbjerg guide", lambda: {"topic": topic or "lifecycle", "boundary": "The agent researches; Flyvbjerg only organizes registered evidence.", "stages": stages})
+    guidance = {
+        "evidence": (
+            "Use the best available evidence for the task. Wikipedia and similar tertiary sources are valid for company histories, "
+            "identities, ownership, products, chronology, and reported actions. Prefer stronger sources when readily available or "
+            "when a claim is disputed, causal, quantitative, determines cohort membership, or asserts an absence. Do not treat a "
+            "source's silence as evidence that an event did not occur. Register every source used and preserve permitted captures."
+        ),
+        "missingness": (
+            "Preserve missing, not applicable, censored, conflicted, not found, and invalid states. A failed retrieval, malformed "
+            "result, or source omission is never a zero or negative finding."
+        ),
+        "claims": (
+            "Extracted claims remain candidates until explicitly accepted or rejected. Qualitative claims may be accepted without "
+            "inventing a metric; promotion to an observation remains a separate compatibility-checked action."
+        ),
+    }
+    selected = topic or "lifecycle"
+    emit("flyvbjerg guide", lambda: {
+        "topic": selected,
+        "boundary": "The agent researches; Flyvbjerg only organizes registered evidence.",
+        "stages": stages,
+        "guidance": guidance.get(selected),
+        "available_topics": ["lifecycle", *guidance],
+    })
+
+
+def effective_intake(collection_base: Path) -> list[dict[str, Any]]:
+    items = records(collection_base / "intake/items")
+    resolutions = records(collection_base / "intake/resolutions")
+    by_item: dict[str, list[dict[str, Any]]] = {}
+    for resolution in resolutions:
+        by_item.setdefault(resolution["item_id"], []).append(resolution)
+    result = []
+    for item in items:
+        linked = by_item.get(item["item_id"], [])
+        status = item.get("status", "untriaged")
+        if linked:
+            status = "deferred" if all(x.get("resolution_kind") == "deferred" for x in linked) else "resolved"
+        result.append({**item, "status": status, "resolution_ids": [x["resolution_id"] for x in linked]})
+    return result
+
+
+def with_decisions(root: Path, collection: str, kind: str, record: dict[str, Any]) -> dict[str, Any]:
+    record_id = record[f"{kind}_id"]
+    decisions = [
+        x for x in records(collection_root(root, collection) / "decisions")
+        if x.get("subject_kind") == kind and x.get("subject_id") == record_id
+    ]
+    return {**record, "effective_status": decisions[-1]["decision"] if decisions else record.get("status"), "decisions": decisions}
 
 
 def next_state(root: Path) -> Envelope:
@@ -87,13 +136,20 @@ def next_state(root: Path) -> Envelope:
     if not targets:
         step = {"id": "create_target", "purpose": "Describe the decision to inform", "command": "flyvbjerg target create TARGET --name NAME", "mutates_state": True, "requires_network": False, "requires_user_approval": False}
     elif not collections:
-        step = {"id": "create_collection", "purpose": "Create an exploratory evidence corpus", "command": "flyvbjerg collection new COLLECTION --title TITLE", "mutates_state": True, "requires_network": False, "requires_user_approval": False}
+        step = {"id": "create_collection", "purpose": "Create an exploratory evidence corpus", "command": "flyvbjerg collection new COLLECTION TITLE", "mutates_state": True, "requires_network": False, "requires_user_approval": False}
     else:
-        unresolved = sum(len(records(root / "collections" / c["collection_id"] / "intake/items")) for c in collections)
+        unresolved_by_collection = {
+            c["collection_id"]: [x for x in effective_intake(root / "collections" / c["collection_id"]) if x["status"] == "untriaged"]
+            for c in collections
+        }
+        unresolved = sum(len(items) for items in unresolved_by_collection.values())
         step = {"id": "review_intake", "purpose": "Resolve or defer registered intake", "command": f"flyvbjerg intake list {collections[0]['collection_id']}", "mutates_state": False, "requires_network": False, "requires_user_approval": False}
         if unresolved == 0:
             step = {"id": "register_evidence", "purpose": "Register evidence found by the agent", "command": f"flyvbjerg source add {collections[0]['collection_id']} --url URL", "mutates_state": True, "requires_network": False, "requires_user_approval": False}
-    return Envelope(command="flyvbjerg next", data={"workspace": read_json(root / "workspace.json"), "target_count": len({p.parent.name for p in targets}), "collection_count": len(collections)}, next_steps=[step])
+    data = {"workspace": read_json(root / "workspace.json"), "target_count": len({p.parent.name for p in targets}), "collection_count": len(collections)}
+    if collections:
+        data["unresolved_intake_count"] = unresolved
+    return Envelope(command="flyvbjerg next", data=data, next_steps=[step])
 
 
 @app.command("next")
@@ -201,7 +257,19 @@ def intake_add(collection: str, source: str, kind: str, text: str, capture: str 
 
 @intake_app.command("list")
 def intake_list(collection: str, status: str | None = None, kind: str | None = None) -> None:
-    emit("flyvbjerg intake list", lambda: [x for x in list_records(discover(), collection, "item") if (not status or x.get("status") == status) and (not kind or x.get("kind") == kind)])
+    def action() -> list[dict[str, Any]]:
+        items = effective_intake(collection_root(discover(), collection))
+        return [x for x in items if (not status or x.get("status") == status) and (not kind or x.get("kind") == kind)]
+    emit("flyvbjerg intake list", action)
+
+
+@intake_app.command("defer")
+def intake_defer(collection: str, item: str, reason: str = typer.Option(...)) -> None:
+    def action() -> Envelope:
+        root = discover(); get_record(root, collection, "item", item)
+        record, artifact = add_record(root, collection, "resolution", {"item_id": item, "resolution_kind": "deferred", "reason": reason})
+        return artifact_envelope("flyvbjerg intake defer", record, artifact)
+    emit("flyvbjerg intake defer", action)
 
 
 @intake_app.command("resolve-case")
@@ -229,6 +297,27 @@ def intake_resolve_event(collection: str, item: str, type: str = typer.Option(..
     emit("flyvbjerg intake resolve-event", action)
 
 
+@intake_app.command("resolve-relationship")
+def intake_resolve_relationship(collection: str, item: str, from_case: str = typer.Option(..., "--from"), type: str = typer.Option(...), to_case: str = typer.Option(..., "--to")) -> None:
+    def action() -> Envelope:
+        root = discover(); intake = get_record(root, collection, "item", item)
+        get_case(root, collection, from_case); get_case(root, collection, to_case)
+        relationship, relationship_artifact = add_record(root, collection, "relationship", {"from_case": from_case, "type": type, "to_case": to_case, "source_id": intake["source_id"], "item_id": item})
+        record, resolution_artifact = add_record(root, collection, "resolution", {"item_id": item, "resolution_kind": "relationship", "relationship_id": relationship["relationship_id"]})
+        return Envelope(command="flyvbjerg intake resolve-relationship", data=record, artifacts=[relationship_artifact, resolution_artifact])
+    emit("flyvbjerg intake resolve-relationship", action)
+
+
+@intake_app.command("resolve-claim")
+def intake_resolve_claim(collection: str, item: str, scope_kind: str = typer.Option(...), scope: list[str] = typer.Option(...), claim_kind: str = typer.Option(...), value: str | None = None, unit: str | None = None, construct: str | None = None) -> None:
+    def action() -> Envelope:
+        root = discover(); intake = get_record(root, collection, "item", item)
+        claim, claim_artifact = add_record(root, collection, "claim", {"scope_kind": scope_kind, "scope_ids": scope, "claim_kind": claim_kind, "source_id": intake["source_id"], "value": json_value(value), "unit": unit, "construct": construct, "status": "candidate", "item_ids": [item]})
+        record, resolution_artifact = add_record(root, collection, "resolution", {"item_id": item, "resolution_kind": "claim", "claim_id": claim["claim_id"]})
+        return Envelope(command="flyvbjerg intake resolve-claim", data=record, artifacts=[claim_artifact, resolution_artifact])
+    emit("flyvbjerg intake resolve-claim", action)
+
+
 @case_app.command("add")
 def case_add(collection: str, case_id: str = typer.Option(..., "--id"), name: str = typer.Option(...), type: str | None = None, from_file: Path | None = typer.Option(None, "--from")) -> None:
     def action() -> Envelope:
@@ -245,6 +334,19 @@ def case_show(collection: str, case_id: str) -> None:
 @case_app.command("list")
 def case_list(collection: str) -> None:
     emit("flyvbjerg case list", lambda: records(collection_root(discover(), collection) / "cases", "*/case.json"))
+
+
+@case_app.command("update")
+def case_update(collection: str, case_id: str, from_file: Path = typer.Option(..., "--from"), source: list[str] | None = typer.Option(None)) -> None:
+    def action() -> Envelope:
+        root = discover(); current = get_case(root, collection, case_id); changes = read_input(from_file)
+        if changes.get("case_id", case_id) != case_id: raise ValidationError("An update cannot change case_id")
+        source_ids = list(dict.fromkeys([*current.get("source_ids", []), *(source or [])]))
+        for source_id in source or []: get_record(root, collection, "source", source_id)
+        record = {**current, **changes, "case_id": case_id, "source_ids": source_ids, "updated_at": now()}
+        artifact = atomic_write(collection_root(root, collection) / "cases" / case_id / "case.json", record, replace=True)
+        return artifact_envelope("flyvbjerg case update", record, artifact)
+    emit("flyvbjerg case update", action)
 
 
 @event_app.command("add")
@@ -282,6 +384,32 @@ def claim_add(collection: str, scope_kind: str = typer.Option(...), scope: list[
         record, artifact = add_record(discover(), collection, "claim", {"scope_kind": scope_kind, "scope_ids": scope, "claim_kind": claim_kind, "source_id": source, "value": json_value(value), "unit": unit, "construct": construct, "causal_strength": causal_strength, "status": "candidate"})
         return artifact_envelope("flyvbjerg claim add", record, artifact)
     emit("flyvbjerg claim add", action)
+
+
+@claim_app.command("decide")
+def claim_decide(collection: str, claim_id: str, accept: bool = False, reject: bool = False, reason: str = typer.Option(...)) -> None:
+    def action() -> Envelope:
+        if accept == reject: raise ValidationError("Choose exactly one of --accept or --reject")
+        root = discover(); get_record(root, collection, "claim", claim_id)
+        record, artifact = add_decision(root, collection, "claim", claim_id, "accepted" if accept else "rejected", reason)
+        return artifact_envelope("flyvbjerg claim decide", record, artifact)
+    emit("flyvbjerg claim decide", action)
+
+
+@claim_app.command("show")
+def claim_show(collection: str, claim_id: str) -> None:
+    def action() -> dict[str, Any]:
+        root = discover()
+        return with_decisions(root, collection, "claim", get_record(root, collection, "claim", claim_id))
+    emit("flyvbjerg claim show", action)
+
+
+@claim_app.command("list")
+def claim_list(collection: str, status: str | None = None, claim_kind: str | None = None) -> None:
+    def action() -> list[dict[str, Any]]:
+        root = discover(); claims = [with_decisions(root, collection, "claim", x) for x in list_records(root, collection, "claim")]
+        return [x for x in claims if (not status or x.get("effective_status") == status) and (not claim_kind or x.get("claim_kind") == claim_kind)]
+    emit("flyvbjerg claim list", action)
 
 
 @claim_app.command("promote")
@@ -361,6 +489,24 @@ def analysis_show(analysis_id: str) -> None:
 @app.command("rate")
 def rate(analysis_id: str) -> None:
     emit("flyvbjerg rate", lambda: load_analysis(discover(), analysis_id)["distribution"])
+
+
+@app.command("threshold")
+def threshold(analysis_id: str, operator: str = typer.Option(...), value: float = typer.Option(...)) -> None:
+    emit("flyvbjerg threshold", lambda: threshold_analysis(discover(), analysis_id, operator, value))
+
+
+@app.command("locate")
+def locate(analysis_id: str, value: float = typer.Option(...), label: str | None = None) -> None:
+    emit("flyvbjerg locate", lambda: locate_value(discover(), analysis_id, value, label))
+
+
+@app.command("plot")
+def plot(analysis_id: str, kind: str = typer.Option(...), output: Path = typer.Option(...), target_value: float | None = None, threshold: float | None = None) -> None:
+    def action() -> Envelope:
+        receipt, artifacts = create_plot(discover(), analysis_id, kind, output, target_value, threshold)
+        return Envelope(command="flyvbjerg plot", data=receipt, artifacts=artifacts)
+    emit("flyvbjerg plot", action)
 
 
 @sensitivity_app.command("cluster")

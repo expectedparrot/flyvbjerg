@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A worked tutorial for building an auditable collection of Upwork product launches with Flyvbjerg.">
+  <title>Expected Parrot | Exploring Upwork product launches with Flyvbjerg</title>
+  <style>
+    :root{--ink:#172019;--muted:#637067;--paper:#fff;--wash:#f4f7f3;--line:#dce5dc;--green:#167a43;--pale:#eaf6ed;--amber:#9a5a00;--amber-bg:#fff6df;--red:#a43737;--red-bg:#fff0ef;--code:#17231c;--measure:790px;--sans:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Georgia,"Times New Roman",serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.68 var(--sans)}#progress{position:fixed;z-index:30;top:0;left:0;width:0;height:3px;background:var(--green)}
+    nav{position:fixed;inset:0 auto 0 0;width:286px;overflow:auto;padding:34px 27px;background:var(--wash);border-right:1px solid var(--line)}nav .brand{display:block;margin-bottom:23px;color:var(--ink);font:700 22px/1.15 var(--serif);text-decoration:none}nav .brand span{display:block;margin-top:5px;color:var(--green);font:800 10px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase}nav .part{margin:21px 0 7px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}nav>a:not(.brand){display:block;padding:4px 0;color:#435047;font-size:13px;line-height:1.35;text-decoration:none}nav>a:not(.brand):hover{color:var(--green)}nav .small{margin-top:25px;color:var(--muted);font-size:12px}.nav-toggle{display:none;width:100%;margin-bottom:14px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;text-align:left}
+    main{margin-left:286px}article{max-width:1130px;padding:58px 68px 100px}header{padding-bottom:45px;border-bottom:1px solid var(--line)}.hero-art{display:block;width:100%;max-width:960px;height:auto;margin:34px 0 0;border:1px solid var(--line);border-radius:10px}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}h1{max-width:880px;margin:12px 0 18px;font:700 clamp(42px,6vw,70px)/1.02 var(--serif);letter-spacing:-.035em}h2{max-width:850px;margin:0 0 20px;font:700 35px/1.12 var(--serif);letter-spacing:-.02em}h3{max-width:var(--measure);margin:34px 0 8px;font:700 22px/1.25 var(--serif)}.dek{max-width:870px;margin:0;color:#455248;font:20px/1.55 var(--serif)}section{padding:60px 0;border-bottom:1px solid var(--line)}p,ul,ol,table,pre,.callout,.diagram,.artifact{max-width:var(--measure)}a{color:var(--green)}code{padding:.14em .35em;background:#eef2ee;border-radius:4px;font:88% var(--mono)}
+    pre{position:relative;overflow:auto;margin:18px 0 26px;padding:20px 58px 20px 22px;color:#d9e7dc;background:var(--code);border-radius:8px;font:13px/1.58 var(--mono)}pre code{padding:0;color:inherit;background:none}.command{border-left:4px solid #3cad69}.output{border-left:4px solid #83958a}.copy{position:absolute;top:10px;right:10px;padding:5px 8px;color:#d8ebe0;background:#34453b;border:0;border-radius:5px;font:11px var(--sans);cursor:pointer}.copy:hover{background:var(--green)}
+    .chapter{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;margin-right:10px;color:#fff;background:var(--green);border-radius:50%;font:800 15px var(--sans);vertical-align:5px}.callout{margin:24px 0;padding:18px 20px;background:var(--pale);border-left:4px solid var(--green);border-radius:0 7px 7px 0}.callout.warning{background:var(--amber-bg);border-color:#d28a1b}.callout.danger{background:var(--red-bg);border-color:var(--red)}.callout p:first-child{margin-top:0}.callout p:last-child{margin-bottom:0}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;max-width:960px;margin:28px 0}.step{position:relative;min-height:118px;padding:15px 13px;background:var(--wash);border:1px solid var(--line);border-radius:8px}.step b{display:block;margin-bottom:7px;color:var(--green);font-size:11px;text-transform:uppercase}.step span{font-size:13px;line-height:1.4}.step:not(:last-child):after{content:"→";position:absolute;z-index:2;top:43px;right:-15px;color:var(--green);font-size:20px;font-weight:800}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:920px;margin:24px 0}.card{padding:20px;background:var(--wash);border:1px solid var(--line);border-radius:8px}.card h3{margin-top:0}.card p:last-child{margin-bottom:0}.artifact{display:grid;grid-template-columns:180px 1fr;gap:16px;margin:10px 0;padding:14px 0;border-bottom:1px solid var(--line)}.artifact code{align-self:start}.artifact p{margin:0;color:#455248;font-size:14px}
+    table{width:100%;margin:20px 0 28px;border-collapse:collapse;font-size:14px}th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:#405047;background:var(--wash);font-size:11px;letter-spacing:.06em;text-transform:uppercase}.good{color:var(--green);font-weight:750}.bad{color:var(--red);font-weight:750}.muted{color:var(--muted)}details{max-width:var(--measure);margin:14px 0 25px}summary{color:var(--green);font-size:13px;font-weight:750;cursor:pointer}details[open] summary{margin-bottom:8px}.diagram{overflow:auto;margin:24px 0;padding:20px;color:#d9e7dc;background:var(--code);border-radius:8px;font:13px/1.55 var(--mono);white-space:pre}.contents{padding:30px 0}.contents ol{columns:2;column-gap:44px;max-width:850px}.contents li{break-inside:avoid;margin:5px 0}.contents a{text-decoration:none}footer{padding-top:38px;color:var(--muted);font-size:13px}
+    @media(max-width:960px){nav{position:static;width:auto;padding:22px 24px;border-right:0;border-bottom:1px solid var(--line)}.nav-toggle{display:block}nav .part,nav>a:not(.brand),nav .small{display:none}nav.open .part{display:block}nav.open>a:not(.brand){display:block}nav.open .small{display:block}nav .brand{margin-bottom:12px}main{margin-left:0}article{padding:38px 25px 80px}.flow{grid-template-columns:1fr}.step{min-height:auto}.step:not(:last-child):after{display:none}}
+    @media(max-width:650px){h2{font-size:29px}.grid{grid-template-columns:1fr}.contents ol{columns:1}.artifact{grid-template-columns:1fr}table{display:block;overflow-x:auto}pre{padding-right:45px}}
+    @media print{nav,#progress,.copy,.nav-toggle{display:none!important}main{margin:0}article{max-width:none;padding:0}h2{break-before:page}pre{white-space:pre-wrap;color:#000;background:#eee}}
+  </style>
+</head>
+<body>
+<div id="progress"></div>
+<nav aria-label="Tutorial contents">
+  <a class="brand" href="#top">Flyvbjerg <span>Intake-first design tutorial</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false">Show tutorial contents</button>
+  <div class="part">From material to cases</div>
+  <a href="#orientation">1. The new model</a>
+  <a href="#workspace">2. Start an exploration</a>
+  <a href="#research">3. Agent research boundary</a>
+  <a href="#sources">4. Register sources and captures</a>
+  <a href="#items">5. Create intake items</a>
+  <a href="#triage">6. Resolve cases</a>
+  <a href="#events">7. Resolve events</a>
+  <a href="#relationships">8. Relate products</a>
+  <div class="part">From cases to evidence</div>
+  <a href="#dossiers">9. Inspect rich dossiers</a>
+  <a href="#metrics">10. Add metrics later</a>
+  <a href="#coverage">11. Represent missingness</a>
+  <a href="#analysis">12. Freeze an analysis</a>
+  <a href="#edsl">13. Optional EDSL processing</a>
+  <a href="#files">14. What remains on disk</a>
+  <a href="#lessons">15. What the simulation changed</a>
+  <div class="small">Worked design tutorial based on the hand-built Upwork simulation and the Flyvbjerg 0.1 CLI.</div>
+</nav>
+
+<main><article id="top">
+  <header>
+    <div class="eyebrow">Expected Parrot · Real-company design simulation</div>
+    <h1>From an Upwork press release to an auditable product collection</h1>
+    <p class="dek">A press release is not a case, a product is not a launch event, and a company claim is not automatically a metric. This tutorial follows the intake-first workflow that emerged when we modeled real Upwork product announcements by hand.</p>
+    <img class="hero-art" src="flyvbjerg-art.png" alt="An Expected Parrot assembling a Danish historical reference class inside EDSL brackets" width="3364" height="1740">
+  </header>
+
+  <div class="callout warning"><strong>Worked design tutorial.</strong> Flyvbjerg 0.1 now implements the core intake, case, metric, analysis, and bounded EDSL workflow. Some responses below remain illustrative because they expose the intended complete interface, including later convenience commands. The source facts come from real Upwork public materials. See the <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/SPEC.md">specification</a>, <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/PRACTICE.md">practice notes</a>, and <a href="https://github.com/expectedparrot/flyvbjerg/tree/main/simulations/upwork-product-launches">hand-built simulation</a>.</div>
+
+  <section class="contents">
+    <h2>What we are testing</h2>
+    <ol>
+      <li><a href="#sources">Can material exist before cases?</a></li>
+      <li><a href="#triage">Can one source create several cases?</a></li>
+      <li><a href="#events">Can products survive many launch stages?</a></li>
+      <li><a href="#relationships">Can umbrella and atomic products coexist?</a></li>
+      <li><a href="#metrics">Can metrics be applied after collection?</a></li>
+      <li><a href="#coverage">Can absence retain its meaning?</a></li>
+      <li><a href="#analysis">Can heterogeneous evidence fail safely?</a></li>
+      <li><a href="#edsl">Does EDSL remain optional and bounded?</a></li>
+    </ol>
+  </section>
+
+  <section id="orientation">
+    <h2><span class="chapter">1</span>The new model</h2>
+    <p>The original design expected research to produce cases and observations directly. Real Upwork announcements made that unrealistic. A single release introduces several products; a named product appears in many later releases; the same language can describe a beta, rollout, integration, or expansion.</p>
+    <div class="flow">
+      <div class="step"><b>Collect</b><span>Register sources and preserved captures once.</span></div>
+      <div class="step"><b>Extract</b><span>Create small, locatable intake items without forcing identity.</span></div>
+      <div class="step"><b>Resolve</b><span>Form persistent cases, events, and relationships.</span></div>
+      <div class="step"><b>Measure</b><span>Define metrics only when cases support comparison.</span></div>
+      <div class="step"><b>Analyze</b><span>Freeze accepted evidence and expose every gap.</span></div>
+    </div>
+    <div class="grid">
+      <div class="card"><h3>Collection</h3><p>An exploratory corpus such as “Upwork product launches.” It can contain ambiguous material without yet claiming to be a valid reference class.</p></div>
+      <div class="card"><h3>Reference class</h3><p>An approved analytical use of a collection with a versioned unit, membership rule, metric, and analysis set.</p></div>
+    </div>
+    <p>This distinction lets us learn what the entities are before pretending we know how to compare their outcomes.</p>
+  </section>
+
+  <section id="workspace">
+    <h2><span class="chapter">2</span>Start an exploratory collection</h2>
+    <pre class="command"><code>mkdir upwork-launches
+cd upwork-launches
+flyvbjerg init
+flyvbjerg collection new upwork-product-launches \
+  --title "Upwork customer-facing product launches"</code></pre>
+    <details><summary>Show representative response</summary>
+      <pre class="output"><code>{
+  "schema_version": "1.0",
+  "command": "flyvbjerg collection new upwork-product-launches",
+  "status": "ok",
+  "data": {
+    "collection_id": "upwork-product-launches",
+    "state": "exploratory",
+    "cases": 0,
+    "untriaged_items": 0
+  },
+  "artifacts": [{
+    "path": ".flyvbjerg/collections/upwork-product-launches/collection.json",
+    "role": "collection_record",
+    "media_type": "application/json",
+    "sha256": "sha256:..."
+  }],
+  "warnings": [],
+  "errors": [],
+  "next_steps": [{
+    "id": "register_source",
+    "purpose": "Register material found by the research agent",
+    "command": "flyvbjerg source add upwork-product-launches --file PATH --url URL",
+    "mutates_state": true,
+    "requires_network": false,
+    "requires_user_approval": false
+  }]
+}</code></pre>
+    </details>
+    <p>No metric or inclusion rule is required yet. We know only that we want to explore named Upwork customer-facing products and launch activity.</p>
+  </section>
+
+  <section id="research">
+    <h2><span class="chapter">3</span>The agent performs the research</h2>
+    <p>The coding agent searches Upwork’s press-release index and investor materials with its own browser and web tools. Flyvbjerg neither runs these searches nor downloads their results.</p>
+    <table>
+      <thead><tr><th>Agent action</th><th>Flyvbjerg action</th></tr></thead>
+      <tbody>
+        <tr><td>Search Upwork investor relations</td><td>None</td></tr>
+        <tr><td>Open and assess a press release</td><td>None</td></tr>
+        <tr><td>Save an official PDF or permitted HTML capture</td><td>Register and hash the supplied file</td></tr>
+        <tr><td>Notice several product announcements</td><td>Store bounded intake items</td></tr>
+        <tr><td>Decide two names refer to one product</td><td>Record an explicit resolution</td></tr>
+      </tbody>
+    </table>
+    <p>The first pass uses Upwork’s <a href="https://investors.upwork.com/news-releases/news-release-details/upwork-launches-new-generative-ai-tools-and-services-hub">July 2023 AI launch</a>, <a href="https://investors.upwork.com/news-releases/news-release-details/upwork-introduces-new-suite-generative-ai-apps-offers-and">November 2023 Chat Pro release</a>, <a href="https://investors.upwork.com/news-releases/news-release-details/upwork-introduces-upwork-updates-launch-ai-innovations-and-other">Spring 2024 Updates</a>, <a href="https://investors.upwork.com/news-releases/news-release-details/upwork-expands-ai-innovation-and-unveils-new-solutions-better">Fall 2024 Updates</a>, and quarterly results.</p>
+  </section>
+
+  <section id="sources">
+    <h2><span class="chapter">4</span>Register a source and its capture</h2>
+    <p>A source is bibliographic identity; a capture is preserved content. They are separate because one webpage may have an official PDF, extracted Markdown, and later revisions.</p>
+    <pre class="command"><code>flyvbjerg source add upwork-product-launches \
+  --file collected/upwork-spring-2024.pdf \
+  --url https://investors.upwork.com/news-releases/news-release-details/upwork-introduces-upwork-updates-launch-ai-innovations-and-other \
+  --title "Upwork Updates: Spring 2024" \
+  --kind press_release</code></pre>
+    <details><summary>Show the resulting identities</summary>
+      <pre class="output"><code>{
+  "status": "ok",
+  "data": {
+    "source": {
+      "source_id": "src_spring_2024",
+      "publisher": "Upwork Inc.",
+      "published": "2024-04-30",
+      "url": "https://investors.upwork.com/..."
+    },
+    "capture": {
+      "capture_id": "cap_spring_2024_pdf",
+      "original_name": "upwork-spring-2024.pdf",
+      "media_type": "application/pdf",
+      "sha256": "sha256:91a...",
+      "method": "agent_supplied"
+    }
+  },
+  "artifacts": [{
+    "path": ".flyvbjerg/collections/upwork-product-launches/intake/captures/cap_spring_2024_pdf/upwork-spring-2024.pdf",
+    "role": "source_capture",
+    "media_type": "application/pdf",
+    "sha256": "sha256:91a..."
+  }]
+}</code></pre>
+    </details>
+    <div class="callout"><strong>A URL is not a capture.</strong> If the agent registers only a URL, Flyvbjerg records it but warns that no durable local content exists. It never follows the URL itself.</div>
+  </section>
+
+  <section id="items">
+    <h2><span class="chapter">5</span>Create intake items without inventing cases</h2>
+    <p>The Spring 2024 release mentions Uma, Best Match insights, Job Post Generator, Proposal Tips, Chat Pro, Boosted Profiles, Portfolio, Coaching Services, and other offerings. The agent records useful bounded excerpts before deciding what each name represents.</p>
+    <pre class="command"><code>flyvbjerg intake add upwork-product-launches \
+  --source src_spring_2024 \
+  --capture cap_spring_2024_pdf \
+  --kind candidate_entity \
+  --text "The Spring 2024 Update is headlined by Uma, Upwork's Mindful AI." \
+  --locator '{"page":1,"heading":"Introducing Uma"}' \
+  --proposed-name Uma
+
+flyvbjerg intake add upwork-product-launches \
+  --source src_spring_2024 \
+  --capture cap_spring_2024_pdf \
+  --kind candidate_event \
+  --text "Portfolio, now available in beta..." \
+  --locator '{"page":3,"heading":"New Resources for Freelancers"}' \
+  --proposed-name Portfolio</code></pre>
+    <p>Both items are <code>untriaged</code>. Neither creates a product, a launch, or a metric value. The intake record says only: this bounded information may matter, and here is exactly where it came from.</p>
+    <pre class="command"><code>flyvbjerg intake list upwork-product-launches --status untriaged
+flyvbjerg intake next upwork-product-launches</code></pre>
+  </section>
+
+  <section id="triage">
+    <h2><span class="chapter">6</span>Resolve persistent product cases</h2>
+    <p>After reading the July 2023 and Spring 2024 sources together, the agent concludes that Job Post Generator is a persistent product feature discussed in several releases. It resolves the item into a new case.</p>
+    <pre class="command"><code>flyvbjerg intake resolve-case upwork-product-launches item_job_generator \
+  --new-case job-post-generator \
+  --name "Job Post Generator"
+
+flyvbjerg intake resolve-case upwork-product-launches item_job_generator_2024 \
+  --case job-post-generator</code></pre>
+    <p>The first command creates the identity; the second links later material to it. Both immutable resolutions remain. The same pattern creates candidates for Proposal Tips, Upwork Chat Pro, Uma, and Boosted Profiles.</p>
+    <div class="diagram">one source ───────────────┬─→ Uma
+                              ├─→ Job Post Generator
+Spring 2024 press release ────┼─→ Proposal Tips
+                              ├─→ Upwork Chat Pro
+                              ├─→ Boosted Profiles
+                              └─→ Portfolio
+
+one product ←── July 2023 release
+            ←── Spring 2024 release
+            ←── Q3 2024 financial results</div>
+    <p>This many-to-many structure is why sources stay at collection level rather than being copied into every dossier.</p>
+  </section>
+
+  <section id="events">
+    <h2><span class="chapter">7</span>Resolve launch stages as events</h2>
+    <p>Upwork Chat Pro was premiered with a waitlist, later bundled into Freelancer Plus, and later reported 68% quarterly daily-active-user growth. Those are three events involving one persistent case.</p>
+    <pre class="command"><code>flyvbjerg intake resolve-event upwork-product-launches item_chat_pro_premiere \
+  --type beta_announced \
+  --case upwork-chat-pro \
+  --date 2023-11-06 \
+  --date-precision day
+
+flyvbjerg event add upwork-product-launches \
+  --type bundled \
+  --case upwork-chat-pro \
+  --date 2024-05-01 \
+  --source src_2024_q1_results
+
+flyvbjerg event add upwork-product-launches \
+  --type outcome_disclosed \
+  --case upwork-chat-pro \
+  --date 2024-08-07 \
+  --source src_2024_q2_results</code></pre>
+    <table>
+      <thead><tr><th>Date</th><th>Event</th><th>What it does not mean</th></tr></thead>
+      <tbody>
+        <tr><td>2023-11-06</td><td>Beta announced; waitlist opened</td><td>General availability</td></tr>
+        <tr><td>2024-05-01</td><td>Bundled into Freelancer Plus</td><td>A new product identity</td></tr>
+        <tr><td>2024-08-07</td><td>DAU growth disclosed</td><td>Causal proof of product success</td></tr>
+      </tbody>
+    </table>
+    <p>A multi-product Upwork Updates release can also be one event linked to many cases. Events live at collection level and dossiers compose references to them.</p>
+  </section>
+
+  <section id="relationships">
+    <h2><span class="chapter">8</span>Relate umbrella products to features</h2>
+    <p>Uma is described both as an AI technology underlying existing experiences and as a conversational companion. It should not be flattened into the same entity level as every feature it powers.</p>
+    <pre class="command"><code>flyvbjerg relationship add upwork-product-launches \
+  --from job-post-generator \
+  --type powered_by \
+  --to uma \
+  --source src_spring_2024
+
+flyvbjerg relationship add upwork-product-launches \
+  --from upwork-chat-pro \
+  --type powered_by \
+  --to uma \
+  --source src_spring_2024</code></pre>
+    <div class="diagram">Uma  [umbrella AI platform / companion]
+ ├── powers → Job Post Generator
+ ├── powers → Proposal Tips
+ ├── powers → Upwork Chat Pro
+ └── powers → Best Match insights</div>
+    <p>The inverse <code>powers</code> edges are derived. Relationships do not copy observations: Chat Pro’s DAU growth is not Uma-wide adoption, and portfolio revenue is not Boosted Profiles revenue.</p>
+  </section>
+
+  <section id="dossiers">
+    <h2><span class="chapter">9</span>Inspect a rich case dossier</h2>
+    <pre class="command"><code>flyvbjerg case show upwork-product-launches upwork-chat-pro</code></pre>
+    <details open><summary>Hide representative composed dossier</summary>
+      <pre class="output"><code>{
+  "case": {
+    "case_id": "upwork-chat-pro",
+    "name": "Upwork Chat Pro",
+    "entity_type": "integrated_application",
+    "membership": "candidate"
+  },
+  "sources": [
+    "src_2023_11_chat_pro",
+    "src_spring_2024",
+    "src_2024_q1_results",
+    "src_2024_q2_results"
+  ],
+  "events": [
+    {"type":"beta_announced","date":"2023-11-06"},
+    {"type":"bundled","date":"2024-05-01"},
+    {"type":"outcome_disclosed","date":"2024-08-07"}
+  ],
+  "relationships": [
+    {"type":"powered_by","to":"uma"},
+    {"type":"bundled_into","to":"freelancer-plus"}
+  ],
+  "observations": [],
+  "coverage": {},
+  "open_questions": [
+    "Does a waitlist premiere qualify under the eventual class definition?"
+  ]
+}</code></pre>
+    </details>
+    <p>The dossier is composed from shared records; it does not duplicate source or event bodies. Its optional <code>README.md</code> can contain richer agent notes but is not structured evidence by itself.</p>
+  </section>
+
+  <section id="metrics">
+    <h2><span class="chapter">10</span>Add metrics only after seeing what is comparable</h2>
+    <p>The first pass finds heterogeneous disclosures:</p>
+    <ul>
+      <li>Job Post Generator: approximately 70–73% faster job-post completion.</li>
+      <li>Proposal Tips: qualitative faster work acquisition.</li>
+      <li>Chat Pro: daily active users grew 68% quarter over quarter.</li>
+      <li>Boosted Profiles: feature expansion and only portfolio-level revenue.</li>
+      <li>Uma: capability expansion without a clean product-wide adoption figure.</li>
+    </ul>
+    <div class="callout warning"><strong>There is no honest `product_success` metric here.</strong> Defining one would hide different constructs, denominators, and disclosure choices behind one label. The collection is useful even though it is not yet a reference class.</div>
+    <p>We can still define a narrow metric that applies where Upwork actually disclosed it:</p>
+    <pre class="command"><code>flyvbjerg metric add upwork-product-launches daily-active-user-growth-qoq \
+  --kind numeric \
+  --role outcome \
+  --unit percent \
+  --description "Quarter-over-quarter change in product daily active users"</code></pre>
+    <pre class="command"><code>flyvbjerg observation add upwork-product-launches upwork-chat-pro \
+  --metric daily-active-user-growth-qoq \
+  --value 68 \
+  --period 2024Q2 \
+  --source src_2024_q2_results \
+  --locator '{"heading":"Artificial Intelligence"}' \
+  --method reported</code></pre>
+    <p>The observation is a candidate. A separate decision accepts it after checking the source and definition:</p>
+    <pre class="command"><code>flyvbjerg observation decide upwork-product-launches obs_chat_pro_dau_q2 \
+  --accept \
+  --reason "The primary source reports the same construct, period, and unit."</code></pre>
+  </section>
+
+  <section id="coverage">
+    <h2><span class="chapter">11</span>Say why a value is absent</h2>
+    <p>The new metric should not produce four generic nulls. Each product has a different evidence state.</p>
+    <pre class="command"><code>flyvbjerg coverage set upwork-product-launches job-post-generator \
+  --metric daily-active-user-growth-qoq \
+  --state not_disclosed \
+  --reason "Reviewed FY2023 and Q3 2024 disclosures report workflow speed, not DAU growth." \
+  --source src_2024_q3_results
+
+flyvbjerg coverage set upwork-product-launches boosted-profiles \
+  --metric daily-active-user-growth-qoq \
+  --state not_researched \
+  --reason "No bounded review for a product-level DAU disclosure has been completed."
+
+flyvbjerg coverage set upwork-product-launches uma \
+  --metric daily-active-user-growth-qoq \
+  --state not_applicable \
+  --reason "Uma is currently modeled as an umbrella platform, not one atomic application."</code></pre>
+    <table>
+      <thead><tr><th>State</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>not_researched</code></td><td>The agent has not completed a bounded search.</td></tr>
+        <tr><td><code>not_disclosed</code></td><td>Relevant reviewed sources do not disclose the value.</td></tr>
+        <tr><td><code>not_found_in_reviewed_sources</code></td><td>A named capture set was checked without locating it.</td></tr>
+        <tr><td><code>not_applicable</code></td><td>The construct does not apply to this entity.</td></tr>
+        <tr><td><code>censored</code></td><td>The relevant outcome window has not closed.</td></tr>
+        <tr><td><code>conflicted</code></td><td>Supported claims disagree.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="analysis">
+    <h2><span class="chapter">12</span>Freeze an analysis—and let it fail honestly</h2>
+    <pre class="command"><code>flyvbjerg analysis create upwork-product-launches \
+  --name launch-adoption-first-pass \
+  --metric daily-active-user-growth-qoq \
+  --cutoff 2026-08-11</code></pre>
+    <details><summary>Show representative warning response</summary>
+      <pre class="output"><code>{
+  "status": "ok",
+  "data": {
+    "analysis_id": "analysis_launch_adoption_v1",
+    "eligible_cases": 4,
+    "observed_cases": 1,
+    "coverage": {
+      "observed": 1,
+      "not_disclosed": 1,
+      "not_researched": 1,
+      "not_applicable": 1
+    },
+    "reference_distribution_ready": false
+  },
+  "warnings": [
+    {"code":"insufficient_observations","message":"One observation cannot support a reference distribution."},
+    {"code":"mixed_entity_levels","message":"The collection contains umbrella and atomic product entities."}
+  ],
+  "next_steps": [{
+    "id": "inspect_gaps",
+    "purpose": "Review case-specific coverage before attempting a rate",
+    "command": "flyvbjerg gaps upwork-product-launches --metric daily-active-user-growth-qoq",
+    "mutates_state": false,
+    "requires_network": false,
+    "requires_user_approval": false
+  }]
+}</code></pre>
+    </details>
+    <p>This is a successful analytical result: the material does not support the proposed comparison. The tool preserves a useful product corpus without manufacturing a base rate from incompatible disclosures.</p>
+  </section>
+
+  <section id="edsl">
+    <h2><span class="chapter">13</span>Use EDSL only for bounded processing</h2>
+    <p>If the collection grows to dozens of earnings transcripts, the agent may ask Flyvbjerg to package extraction over captures already present in the workspace.</p>
+    <pre class="command"><code>flyvbjerg process plan upwork-product-launches \
+  --name transcript-product-mentions-v1 \
+  --mode extract \
+  --capture cap_q1_2024_transcript \
+  --capture cap_q2_2024_transcript
+
+flyvbjerg process approve run_transcript_mentions_v1
+flyvbjerg process build run_transcript_mentions_v1 \
+  --output .flyvbjerg/collections/upwork-product-launches/runs/run_transcript_mentions_v1</code></pre>
+    <p>The package contains native EDSL Jobs and Models. Flyvbjerg returns—but never runs—the external commands:</p>
+    <pre class="command"><code>ep inspect .flyvbjerg/collections/upwork-product-launches/runs/run_transcript_mentions_v1/jobs.ep
+ep jobs cost .flyvbjerg/collections/upwork-product-launches/runs/run_transcript_mentions_v1/jobs.ep
+ep run .flyvbjerg/collections/upwork-product-launches/runs/run_transcript_mentions_v1/jobs.ep \
+  --output transcript-product-mentions.results.ep</code></pre>
+    <div class="callout danger"><strong>Explicit execution boundary.</strong> The user must inspect the Jobs and authorize model execution. Results are audited against the original Jobs and captures, then ingested as intake items or candidate observations—not accepted facts.</div>
+  </section>
+
+  <section id="files">
+    <h2><span class="chapter">14</span>What remains on disk</h2>
+    <div class="diagram">.flyvbjerg/collections/upwork-product-launches/
+├── collection.json
+├── definition.md
+├── intake/
+│   ├── sources/          shared bibliographic records
+│   ├── captures/         immutable preserved files
+│   ├── items/            untriaged and resolved excerpts
+│   └── resolutions/      how items became domain records
+├── cases/
+│   ├── job-post-generator/
+│   ├── proposal-tips/
+│   ├── upwork-chat-pro/
+│   ├── uma/
+│   └── boosted-profiles/
+├── events/               shared and case-specific lifecycle events
+├── metrics/              definitions added after case construction
+├── analysis-sets/        frozen evidence selections
+└── runs/                 optional EDSL Jobs, Results, audits, retries</div>
+    <p>Run <code>flyvbjerg describe PATH</code> to trace a record or artifact back through its source, capture, intake item, resolution, and decision. Run <code>flyvbjerg next</code> after every material stage so repository state—not chat memory—determines the next action.</p>
+  </section>
+
+  <section id="lessons">
+    <h2><span class="chapter">15</span>What this version gets right</h2>
+    <table>
+      <thead><tr><th>Observed problem</th><th>Design response</th></tr></thead>
+      <tbody>
+        <tr><td>A release mentions many products.</td><td>Register once; create several intake items and resolutions.</td></tr>
+        <tr><td>A product appears in many releases.</td><td>One persistent case with many source links and events.</td></tr>
+        <tr><td>Beta, rollout, bundling, and expansion differ.</td><td>First-class lifecycle events rather than one overloaded launch date.</td></tr>
+        <tr><td>Uma spans atomic features.</td><td>Typed entity levels and relationships.</td></tr>
+        <tr><td>Outcomes use incompatible constructs.</td><td>Metric definitions come later; no generic success score.</td></tr>
+        <tr><td>Missing values have different causes.</td><td>Explicit coverage states rather than null.</td></tr>
+        <tr><td>The corpus may never support a forecast.</td><td>A collection remains valuable without being called a reference class.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><strong>The first implementation target is now concrete.</strong> It should reproduce this intake, triage, case composition, relationship, event, metric, coverage, and failed-analysis flow without model calls. EDSL processing is the second slice; forecasting comes only after a simulation yields genuinely comparable outcomes.</div>
+    <pre class="command"><code>flyvbjerg validate --collection upwork-product-launches
+flyvbjerg next upwork-product-launches</code></pre>
+  </section>
+
+  <footer>
+    <p>This tutorial intentionally shows a collection that does not yet produce a reference-class forecast. That is the point: a useful evidence tool should help an agent discover non-comparability instead of rewarding premature quantification.</p>
+  </footer>
+</article></main>
+
+<script>
+  const nav=document.querySelector('nav'),toggle=document.querySelector('.nav-toggle'),progress=document.getElementById('progress');
+  toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Hide tutorial contents':'Show tutorial contents'});
+  nav.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{if(matchMedia('(max-width: 960px)').matches){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.textContent='Show tutorial contents'}}));
+  document.querySelectorAll('pre').forEach(pre=>{const code=pre.querySelector('code');if(!code)return;const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copy';b.setAttribute('aria-label','Copy code');b.addEventListener('click',async()=>{await navigator.clipboard.writeText(code.innerText);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)});pre.appendChild(b)});
+  addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.width=(h?scrollY/h*100:0)+'%'},{passive:true});
+</script>
+</body>
+</html>

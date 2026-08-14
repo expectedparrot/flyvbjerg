@@ -1,0 +1,6 @@
+{
+  "label": "Conservative worldwide gross multiple",
+  "definition": "Worldwide theatrical gross divided by the reported production-budget upper bound.",
+  "subject_kinds": ["case"],
+  "zero_policy": "Missing inputs remain missing. No failed calculation is zero."
+}

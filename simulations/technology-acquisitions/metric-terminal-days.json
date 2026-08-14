@@ -1,0 +1,13 @@
+{
+  "label": "Days from definitive agreement announcement to terminal state",
+  "definition": "Elapsed calendar days from public definitive-agreement announcement to either legal completion or announced termination. Completion and termination are retained as distinct terminal states.",
+  "subject_kinds": ["case"],
+  "derivation": {
+    "kind": "event_interval",
+    "start_event_type": "definitive_agreement_announced",
+    "end_event_types": ["completed", "terminated"],
+    "selection": "first_terminal_event",
+    "date_precision_required": "day"
+  },
+  "zero_policy": "No terminal event or an unresolved date remains missing or right-censored; it is never zero."
+}

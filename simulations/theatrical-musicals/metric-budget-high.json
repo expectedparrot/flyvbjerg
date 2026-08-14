@@ -1,0 +1,6 @@
+{
+  "label": "Reported production budget upper bound",
+  "definition": "Upper bound of the production budget reported by the registered source, in nominal millions of US dollars.",
+  "subject_kinds": ["case"],
+  "zero_policy": "Missing or malformed budget data remain missing and are never zero."
+}

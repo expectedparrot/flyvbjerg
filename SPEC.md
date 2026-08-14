@@ -496,6 +496,11 @@ Derived observations reference the exact input event or observation ids and the
 metric version. Ambiguous event selection, insufficient date precision, or
 missing endpoints produces a gap, never a guessed duration.
 
+An interval derivation may instead declare `end_event_types` and
+`selection: first_terminal_event`. The derived observation preserves the chosen
+`terminal_event_type`; completion, cancellation, termination, and other terminal
+states therefore remain distinguishable.
+
 ### 3.13 Observation
 
 An **observation** applies one metric version to one subject. A subject may be a
@@ -566,10 +571,21 @@ source process, or other dependence relevant to inference.
 }
 ```
 
-Flyvbjerg reports both subject count and cluster count. It does not claim
-independent observations merely because case ids differ. V0.1 warns and exposes
+Flyvbjerg always reports subject count. It reports cluster count only when
+dependence clusters have been explicitly supplied. Otherwise
+`dependence_status` is `not_assessed` and `n_clusters` is null; distinct case ids
+do not imply independent observations. V0.1 warns and exposes
 leave-one-cluster-out sensitivity; later estimators may model dependence
 directly.
+
+Numeric distributions include nearest-rank empirical quantiles. Read-only
+`locate` operations position a proposed target value against the locked
+distribution, while `threshold` operations report exact matching counts,
+denominators, subject identities, missing subjects, and dependence status.
+`plot` renders an ordered case view or empirical cumulative distribution as a
+deterministic SVG. Each plot has a JSON receipt identifying the locked analysis,
+marker values, and output hash. Plot annotations expose sample size,
+missingness, dependence status, and quantile convention.
 
 A **forecast** applies an analysis-set distribution to a target. The unadjusted
 outside view and any target-specific adjustment are separate stored objects.

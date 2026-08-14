@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>How long do large technology acquisitions take?</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; }
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; }
+code span.at { color: #7d9029; }
+code span.bn { color: #40a070; }
+code span.bu { color: #008000; }
+code span.cf { color: #007020; font-weight: bold; }
+code span.ch { color: #4070a0; }
+code span.cn { color: #880000; }
+code span.co { color: #60a0b0; font-style: italic; }
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; }
+code span.do { color: #ba2121; font-style: italic; }
+code span.dt { color: #902000; }
+code span.dv { color: #40a070; }
+code span.er { color: #ff0000; font-weight: bold; }
+code span.ex { }
+code span.fl { color: #40a070; }
+code span.fu { color: #06287e; }
+code span.im { color: #008000; font-weight: bold; }
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; }
+code span.kw { color: #007020; font-weight: bold; }
+code span.op { color: #666666; }
+code span.ot { color: #007020; }
+code span.pp { color: #bc7a00; }
+code span.sc { color: #4070a0; }
+code span.ss { color: #bb6688; }
+code span.st { color: #4070a0; }
+code span.va { color: #19177c; }
+code span.vs { color: #4070a0; }
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
+</style>
+  <style type="text/css">:root {
+color-scheme: light;
+--ink: #202522;
+--muted: #5f6963;
+--accent: #1f5b49;
+--rule: #d9dfdb;
+--panel: #f4f7f5;
+}
+body {
+color: var(--ink);
+background: #fff;
+font: 17px/1.65 Georgia, "Times New Roman", serif;
+margin: 0 auto;
+max-width: 920px;
+padding: 4rem 2rem 7rem;
+}
+h1, h2, h3 {
+color: #173c31;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+line-height: 1.2;
+}
+h1 { font-size: 2.65rem; margin-bottom: .3rem; }
+h2 { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.4rem; }
+h3 { margin-top: 2rem; }
+p, li { max-width: 78ch; }
+a { color: var(--accent); }
+table {
+border-collapse: collapse;
+display: block;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+font-size: .91rem;
+margin: 1.5rem 0;
+overflow-x: auto;
+width: 100%;
+}
+th, td { border: 1px solid var(--rule); padding: .65rem .75rem; text-align: left; vertical-align: top; }
+th { background: var(--panel); }
+tr:nth-child(even) td { background: #fafbfa; }
+code {
+background: var(--panel);
+border-radius: 3px;
+font-size: .88em;
+padding: .12rem .3rem;
+}
+pre {
+background: var(--panel);
+border-left: 4px solid var(--accent);
+overflow-x: auto;
+padding: 1rem 1.2rem;
+}
+pre code { padding: 0; }
+@media print {
+body { font-size: 11pt; max-width: none; padding: 0; }
+h2 { break-after: avoid; }
+table, pre { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">How long do large technology acquisitions take?</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#how-long-do-large-technology-acquisitions-take" id="toc-how-long-do-large-technology-acquisitions-take">How long do
+large technology acquisitions take?</a>
+<ul>
+<li><a href="#a-wikipedia-supported-reference-class-pilot-for-deal-timing-and-completion-risk" id="toc-a-wikipedia-supported-reference-class-pilot-for-deal-timing-and-completion-risk">A
+Wikipedia-supported reference-class pilot for deal timing and completion
+risk</a></li>
+<li><a href="#decision-brief" id="toc-decision-brief">Decision
+brief</a></li>
+<li><a href="#the-decision-problem" id="toc-the-decision-problem">The
+decision problem</a></li>
+<li><a href="#cohort-construction" id="toc-cohort-construction">Cohort
+construction</a></li>
+<li><a href="#why-wikipedia-works-for-this-pilot" id="toc-why-wikipedia-works-for-this-pilot">Why Wikipedia works for this
+pilot</a></li>
+<li><a href="#results-and-interpretation" id="toc-results-and-interpretation">Results and interpretation</a></li>
+<li><a href="#interpreting-a-12-month-inside-view-estimate" id="toc-interpreting-a-12-month-inside-view-estimate">Interpreting a
+12-month inside-view estimate</a></li>
+<li><a href="#what-the-analysis-does-not-establish" id="toc-what-the-analysis-does-not-establish">What the analysis does not
+establish</a></li>
+<li><a href="#implications-for-flyvbjerg" id="toc-implications-for-flyvbjerg">Implications for Flyvbjerg</a></li>
+<li><a href="#recommended-next-steps" id="toc-recommended-next-steps">Recommended next steps</a></li>
+<li><a href="#audit-and-reproduction" id="toc-audit-and-reproduction">Audit and reproduction</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="how-long-do-large-technology-acquisitions-take">How long do
+large technology acquisitions take?</h1>
+<h2 id="a-wikipedia-supported-reference-class-pilot-for-deal-timing-and-completion-risk">A
+Wikipedia-supported reference-class pilot for deal timing and completion
+risk</h2>
+<h2 id="decision-brief">Decision brief</h2>
+<p>Executives evaluating a large acquisition usually have an inside-view
+schedule: the parties expect to close by a stated quarter, integration
+plans assume a particular date, and financing or investor communications
+reflect that plan. The relevant outside-view question is not whether the
+schedule is possible. It is how that schedule compares with the
+experience of similar announced deals, including agreements that never
+closed.</p>
+<p>This pilot examines ten definitive agreements to acquire technology
+companies. Each was announced between 2015 and 2022 with announced
+consideration of at least $20 billion. Cases entered the cohort when the
+agreement was announced; later completion or termination played no role
+in selection.</p>
+<p>The pilot results are:</p>
+<ul>
+<li>Seven of ten agreements completed and three terminated.</li>
+<li>Time from announcement to completion or termination ranged from 185
+to 637 days.</li>
+<li>The median time to a terminal state was 467 days, approximately 15.3
+months; the mean was 426 days.</li>
+<li>No deal reached a terminal state within six months. Four of ten did
+so within 12 months, eight within 18 months, and all ten within 24
+months.</li>
+<li>Among the seven completed deals, four closed within 12 months and
+six within 18 months.</li>
+</ul>
+<p>For a hypothetical newly announced transaction with a 12-month
+closing estimate, the outside view is cautionary. Twelve months is
+faster than the pilot median, and only 40% of the agreements had reached
+any terminal state by then. That does not mean the target has a 40%
+chance of closing within a year: the seed cohort is small, not yet
+certified exhaustive, and does not adjust for regulatory overlap,
+jurisdictions, deal structure, or transaction-specific facts. It does
+mean that a one-year plan should be presented as relatively aggressive
+rather than historically routine.</p>
+<p>The figures below make the outside-view comparison concrete. Both are
+generated directly from the locked Flyvbjerg analysis and display its
+identity and methodological caveats.</p>
+<figure>
+<img role="img" aria-label="Ordered announcement-to-terminal durations. The 365-day target is faster than six of ten observed cases." src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjUyMCIgdmlld0JveD0iMCAwIDEwMDAgNTIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+Cjx0aXRsZSBpZD0idGl0bGUiPk9yZGVyZWQgb2JzZXJ2YXRpb25zOiB0ZXJtaW5hbF9zdGF0ZV9kdXJhdGlvbl92MjwvdGl0bGU+PGRlc2MgaWQ9ImRlc2MiPkF1ZGl0ZWQgcmVmZXJlbmNlLWNsYXNzIHBsb3QgZm9yIGFuYWx5c2lzXzAxZDBjZGIxMzcwYzQ4MDg8L2Rlc2M+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmYiLz48ZyBmb250LWZhbWlseT0iLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsU2Vnb2UgVUksc2Fucy1zZXJpZiIgZmlsbD0iIzIwMjUyMiI+Cjx0ZXh0IHg9IjQwIiB5PSIzNiIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9IjYwMCI+T3JkZXJlZCBvYnNlcnZhdGlvbnM6IHRlcm1pbmFsX3N0YXRlX2R1cmF0aW9uX3YyPC90ZXh0Pgo8dGV4dCB4PSI0MCIgeT0iNTgiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM1ZjY5NjMiPm1ldHJpYzogdGVybWluYWxfc3RhdGVfZGF5cyB2MjwvdGV4dD4KPGxpbmUgeDE9IjI1MCIgeTE9Ijg1IiB4Mj0iOTQwIiB5Mj0iODUiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iOTAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkVsb24gTXVza+KAk1R3aXR0ZXI8L3RleHQ+PGNpcmNsZSBjeD0iMjgxLjQiIGN5PSI4NSIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjI5MS40IiB5PSI5MCIgZm9udC1zaXplPSIxMyI+MTg1PC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSIxMTkiIHgyPSI5NDAiIHkyPSIxMTkiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iMTI0IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5TYWxlc2ZvcmNl4oCTU2xhY2s8L3RleHQ+PGNpcmNsZSBjeD0iMzQ2LjYiIGN5PSIxMTkiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSIzNTYuNiIgeT0iMTI0IiBmb250LXNpemU9IjEzIj4yMzI8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjE1MyIgeDI9Ijk0MCIgeTI9IjE1MyIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIxNTgiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPklCTeKAk1JlZCBIYXQ8L3RleHQ+PGNpcmNsZSBjeD0iMzc3LjEiIGN5PSIxNTMiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSIzODcuMSIgeT0iMTU4IiBmb250LXNpemU9IjEzIj4yNTQ8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjE4NyIgeDI9Ijk0MCIgeTI9IjE4NyIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIxOTIiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkRlbGzigJNFTUM8L3RleHQ+PGNpcmNsZSBjeD0iNDg0LjAiIGN5PSIxODciIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSI0OTQuMCIgeT0iMTkyIiBmb250LXNpemU9IjEzIj4zMzE8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjIyMSIgeDI9Ijk0MCIgeTI9IjIyMSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIyMjYiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkFkb2Jl4oCTRmlnbWE8L3RleHQ+PGNpcmNsZSBjeD0iNjYxLjYiIGN5PSIyMjEiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSI2NzEuNiIgeT0iMjI2IiBmb250LXNpemU9IjEzIj40NTk8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjI1NSIgeDI9Ijk0MCIgeTI9IjI1NSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIyNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkFNROKAk1hpbGlueDwvdGV4dD48Y2lyY2xlIGN4PSI2ODMuOCIgY3k9IjI1NSIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjY5My44IiB5PSIyNjAiIGZvbnQtc2l6ZT0iMTMiPjQ3NTwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMjg5IiB4Mj0iOTQwIiB5Mj0iMjg5IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjI5NCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+TnZpZGlh4oCTQXJtPC90ZXh0PjxjaXJjbGUgY3g9IjczNi42IiBjeT0iMjg5IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iNzQ2LjYiIHk9IjI5NCIgZm9udC1zaXplPSIxMyI+NTEzPC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSIzMjMiIHgyPSI5NDAiIHkyPSIzMjMiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iMzI4IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5Ccm9hZGNvbeKAk1ZNd2FyZTwvdGV4dD48Y2lyY2xlIGN4PSI3ODEuMCIgY3k9IjMyMyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9Ijc5MS4wIiB5PSIzMjgiIGZvbnQtc2l6ZT0iMTMiPjU0NTwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMzU3IiB4Mj0iOTQwIiB5Mj0iMzU3IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjM2MiIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+TWljcm9zb2Z04oCTQWN0aXZpc2lvbiBCbGl6emFyZDwvdGV4dD48Y2lyY2xlIGN4PSI5MDMuMSIgY3k9IjM1NyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjkxMy4xIiB5PSIzNjIiIGZvbnQtc2l6ZT0iMTMiPjYzMzwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMzkxIiB4Mj0iOTQwIiB5Mj0iMzkxIiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjM5NiIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+UXVhbGNvbW3igJNOWFA8L3RleHQ+PGNpcmNsZSBjeD0iOTA4LjYiIGN5PSIzOTEiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSI5MTguNiIgeT0iMzk2IiBmb250LXNpemU9IjEzIj42Mzc8L3RleHQ+PGxpbmUgeDE9IjUzMS4yIiB5MT0iNjAiIHgyPSI1MzEuMiIgeTI9IjQwMyIgc3Ryb2tlPSIjYzI0ZDJjIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjcgNSIvPjx0ZXh0IHg9IjUzNy4yIiB5PSI1MyIgZmlsbD0iI2MyNGQyYyIgZm9udC1zaXplPSIxNCI+dGFyZ2V0IC8gdGhyZXNob2xkOiAzNjU8L3RleHQ+Cjx0ZXh0IHg9IjQwIiB5PSI0OTUiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM1ZjY5NjMiPm49MTAgwrcgbWlzc2luZz0wIMK3IGRlcGVuZGVuY2U6IG5vdCBhc3Nlc3NlZCDCtyBxdWFudGlsZXM6IG5lYXJlc3RfcmFuayDCtyBhbmFseXNpc18wMWQwY2RiMTM3MGM0ODA4PC90ZXh0PjwvZz48L3N2Zz4=" alt="Ordered announcement-to-terminal durations. The 365-day target is faster than six of ten observed cases." />
+<figcaption aria-hidden="true">Ordered announcement-to-terminal
+durations. The 365-day target is faster than six of ten observed
+cases.</figcaption>
+</figure>
+<p>The ordered view shows a meaningful gap around the target. Four cases
+resolved between 185 and 331 days. The next observed case, Adobe–Figma,
+did not terminate until day 459. A 365-day estimate falls between the
+faster four and slower six, not near the center of a dense group.</p>
+<figure>
+<img role="img" aria-label="Empirical cumulative distribution of announcement-to-terminal duration. At 365 days the observed cumulative fraction is 0.40." src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTQwIiB2aWV3Qm94PSIwIDAgOTAwIDU0MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsbGVkYnk9InRpdGxlIGRlc2MiPgo8dGl0bGUgaWQ9InRpdGxlIj5FbXBpcmljYWwgY3VtdWxhdGl2ZSBkaXN0cmlidXRpb246IHRlcm1pbmFsX3N0YXRlX2R1cmF0aW9uX3YyPC90aXRsZT48ZGVzYyBpZD0iZGVzYyI+QXVkaXRlZCByZWZlcmVuY2UtY2xhc3MgcGxvdCBmb3IgYW5hbHlzaXNfMDFkMGNkYjEzNzBjNDgwODwvZGVzYz4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2ZmZiIvPjxnIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCxTZWdvZSBVSSxzYW5zLXNlcmlmIiBmaWxsPSIjMjAyNTIyIj4KPHRleHQgeD0iNDAiIHk9IjM2IiBmb250LXNpemU9IjIyIiBmb250LXdlaWdodD0iNjAwIj5FbXBpcmljYWwgY3VtdWxhdGl2ZSBkaXN0cmlidXRpb246IHRlcm1pbmFsX3N0YXRlX2R1cmF0aW9uX3YyPC90ZXh0Pgo8dGV4dCB4PSI0MCIgeT0iNTgiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM1ZjY5NjMiPm1ldHJpYzogdGVybWluYWxfc3RhdGVfZGF5cyB2MjwvdGV4dD4KPHBhdGggZD0iTSA4NS4wIDQzMC4wIEwgMTE5LjUgNDMwLjAgTCAxMTkuNSAzOTQuMCBMIDE5MS40IDM5NC4wIEwgMTkxLjQgMzU4LjAgTCAyMjUuMCAzNTguMCBMIDIyNS4wIDMyMi4wIEwgMzQyLjcgMzIyLjAgTCAzNDIuNyAyODYuMCBMIDUzOC40IDI4Ni4wIEwgNTM4LjQgMjUwLjAgTCA1NjIuOCAyNTAuMCBMIDU2Mi44IDIxNC4wIEwgNjIwLjkgMjE0LjAgTCA2MjAuOSAxNzguMCBMIDY2OS44IDE3OC4wIEwgNjY5LjggMTQyLjAgTCA4MDQuMyAxNDIuMCBMIDgwNC4zIDEwNi4wIEwgODEwLjUgMTA2LjAgTCA4MTAuNSA3MC4wIEwgODQ1LjAgNzAuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMWY1YjQ5IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iMzk0LjciIHkxPSI3MCIgeDI9IjM5NC43IiB5Mj0iNDMwIiBzdHJva2U9IiNjMjRkMmMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNyA1Ii8+PHRleHQgeD0iNDAwLjciIHk9Ijg4IiBmaWxsPSIjYzI0ZDJjIiBmb250LXNpemU9IjE0Ij50YXJnZXQgLyB0aHJlc2hvbGQ6IDM2NTwvdGV4dD48bGluZSB4MT0iODUuMCIgeTE9IjQzMCIgeDI9Ijg1LjAiIHkyPSI0MzYiIHN0cm9rZT0iIzM0NDEzYiIvPjx0ZXh0IHg9Ijg1LjAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMyI+MTYyPC90ZXh0PjxsaW5lIHgxPSI3OSIgeTE9IjQzMC4wIiB4Mj0iODUiIHkyPSI0MzAuMCIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iNzMiIHk9IjQzNC4wIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjEzIj4wLjA8L3RleHQ+PGxpbmUgeDE9IjIzNy4wIiB5MT0iNDMwIiB4Mj0iMjM3LjAiIHkyPSI0MzYiIHN0cm9rZT0iIzM0NDEzYiIvPjx0ZXh0IHg9IjIzNy4wIiB5PSI0NTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTMiPjI2MjwvdGV4dD48bGluZSB4MT0iNzkiIHkxPSIzNTguMCIgeDI9Ijg1IiB5Mj0iMzU4LjAiIHN0cm9rZT0iIzM0NDEzYiIvPjx0ZXh0IHg9IjczIiB5PSIzNjIuMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxMyI+MC4yPC90ZXh0PjxsaW5lIHgxPSIzODkuMCIgeTE9IjQzMCIgeDI9IjM4OS4wIiB5Mj0iNDM2IiBzdHJva2U9IiMzNDQxM2IiLz48dGV4dCB4PSIzODkuMCIgeT0iNDU1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEzIj4zNjE8L3RleHQ+PGxpbmUgeDE9Ijc5IiB5MT0iMjg2LjAiIHgyPSI4NSIgeTI9IjI4Ni4wIiBzdHJva2U9IiMzNDQxM2IiLz48dGV4dCB4PSI3MyIgeT0iMjkwLjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTMiPjAuNDwvdGV4dD48bGluZSB4MT0iNTQxLjAiIHkxPSI0MzAiIHgyPSI1NDEuMCIgeTI9IjQzNiIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iNTQxLjAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMyI+NDYxPC90ZXh0PjxsaW5lIHgxPSI3OSIgeTE9IjIxNC4wIiB4Mj0iODUiIHkyPSIyMTQuMCIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iNzMiIHk9IjIxOC4wIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjEzIj4wLjY8L3RleHQ+PGxpbmUgeDE9IjY5My4wIiB5MT0iNDMwIiB4Mj0iNjkzLjAiIHkyPSI0MzYiIHN0cm9rZT0iIzM0NDEzYiIvPjx0ZXh0IHg9IjY5My4wIiB5PSI0NTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTMiPjU2MDwvdGV4dD48bGluZSB4MT0iNzkiIHkxPSIxNDIuMCIgeDI9Ijg1IiB5Mj0iMTQyLjAiIHN0cm9rZT0iIzM0NDEzYiIvPjx0ZXh0IHg9IjczIiB5PSIxNDYuMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxMyI+MC44PC90ZXh0PjxsaW5lIHgxPSI4NDUuMCIgeTE9IjQzMCIgeDI9Ijg0NS4wIiB5Mj0iNDM2IiBzdHJva2U9IiMzNDQxM2IiLz48dGV4dCB4PSI4NDUuMCIgeT0iNDU1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEzIj42NjA8L3RleHQ+PGxpbmUgeDE9Ijc5IiB5MT0iNzAuMCIgeDI9Ijg1IiB5Mj0iNzAuMCIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iNzMiIHk9Ijc0LjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTMiPjEuMDwvdGV4dD4KPHRleHQgeD0iNDAiIHk9IjUxNSIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzVmNjk2MyI+bj0xMCDCtyBtaXNzaW5nPTAgwrcgZGVwZW5kZW5jZTogbm90IGFzc2Vzc2VkIMK3IHF1YW50aWxlczogbmVhcmVzdF9yYW5rIMK3IGFuYWx5c2lzXzAxZDBjZGIxMzcwYzQ4MDg8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Empirical cumulative distribution of announcement-to-terminal duration. At 365 days the observed cumulative fraction is 0.40." />
+<figcaption aria-hidden="true">Empirical cumulative distribution of
+announcement-to-terminal duration. At 365 days the observed cumulative
+fraction is 0.40.</figcaption>
+</figure>
+<p>Reading vertically at 365 days gives 0.40. Reading horizontally from
+0.50 places the nearest-rank empirical P50 at 459 days, while the
+conventional even-sample median is 467 days. The chart uses steps rather
+than a smoothed curve because ten observations do not justify invented
+continuity or precision.</p>
+<p>The product lesson is that a decision-facing reference-class tool
+must connect individual historical cases, the empirical distribution, a
+target estimate, and a decision threshold without hiding missingness or
+dependence assumptions.</p>
+<h2 id="the-decision-problem">The decision problem</h2>
+<p>The period between signing and terminal resolution creates real
+exposure. The buyer and target must retain employees, operate under
+restrictions, maintain financing, answer regulators, and plan for an
+integration that may be delayed or never occur. A schedule that is too
+optimistic can distort financing costs, synergy timing, retention
+programs, product road maps, and communications with boards and
+investors.</p>
+<p>An individual deal team will naturally emphasize its own legal
+analysis, regulatory strategy, and expected timetable. Those facts
+matter. But they can also produce overconfidence because every
+transaction appears unique from the inside. Reference-class analysis
+supplies a disciplined baseline before transaction-specific adjustments
+are applied.</p>
+<p>The useful questions are:</p>
+<ol type="1">
+<li>How long did comparable announced agreements take to reach
+completion or termination?</li>
+<li>What fraction completed at all?</li>
+<li>What fraction resolved within the planning threshold?</li>
+<li>Is management’s schedule near the historical center or in an
+optimistic tail?</li>
+<li>Which target-specific facts justify moving away from the outside
+view?</li>
+</ol>
+<p>This pilot addresses the first four questions descriptively. It does
+not yet estimate a causal effect of deal characteristics or produce an
+adjusted probability for a specific transaction.</p>
+<h2 id="cohort-construction">Cohort construction</h2>
+<p>The pilot unit is one publicly announced definitive acquisition
+agreement. The seed inclusion rule requires:</p>
+<ul>
+<li>an agreement announced from 2015 through 2022;</li>
+<li>a target whose principal business is technology;</li>
+<li>announced consideration of at least $20 billion; and</li>
+<li>a definitive agreement rather than an informal or hostile
+proposal.</li>
+</ul>
+<p>Transaction value is assessed at announcement. This matters for stock
+deals, whose reported value can change before closing. Realized
+consideration is a different measurement and should not silently alter
+eligibility.</p>
+<p>The cohort includes terminated agreements. Excluding them would
+select on the outcome and answer only, “How long did the deals that
+eventually completed take to close?” That conditional question can be
+useful, but it cannot estimate the experience facing a decision-maker at
+announcement.</p>
+<p>The ten seed cases are Dell–EMC, Qualcomm–NXP, IBM–Red Hat,
+AMD–Xilinx, Salesforce–Slack, Nvidia–Arm, Microsoft–Activision Blizzard,
+Broadcom–VMware, Adobe–Figma, and Elon Musk–Twitter.</p>
+<p>The cohort is documented but not yet proven exhaustive. Before using
+its completion share as a market base rate, it should be checked against
+an independent enumeration of every qualifying announcement. Complete
+measurement of the cases already found is not the same as complete
+discovery of the reference class.</p>
+<h2 id="why-wikipedia-works-for-this-pilot">Why Wikipedia works for this
+pilot</h2>
+<p>Large acquisitions commonly have dedicated Wikipedia pages or
+substantial sections in company histories. These pages often state the
+parties, announced value, definitive-agreement date, completion or
+termination date, regulatory challenges, and successor identity. They
+also link to company announcements, regulatory documents, and
+contemporaneous reporting.</p>
+<p>That makes Wikipedia effective best-available evidence for a
+first-pass chronology. It is not treated as infallible. Exact dates were
+registered with their page identities, and absence from a page was never
+treated as proof that an event did not occur. Claims that determine a
+disputed cohort boundary or assert an absence would merit checking
+against the page’s underlying sources.</p>
+<p>Representative pages include <a href="https://en.wikipedia.org/wiki/Dell">Dell</a>, <a href="https://en.wikipedia.org/wiki/Red_Hat">Red Hat</a>, <a href="https://en.wikipedia.org/wiki/Xilinx">Xilinx</a>, <a href="https://en.wikipedia.org/wiki/Salesforce">Salesforce</a>, <a href="https://en.wikipedia.org/wiki/Acquisition_of_Activision_Blizzard_by_Microsoft">Microsoft–Activision
+Blizzard</a>, and <a href="https://en.wikipedia.org/wiki/Broadcom">Broadcom</a>.</p>
+<h2 id="results-and-interpretation">Results and interpretation</h2>
+<h3 id="deal-level-chronology-behind-the-ordered-plot">Deal-level
+chronology behind the ordered plot</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 16%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th>Agreement</th>
+<th style="text-align: right;">Announced</th>
+<th style="text-align: right;">Terminal date</th>
+<th>State</th>
+<th style="text-align: right;">Days</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elon Musk–Twitter</td>
+<td style="text-align: right;">2022-04-25</td>
+<td style="text-align: right;">2022-10-27</td>
+<td>Completed</td>
+<td style="text-align: right;">185</td>
+</tr>
+<tr>
+<td>Salesforce–Slack</td>
+<td style="text-align: right;">2020-12-01</td>
+<td style="text-align: right;">2021-07-21</td>
+<td>Completed</td>
+<td style="text-align: right;">232</td>
+</tr>
+<tr>
+<td>IBM–Red Hat</td>
+<td style="text-align: right;">2018-10-28</td>
+<td style="text-align: right;">2019-07-09</td>
+<td>Completed</td>
+<td style="text-align: right;">254</td>
+</tr>
+<tr>
+<td>Dell–EMC</td>
+<td style="text-align: right;">2015-10-12</td>
+<td style="text-align: right;">2016-09-07</td>
+<td>Completed</td>
+<td style="text-align: right;">331</td>
+</tr>
+<tr>
+<td>Adobe–Figma</td>
+<td style="text-align: right;">2022-09-15</td>
+<td style="text-align: right;">2023-12-18</td>
+<td>Terminated</td>
+<td style="text-align: right;">459</td>
+</tr>
+<tr>
+<td>AMD–Xilinx</td>
+<td style="text-align: right;">2020-10-27</td>
+<td style="text-align: right;">2022-02-14</td>
+<td>Completed</td>
+<td style="text-align: right;">475</td>
+</tr>
+<tr>
+<td>Nvidia–Arm</td>
+<td style="text-align: right;">2020-09-13</td>
+<td style="text-align: right;">2022-02-08</td>
+<td>Terminated</td>
+<td style="text-align: right;">513</td>
+</tr>
+<tr>
+<td>Broadcom–VMware</td>
+<td style="text-align: right;">2022-05-26</td>
+<td style="text-align: right;">2023-11-22</td>
+<td>Completed</td>
+<td style="text-align: right;">545</td>
+</tr>
+<tr>
+<td>Microsoft–Activision Blizzard</td>
+<td style="text-align: right;">2022-01-18</td>
+<td style="text-align: right;">2023-10-13</td>
+<td>Completed</td>
+<td style="text-align: right;">633</td>
+</tr>
+<tr>
+<td>Qualcomm–NXP</td>
+<td style="text-align: right;">2016-10-27</td>
+<td style="text-align: right;">2018-07-26</td>
+<td>Terminated</td>
+<td style="text-align: right;">637</td>
+</tr>
+</tbody>
+</table>
+<p>The table is the audit-friendly counterpart to the ordered plot. The
+fastest terminal event still took slightly more than six months. Four
+transactions resolved in less than a year, while four others clustered
+between roughly 15 and 18 months. Two took about 21 months.</p>
+<h3 id="threshold-view">Threshold view</h3>
+<table>
+<thead>
+<tr>
+<th>Planning threshold</th>
+<th style="text-align: right;">All terminal states</th>
+<th style="text-align: right;">Completed by threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6 months</td>
+<td style="text-align: right;">0/10 (0%)</td>
+<td style="text-align: right;">0/10 (0%)</td>
+</tr>
+<tr>
+<td>12 months</td>
+<td style="text-align: right;">4/10 (40%)</td>
+<td style="text-align: right;">4/10 (40%)</td>
+</tr>
+<tr>
+<td>18 months</td>
+<td style="text-align: right;">8/10 (80%)</td>
+<td style="text-align: right;">6/10 (60%)</td>
+</tr>
+<tr>
+<td>24 months</td>
+<td style="text-align: right;">10/10 (100%)</td>
+<td style="text-align: right;">7/10 (70%)</td>
+</tr>
+</tbody>
+</table>
+<p>The columns answer different questions. “All terminal states”
+measures when uncertainty ended, regardless of result. “Completed by
+threshold” measures whether the acquisition had actually closed. At 18
+months, two terminated agreements had resolved in addition to six
+completed deals; treating all eight as successful closings would be a
+serious error.</p>
+<p>The ECDF plots time to any terminal state. It does not yet
+distinguish completion and termination visually, so the table remains
+necessary to prevent the duration curve from being read as a
+closing-probability curve.</p>
+<h3 id="completion-conditioned-view">Completion-conditioned view</h3>
+<p>Among the seven deals that ultimately completed, the median closing
+time was 331 days and the mean approximately 379 days. Four of seven
+closed within 12 months and six of seven within 18 months.</p>
+<p>Among the three terminated deals, terminal durations were 459, 513,
+and 637 days. This small comparison suggests that failure was not
+necessarily resolved quickly: parties could remain exposed for well over
+a year before termination. It should not be interpreted as a stable
+estimate of how long failed deals take because only three such cases are
+present.</p>
+<h2 id="interpreting-a-12-month-inside-view-estimate">Interpreting a
+12-month inside-view estimate</h2>
+<p>Suppose management expects a newly announced qualifying acquisition
+to close within 12 months.</p>
+<p>The unadjusted pilot says:</p>
+<ul>
+<li>12 months is below the 467-day reference median;</li>
+<li>4/10 agreements reached any terminal state within that
+interval;</li>
+<li>the same 4/10 completed within it; and</li>
+<li>6/10 remained unresolved after one year.</li>
+</ul>
+<p>The correct decision statement is not “the deal has a 40% chance of
+closing.” It is:</p>
+<blockquote>
+<p>In this ten-case seed cohort, a 12-month schedule was achieved by
+four deals and was faster than the median terminal timetable. Management
+should identify the transaction-specific facts that justify planning
+toward the faster part of the historical range.</p>
+</blockquote>
+<p>Potential adjustments might include the number of reviewing
+jurisdictions, horizontal overlap, remedies anticipated at signing,
+political sensitivity, financing constraints, and whether the parties’
+initial guidance already allowed for an extended review. Those
+adjustments must remain explicit. They should not overwrite the
+reference distribution or be smuggled into a revised forecast without a
+stated rationale.</p>
+<p>A practical plan could use separate dates for:</p>
+<ul>
+<li>an operating target or management objective;</li>
+<li>a base planning assumption near the outside-view center;</li>
+<li>a reserve date covering a larger share of historical cases; and</li>
+<li>a long-stop or termination scenario.</li>
+</ul>
+<p>In this pilot, 18 months covers 80% of terminal resolutions but only
+60% of all announced agreements as completed transactions. Twenty-four
+months covers all observed terminal resolutions, including three
+terminations. The distinction should flow into financing, retention, and
+integration-contingency planning.</p>
+<h2 id="what-the-analysis-does-not-establish">What the analysis does not
+establish</h2>
+<p>Several limitations are material:</p>
+<ol type="1">
+<li><strong>The seed cohort may be incomplete.</strong> It has not been
+reconciled against an authoritative enumeration of all $20B-plus
+technology agreements.</li>
+<li><strong>Ten cases are few.</strong> Every deal moves the completion
+rate by ten percentage points.</li>
+<li><strong>Dependence is unassessed.</strong> The transactions share
+regulatory authorities, jurisdictions, macroeconomic periods, and policy
+regimes. The absence of a registered cluster does not make them ten
+independent experiments.</li>
+<li><strong>The cohort is heterogeneous.</strong> Semiconductor,
+enterprise-software, gaming, social-media, and infrastructure deals may
+face different review processes.</li>
+<li><strong>Terminal-state analysis is not survival analysis.</strong>
+There are no pending cases in this historical seed. A live extension
+would need right censoring.</li>
+<li><strong>No causal adjustment is estimated.</strong> The pilot does
+not show that size, sector, or regulatory opposition causes a specified
+delay.</li>
+<li><strong>The thresholds use simple calendar approximations.</strong>
+Production tooling should define whether a “month” means a
+calendar-month anniversary or a fixed number of days.</li>
+</ol>
+<p>These limitations reduce the strength of the forecast; they do not
+eliminate the value of seeing that a one-year schedule is historically
+aggressive in the observed set.</p>
+<h2 id="implications-for-flyvbjerg">Implications for Flyvbjerg</h2>
+<p>This business example identifies a compact set of general analytical
+features.</p>
+<h3 id="empirical-quantiles">Empirical quantiles</h3>
+<p>The revised analysis artifact now reports nearest-rank empirical
+quantiles in addition to count, minimum, median, maximum, and mean. The
+convention is explicit because nearest-rank P50 need not equal the
+average-of-middle-values median in an even sample.</p>
+<h3 id="target-location">Target location</h3>
+<p><code>flyvbjerg locate</code> now positions a target or inside-view
+estimate against a locked analysis without changing historical
+observations. For 365 days it reports empirical rank 0.4, 102 days below
+the median, a ratio to median of 0.782, and the case identities above
+and below the estimate.</p>
+<h3 id="threshold-frequencies">Threshold frequencies</h3>
+<p><code>flyvbjerg threshold</code> now counts observations satisfying a
+declared comparison and reports the denominator, matching and
+nonmatching identities, missing subjects, and dependence status. The
+operation is numeric and generic rather than acquisition-specific.</p>
+<h3 id="competing-outcomes-and-stratification">Competing outcomes and
+stratification</h3>
+<p>Completion and termination cannot be collapsed. Analyses need
+transparent stratification or linked metrics so that
+duration-to-resolution and probability-of-completion remain
+separate.</p>
+<h3 id="cohort-discovery-status">Cohort-discovery status</h3>
+<p>Observation coverage answers whether values are known for registered
+cases. Cohort-discovery status answers whether all eligible cases were
+likely found. The package should report both without elaborate evidence
+scoring.</p>
+<h3 id="dependence-not-assessed">Dependence not assessed</h3>
+<p>Flyvbjerg now reports <code>dependence_status: not_assessed</code>
+and a null cluster count when no dependence groups are supplied,
+avoiding an affirmative independence claim.</p>
+<h3 id="decision-brief-1">Decision brief</h3>
+<p>The final output should compose rather than invent evidence: target
+question, reference class, raw distribution, target position, threshold
+frequencies, explicit adjustments, sensitivity, missingness, cohort
+status, and supported non-conclusions.</p>
+<h3 id="audited-plotting">Audited plotting</h3>
+<p>Flyvbjerg now generates deterministic SVGs from locked analysis
+artifacts:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">flyvbjerg</span> plot analysis_01d0cdb1370c4808 <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--kind</span> ordered <span class="at">--target-value</span> 365 <span class="at">--threshold</span> 365 <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> plots/terminal-duration-ordered.svg</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">flyvbjerg</span> plot analysis_01d0cdb1370c4808 <span class="dt">\</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--kind</span> ecdf <span class="at">--target-value</span> 365 <span class="at">--threshold</span> 365 <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> plots/terminal-duration-ecdf.svg</span></code></pre></div>
+<p>Each SVG has a JSON receipt identifying the analysis, plot kind,
+marker values, creation time, and content hash. Its footer reports
+sample size, missingness, dependence status, and quantile convention.
+Histograms and smoothed densities are deliberately omitted because their
+bins or smoothing would be misleading at n=10.</p>
+<h2 id="recommended-next-steps">Recommended next steps</h2>
+<p>For the analysis:</p>
+<ol type="1">
+<li>Audit the seed cases against an independent transaction
+enumeration.</li>
+<li>Resolve any missing qualifying deals before calling the completion
+share a base rate.</li>
+<li>Define dependence groupings or explicitly leave dependence
+unassessed.</li>
+<li>Add announcement-era management closing guidance and compare planned
+with realized timing.</li>
+<li>Add a live or hypothetical target only after its value, overlap,
+jurisdictions, and guidance are specified.</li>
+</ol>
+<p>The first package slice—quantiles, <code>locate</code>,
+<code>threshold</code>, multi-terminal derivation, non-assumptive
+dependence, and audited plotting—is complete. The next slice should be
+smaller still:</p>
+<ol type="1">
+<li>explicit stratification by another accepted metric;</li>
+<li>cohort-enumeration status distinct from metric coverage; and</li>
+<li>a composed decision brief.</li>
+</ol>
+<h2 id="audit-and-reproduction">Audit and reproduction</h2>
+<p>The Flyvbjerg workspace stores ten cases, twenty dated events, two
+metric definitions, twenty accepted observations, explicit coverage
+states, and two analysis sets. The principal artifacts are:</p>
+<ul>
+<li>terminal-state duration (metric v2):
+<code>analysis_01d0cdb1370c4808</code>;</li>
+<li>completion status: <code>analysis_b32546cda4ca4bd2</code>.</li>
+</ul>
+<p>Reproduce the registered calculations with:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>../../src <span class="ex">python</span> <span class="at">-m</span> flyvbjerg validate</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>../../src <span class="ex">python</span> <span class="at">-m</span> flyvbjerg rate analysis_01d0cdb1370c4808</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>../../src <span class="ex">python</span> <span class="at">-m</span> flyvbjerg threshold analysis_01d0cdb1370c4808 <span class="at">--operator</span> le <span class="at">--value</span> 365</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>../../src <span class="ex">python</span> <span class="at">-m</span> flyvbjerg locate analysis_01d0cdb1370c4808 <span class="at">--value</span> 365 <span class="at">--label</span> management_estimate</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>../../src <span class="ex">python</span> <span class="at">-m</span> flyvbjerg plot analysis_01d0cdb1370c4808 <span class="at">--kind</span> ecdf <span class="at">--target-value</span> 365 <span class="at">--threshold</span> 365 <span class="at">--output</span> plots/terminal-duration-ecdf.svg</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>../../src <span class="ex">python</span> <span class="at">-m</span> flyvbjerg plot analysis_01d0cdb1370c4808 <span class="at">--kind</span> ordered <span class="at">--target-value</span> 365 <span class="at">--threshold</span> 365 <span class="at">--output</span> plots/terminal-duration-ordered.svg</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>../../src <span class="ex">python</span> <span class="at">-m</span> flyvbjerg rate analysis_b32546cda4ca4bd2</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>../../src <span class="ex">python</span> <span class="at">-m</span> flyvbjerg next</span></code></pre></div>
+<p>No EDSL Job was built or executed, no paid model call was made, and
+no credentials are stored in the simulation.</p>
+</body>
+</html>

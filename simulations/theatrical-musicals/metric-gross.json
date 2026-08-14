@@ -1,0 +1,6 @@
+{
+  "label": "Worldwide theatrical box-office gross",
+  "definition": "Worldwide theatrical box-office gross reported by the registered source, in nominal millions of US dollars.",
+  "subject_kinds": ["case"],
+  "zero_policy": "Missing or malformed box-office data remain missing and are never zero."
+}
