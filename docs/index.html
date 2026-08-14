@@ -1,599 +1,343 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="description" content="An auditable reference-class analysis of production budgets and worldwide box office for 18 theatrical adaptations of stage musicals." />
-  <title>Do theatrical adaptations of stage musicals make money?</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A worked Flyvbjerg tutorial building an auditable reference-class analysis of theatrical stage-musical adaptations.">
+  <title>Expected Parrot | Theatrical musical economics with Flyvbjerg</title>
   <style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-
-ul.task-list[class]{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-font-size: inherit;
-width: 0.8em;
-margin: 0 0.8em 0.2em -1.6em;
-vertical-align: middle;
-}
-.display.math{display: block; text-align: center; margin: 0.5rem auto;}
-</style>
-  <style type="text/css">:root { color-scheme: light; --ink:#202522; --muted:#5f6963; --accent:#5b315f; --rule:#ddd8df; --panel:#f7f3f8; }
-html { background:#fff; -webkit-text-size-adjust:100%; }
-body { color:var(--ink); font:17px/1.65 Georgia,"Times New Roman",serif; margin:0 auto; max-width:960px; padding:4rem 2rem 7rem; }
-.site-nav { align-items:center; border-bottom:1px solid var(--rule); display:flex; flex-wrap:wrap; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:.88rem; gap:1rem; justify-content:space-between; margin-bottom:3rem; padding-bottom:1rem; }
-.site-nav strong { color:#432347; }
-.site-nav span { display:flex; flex-wrap:wrap; gap:1rem; }
-h1,h2,h3 { color:#432347; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.2; }
-h1 { font-size:2.7rem; margin-bottom:.35rem; }
-h2 { border-top:1px solid var(--rule); margin-top:3rem; padding-top:1.4rem; }
-h3 { margin-top:2rem; }
-p,li { max-width:80ch; }
-a { color:var(--accent); }
-table { border-collapse:collapse; display:block; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:.87rem; margin:1.5rem 0; overflow-x:auto; width:100%; }
-th,td { border-bottom:1px solid var(--rule); padding:.55rem .7rem; text-align:left; }
-th { background:var(--panel); color:#432347; }
-img { display:block; height:auto; margin:2rem auto; max-width:100%; }
-blockquote { border-left:4px solid var(--accent); color:var(--muted); margin-left:0; padding-left:1rem; }
-code { background:var(--panel); border-radius:3px; padding:.1rem .25rem; }
-@media (max-width:650px) { body { font-size:16px; padding:2rem 1rem 4rem; } h1 { font-size:2.1rem; } }
-@media print { body { max-width:none; padding:0; } a { color:inherit; } }
-</style>
+    :root{--ink:#172019;--muted:#637067;--paper:#fff;--wash:#f4f7f3;--line:#dce5dc;--green:#167a43;--pale:#eaf6ed;--amber:#9a5a00;--amber-bg:#fff6df;--red:#a43737;--red-bg:#fff0ef;--code:#17231c;--measure:790px;--sans:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Georgia,"Times New Roman",serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.68 var(--sans)}#progress{position:fixed;z-index:30;top:0;left:0;width:0;height:3px;background:var(--green)}
+    nav{position:fixed;inset:0 auto 0 0;width:286px;overflow:auto;padding:34px 27px;background:var(--wash);border-right:1px solid var(--line)}nav .brand{display:block;margin-bottom:23px;color:var(--ink);font:700 22px/1.15 var(--serif);text-decoration:none}nav .brand span{display:block;margin-top:5px;color:var(--green);font:800 10px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase}nav .part{margin:21px 0 7px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}nav>a:not(.brand){display:block;padding:4px 0;color:#435047;font-size:13px;line-height:1.35;text-decoration:none}nav>a:not(.brand):hover{color:var(--green)}nav .small{margin-top:25px;color:var(--muted);font-size:12px}.nav-toggle{display:none;width:100%;margin-bottom:14px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;text-align:left}
+    main{margin-left:286px}article{max-width:1130px;padding:58px 68px 100px}header{padding-bottom:45px;border-bottom:1px solid var(--line)}.hero-art{display:block;width:100%;max-width:960px;height:auto;margin:34px 0 0;border:1px solid var(--line);border-radius:10px}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}h1{max-width:880px;margin:12px 0 18px;font:700 clamp(42px,6vw,70px)/1.02 var(--serif);letter-spacing:-.035em}h2{max-width:850px;margin:0 0 20px;font:700 35px/1.12 var(--serif);letter-spacing:-.02em}h3{max-width:var(--measure);margin:34px 0 8px;font:700 22px/1.25 var(--serif)}.dek{max-width:870px;margin:0;color:#455248;font:20px/1.55 var(--serif)}section{padding:60px 0;border-bottom:1px solid var(--line)}p,ul,ol,table,pre,.callout,.diagram,.artifact{max-width:var(--measure)}a{color:var(--green)}code{padding:.14em .35em;background:#eef2ee;border-radius:4px;font:88% var(--mono)}
+    pre{position:relative;overflow:auto;margin:18px 0 26px;padding:20px 58px 20px 22px;color:#d9e7dc;background:var(--code);border-radius:8px;font:13px/1.58 var(--mono)}pre code{padding:0;color:inherit;background:none}.command{border-left:4px solid #3cad69}.output{border-left:4px solid #83958a}.copy{position:absolute;top:10px;right:10px;padding:5px 8px;color:#d8ebe0;background:#34453b;border:0;border-radius:5px;font:11px var(--sans);cursor:pointer}.copy:hover{background:var(--green)}
+    .chapter{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;margin-right:10px;color:#fff;background:var(--green);border-radius:50%;font:800 15px var(--sans);vertical-align:5px}.callout{margin:24px 0;padding:18px 20px;background:var(--pale);border-left:4px solid var(--green);border-radius:0 7px 7px 0}.callout.warning{background:var(--amber-bg);border-color:#d28a1b}.callout.danger{background:var(--red-bg);border-color:var(--red)}.callout p:first-child{margin-top:0}.callout p:last-child{margin-bottom:0}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;max-width:960px;margin:28px 0}.step{position:relative;min-height:118px;padding:15px 13px;background:var(--wash);border:1px solid var(--line);border-radius:8px}.step b{display:block;margin-bottom:7px;color:var(--green);font-size:11px;text-transform:uppercase}.step span{font-size:13px;line-height:1.4}.step:not(:last-child):after{content:"→";position:absolute;z-index:2;top:43px;right:-15px;color:var(--green);font-size:20px;font-weight:800}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:920px;margin:24px 0}.card{padding:20px;background:var(--wash);border:1px solid var(--line);border-radius:8px}.card h3{margin-top:0}.card p:last-child{margin-bottom:0}.artifact{display:grid;grid-template-columns:180px 1fr;gap:16px;margin:10px 0;padding:14px 0;border-bottom:1px solid var(--line)}.artifact code{align-self:start}.artifact p{margin:0;color:#455248;font-size:14px}
+    table{width:100%;margin:20px 0 28px;border-collapse:collapse;font-size:14px}th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:#405047;background:var(--wash);font-size:11px;letter-spacing:.06em;text-transform:uppercase}.good{color:var(--green);font-weight:750}.bad{color:var(--red);font-weight:750}.muted{color:var(--muted)}details{max-width:var(--measure);margin:14px 0 25px}summary{color:var(--green);font-size:13px;font-weight:750;cursor:pointer}details[open] summary{margin-bottom:8px}.diagram{overflow:auto;margin:24px 0;padding:20px;color:#d9e7dc;background:var(--code);border-radius:8px;font:13px/1.55 var(--mono);white-space:pre}.contents{padding:30px 0}.contents ol{columns:2;column-gap:44px;max-width:850px}.contents li{break-inside:avoid;margin:5px 0}.contents a{text-decoration:none}footer{padding-top:38px;color:var(--muted);font-size:13px}
+    @media(max-width:960px){nav{position:static;width:auto;padding:22px 24px;border-right:0;border-bottom:1px solid var(--line)}.nav-toggle{display:block}nav .part,nav>a:not(.brand),nav .small{display:none}nav.open .part{display:block}nav.open>a:not(.brand){display:block}nav.open .small{display:block}nav .brand{margin-bottom:12px}main{margin-left:0}article{padding:38px 25px 80px}.flow{grid-template-columns:1fr}.step{min-height:auto}.step:not(:last-child):after{display:none}}
+    @media(max-width:650px){h2{font-size:29px}.grid{grid-template-columns:1fr}.contents ol{columns:1}.artifact{grid-template-columns:1fr}table{display:block;overflow-x:auto}pre{padding-right:45px}}
+    @media print{nav,#progress,.copy,.nav-toggle{display:none!important}main{margin:0}article{max-width:none;padding:0}h2{break-before:page}pre{white-space:pre-wrap;color:#000;background:#eee}}
+  </style>
 </head>
 <body>
-<nav class="site-nav" aria-label="Example navigation"><strong>Flyvbjerg worked examples</strong><span><a href="upwork-product-launches.html">Upwork product-launch tutorial</a><a href="https://github.com/expectedparrot/flyvbjerg">GitHub repository</a></span></nav>
-<h1 id="do-theatrical-adaptations-of-stage-musicals-make-money">Do
-theatrical adaptations of stage musicals make money?</h1>
-<h2 id="an-auditable-reference-class-analysis-of-18-films-released-from-20062024">An
-auditable reference-class analysis of 18 films released from
-2006–2024</h2>
-<h2 id="executive-decision-brief">Executive decision brief</h2>
-<p>Adapting a successful stage musical for the screen can look unusually
-safe. The underlying title has already attracted audiences, the score is
-proven, and the property may arrive with recognizable stars, awards, or
-decades of cultural familiarity. The historical results in this pilot
-show a less comfortable outside view: theatrical outcomes are strongly
-polarized, and a few enormous hits make the category average look much
-safer than the typical film.</p>
-<p>This analysis covers 18 English-language film adaptations of
-previously produced stage musicals, released theatrically in the United
-States between 2006 and 2024. Membership was determined from creative
-provenance and release facts before budget and box-office outcomes were
-collected. Films therefore do not enter the cohort because they
-succeeded, failed, or became famous for doing either.</p>
-<p>The principal result is a worldwide theatrical gross multiple:
-worldwide box office divided by reported production budget. Budget
-ranges are preserved, so each ranged case has a conservative and
-optimistic multiple.</p>
-<p>The headline findings are:</p>
-<ul>
-<li><strong>8 of 18 films (44%)</strong> grossed less worldwide than
-their reported production budgets.</li>
-<li><strong>3 of 18 (17%)</strong> grossed between 1.0x and 2.5x budget,
-an economically indeterminate zone without a full revenue-and-cost
-waterfall.</li>
-<li><strong>7 of 18 (39%)</strong> exceeded a 2.5x strong
-theatrical-recovery proxy under both ends of their budget
-estimates.</li>
-<li>The conventional conservative median was <strong>1.45x</strong>; the
-optimistic median was <strong>1.88x</strong>. Neither is enough to
-establish net profitability.</li>
-<li>The conservative mean was <strong>2.73x</strong>, but that figure is
-pulled upward by <em>Mamma Mia!</em> at 13.58x. It is not a sensible
-typical-film forecast.</li>
-</ul>
-<p>The decision implication is that a producer should not underwrite a
-new adaptation to the category mean. The historical distribution is
-closer to a barbell: substantial probability of failing even to match
-production cost at the worldwide box office, alongside a smaller set of
-titles producing very large multiples.</p>
-<h2 id="what-profitability-means-here">What “profitability” means
-here</h2>
-<p>Worldwide gross is not money returned to the studio. Cinemas retain
-part of ticket sales, and the studio’s share differs by market and
-contract. Reported production budgets commonly exclude prints and
-advertising, distribution costs, financing, residuals, overhead, and
-talent participations. Conversely, the theatrical calculation omits
-streaming, premium video-on-demand, television, home entertainment,
-soundtrack, licensing, and other ancillary revenue.</p>
-<p>Accordingly, this report does <strong>not</strong> label a film
-profitable merely because gross exceeded budget. It uses three
-deliberately modest categories:</p>
-<ol type="1">
-<li><strong>Below production budget — under 1.0x.</strong> Worldwide box
-office did not even match reported production cost. That is a strong
-theatrical downside signal, though it is still not a complete lifetime
-loss calculation.</li>
-<li><strong>Indeterminate — 1.0x to under 2.5x.</strong> The film
-generated meaningful gross, but the available common fields cannot
-establish whether all costs were recovered.</li>
-<li><strong>Strong theatrical-recovery proxy — at least 2.5x.</strong>
-The film produced a substantial box-office multiple. This is favorable
-evidence, not audited accounting profit.</li>
-</ol>
-<p>The 2.5x threshold is a planning convention rather than a universal
-industry law. The analysis therefore also tests a looser 2.0x line.
-Reported budget ranges change two films’ status at 2.0x, but they do not
-change any film’s classification at 1.0x or 2.5x.</p>
-<h2 id="the-reference-class">The reference class</h2>
-<p>The inclusion rule requires an English-language feature film directly
-adapted from a previously produced stage musical, with a US theatrical
-release from 2006 through 2025 by an established theatrical distributor.
-Sequels not directly adapting the stage work, original screen musicals,
-animated films, concert films, television films, and streaming-first
-releases are excluded.</p>
-<p>This gives a common decision type: whether to finance and
-theatrically release a screen adaptation of a stage property. It
-intentionally excludes successful original screen musicals such as
-<em>La La Land</em> and <em>The Greatest Showman</em> because their
-development risk and source-property economics differ. It also excludes
-<em>Mamma Mia! Here We Go Again</em>: it inherits the film and stage
-franchise but is not a direct adaptation of the original stage book.</p>
-<p>The result is a documented seed cohort, not a proven census of every
-eligible film. Before the observed shares are used as formal population
-probabilities, the cohort should be audited against an independent,
-fixed enumeration.</p>
-<h2 id="film-level-results">Film-level results</h2>
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 13%" />
-</colgroup>
-<thead>
-<tr>
-<th>Film</th>
-<th style="text-align: right;">Release</th>
-<th style="text-align: right;">Production budget</th>
-<th style="text-align: right;">Worldwide gross</th>
-<th style="text-align: right;">Gross multiple</th>
-<th>Proxy zone</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Cyrano_(film)">Cyrano</a></td>
-<td style="text-align: right;">2022</td>
-<td style="text-align: right;">$30m</td>
-<td style="text-align: right;">$6.4m</td>
-<td style="text-align: right;">0.21x</td>
-<td>Below budget</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Nine_(2009_live-action_film)">Nine</a></td>
-<td style="text-align: right;">2009</td>
-<td style="text-align: right;">$80m</td>
-<td style="text-align: right;">$54.0m</td>
-<td style="text-align: right;">0.68x</td>
-<td>Below budget</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Dear_Evan_Hansen_(film)">Dear
-Evan Hansen</a></td>
-<td style="text-align: right;">2021</td>
-<td style="text-align: right;">$27–28m</td>
-<td style="text-align: right;">$19.1m</td>
-<td style="text-align: right;">0.68–0.71x</td>
-<td>Below budget</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/The_Color_Purple_(2023_film)">The
-Color Purple</a></td>
-<td style="text-align: right;">2023</td>
-<td style="text-align: right;">$90–100m</td>
-<td style="text-align: right;">$68.8m</td>
-<td style="text-align: right;">0.69–0.76x</td>
-<td>Below budget</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Cats_(2019_film)">Cats</a></td>
-<td style="text-align: right;">2019</td>
-<td style="text-align: right;">$80–100m</td>
-<td style="text-align: right;">$75.5m</td>
-<td style="text-align: right;">0.76–0.94x</td>
-<td>Below budget</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/West_Side_Story_(2021_film)">West
-Side Story</a></td>
-<td style="text-align: right;">2021</td>
-<td style="text-align: right;">$100m</td>
-<td style="text-align: right;">$76.0m</td>
-<td style="text-align: right;">0.76x</td>
-<td>Below budget</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Rock_of_Ages_(2012_film)">Rock of
-Ages</a></td>
-<td style="text-align: right;">2012</td>
-<td style="text-align: right;">$75m</td>
-<td style="text-align: right;">$59.4m</td>
-<td style="text-align: right;">0.79x</td>
-<td>Below budget</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/In_the_Heights_(film)">In the
-Heights</a></td>
-<td style="text-align: right;">2021</td>
-<td style="text-align: right;">$55m</td>
-<td style="text-align: right;">$45.2m</td>
-<td style="text-align: right;">0.82x</td>
-<td>Below budget</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Jersey_Boys_(film)">Jersey
-Boys</a></td>
-<td style="text-align: right;">2014</td>
-<td style="text-align: right;">$40–58.6m</td>
-<td style="text-align: right;">$67.6m</td>
-<td style="text-align: right;">1.15–1.69x</td>
-<td>Indeterminate</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Annie_(2014_film)">Annie</a></td>
-<td style="text-align: right;">2014</td>
-<td style="text-align: right;">$65–78m</td>
-<td style="text-align: right;">$136.9m</td>
-<td style="text-align: right;">1.76–2.11x</td>
-<td>Indeterminate</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Dreamgirls_(film)">Dreamgirls</a></td>
-<td style="text-align: right;">2006</td>
-<td style="text-align: right;">$75–80m</td>
-<td style="text-align: right;">$155.4m</td>
-<td style="text-align: right;">1.94–2.07x</td>
-<td>Indeterminate</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Hairspray_(2007_film)">Hairspray</a></td>
-<td style="text-align: right;">2007</td>
-<td style="text-align: right;">$75m</td>
-<td style="text-align: right;">$203.5m</td>
-<td style="text-align: right;">2.71x</td>
-<td>Strong proxy</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Mean_Girls_(2024_film)">Mean
-Girls</a></td>
-<td style="text-align: right;">2024</td>
-<td style="text-align: right;">$36m</td>
-<td style="text-align: right;">$105.0m</td>
-<td style="text-align: right;">2.92x</td>
-<td>Strong proxy</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Sweeney_Todd%3A_The_Demon_Barber_of_Fleet_Street_(2007_film)">Sweeney
-Todd</a></td>
-<td style="text-align: right;">2007</td>
-<td style="text-align: right;">$50m</td>
-<td style="text-align: right;">$153.4m</td>
-<td style="text-align: right;">3.07x</td>
-<td>Strong proxy</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Into_the_Woods_(film)">Into
-the Woods</a></td>
-<td style="text-align: right;">2014</td>
-<td style="text-align: right;">$50m</td>
-<td style="text-align: right;">$213.1m</td>
-<td style="text-align: right;">4.26x</td>
-<td>Strong proxy</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Wicked_(2024_film)">Wicked</a></td>
-<td style="text-align: right;">2024</td>
-<td style="text-align: right;">$150m</td>
-<td style="text-align: right;">$756.3m</td>
-<td style="text-align: right;">5.04x</td>
-<td>Strong proxy</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Les_Mis%C3%A9rables_(2012_film)">Les
-Misérables</a></td>
-<td style="text-align: right;">2012</td>
-<td style="text-align: right;">$61m</td>
-<td style="text-align: right;">$442.8m</td>
-<td style="text-align: right;">7.26x</td>
-<td>Strong proxy</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Mamma_Mia!_(film)">Mamma
-Mia!</a></td>
-<td style="text-align: right;">2008</td>
-<td style="text-align: right;">$52m</td>
-<td style="text-align: right;">$706.4m</td>
-<td style="text-align: right;">13.58x</td>
-<td>Strong proxy</td>
-</tr>
-</tbody>
-</table>
-<p>The table is ordered by the conservative multiple, which divides
-gross by the upper budget estimate. The optimistic value divides by the
-lower estimate. This avoids the false precision of replacing every range
-with a midpoint.</p>
-<h2 id="distribution-and-threshold-analysis">Distribution and threshold
-analysis</h2>
-<figure>
-<img role="img" aria-label="Ordered conservative worldwide-gross multiples, with the 2.5x strong-proxy threshold marked." src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9Ijc5MiIgdmlld0JveD0iMCAwIDEwMDAgNzkyIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+Cjx0aXRsZSBpZD0idGl0bGUiPk9yZGVyZWQgb2JzZXJ2YXRpb25zOiBDb25zZXJ2YXRpdmUgd29ybGR3aWRlIGdyb3NzIG11bHRpcGxlPC90aXRsZT48ZGVzYyBpZD0iZGVzYyI+QXVkaXRlZCByZWZlcmVuY2UtY2xhc3MgcGxvdCBmb3IgYW5hbHlzaXNfYmNhNTlhYWQ3MmE3NGFjMzwvZGVzYz4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2ZmZiIvPjxnIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCxTZWdvZSBVSSxzYW5zLXNlcmlmIiBmaWxsPSIjMjAyNTIyIj4KPHRleHQgeD0iNDAiIHk9IjM2IiBmb250LXNpemU9IjIyIiBmb250LXdlaWdodD0iNjAwIj5PcmRlcmVkIG9ic2VydmF0aW9uczogQ29uc2VydmF0aXZlIHdvcmxkd2lkZSBncm9zcyBtdWx0aXBsZTwvdGV4dD4KPHRleHQgeD0iNDAiIHk9IjU4IiBmb250LXNpemU9IjE0IiBmaWxsPSIjNWY2OTYzIj5tZXRyaWM6IGdyb3NzX211bHRpcGxlX2xvdyB2MTwvdGV4dD4KPGxpbmUgeDE9IjI1MCIgeTE9Ijg1IiB4Mj0iOTQwIiB5Mj0iODUiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iOTAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkN5cmFubzwvdGV4dD48Y2lyY2xlIGN4PSIyODEuNCIgY3k9Ijg1IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMjkxLjQiIHk9IjkwIiBmb250LXNpemU9IjEzIj4wLjIxMzM8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjExOSIgeDI9Ijk0MCIgeTI9IjExOSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIxMjQiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPk5pbmU8L3RleHQ+PGNpcmNsZSBjeD0iMzAzLjAiIGN5PSIxMTkiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSIzMTMuMCIgeT0iMTI0IiBmb250LXNpemU9IjEzIj4wLjY3NTwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMTUzIiB4Mj0iOTQwIiB5Mj0iMTUzIiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjE1OCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+RGVhciBFdmFuIEhhbnNlbjwvdGV4dD48Y2lyY2xlIGN4PSIzMDMuNCIgY3k9IjE1MyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjMxMy40IiB5PSIxNTgiIGZvbnQtc2l6ZT0iMTMiPjAuNjgyMTwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMTg3IiB4Mj0iOTQwIiB5Mj0iMTg3IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjE5MiIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+VGhlIENvbG9yIFB1cnBsZTwvdGV4dD48Y2lyY2xlIGN4PSIzMDMuNiIgY3k9IjE4NyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjMxMy42IiB5PSIxOTIiIGZvbnQtc2l6ZT0iMTMiPjAuNjg4PC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSIyMjEiIHgyPSI5NDAiIHkyPSIyMjEiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iMjI2IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5DYXRzPC90ZXh0PjxjaXJjbGUgY3g9IjMwNi44IiBjeT0iMjIxIiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMzE2LjgiIHk9IjIyNiIgZm9udC1zaXplPSIxMyI+MC43NTU8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjI1NSIgeDI9Ijk0MCIgeTI9IjI1NSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIyNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPldlc3QgU2lkZSBTdG9yeTwvdGV4dD48Y2lyY2xlIGN4PSIzMDcuMCIgY3k9IjI1NSIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjMxNy4wIiB5PSIyNjAiIGZvbnQtc2l6ZT0iMTMiPjAuNzY8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjI4OSIgeDI9Ijk0MCIgeTI9IjI4OSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIyOTQiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPlJvY2sgb2YgQWdlczwvdGV4dD48Y2lyY2xlIGN4PSIzMDguNSIgY3k9IjI4OSIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjMxOC41IiB5PSIyOTQiIGZvbnQtc2l6ZT0iMTMiPjAuNzkyPC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSIzMjMiIHgyPSI5NDAiIHkyPSIzMjMiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iMzI4IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5JbiB0aGUgSGVpZ2h0czwvdGV4dD48Y2lyY2xlIGN4PSIzMDkuOSIgY3k9IjMyMyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjMxOS45IiB5PSIzMjgiIGZvbnQtc2l6ZT0iMTMiPjAuODIxODwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMzU3IiB4Mj0iOTQwIiB5Mj0iMzU3IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjM2MiIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+SmVyc2V5IEJveXM8L3RleHQ+PGNpcmNsZSBjeD0iMzI1LjUiIGN5PSIzNTciIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSIzMzUuNSIgeT0iMzYyIiBmb250LXNpemU9IjEzIj4xLjE1MzY8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjM5MSIgeDI9Ijk0MCIgeTI9IjM5MSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIzOTYiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkFubmllPC90ZXh0PjxjaXJjbGUgY3g9IjM1My43IiBjeT0iMzkxIiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMzYzLjciIHk9IjM5NiIgZm9udC1zaXplPSIxMyI+MS43NTUxPC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSI0MjUiIHgyPSI5NDAiIHkyPSI0MjUiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iNDMwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5EcmVhbWdpcmxzPC90ZXh0PjxjaXJjbGUgY3g9IjM2Mi41IiBjeT0iNDI1IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMzcyLjUiIHk9IjQzMCIgZm9udC1zaXplPSIxMyI+MS45NDI1PC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSI0NTkiIHgyPSI5NDAiIHkyPSI0NTkiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iNDY0IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5IYWlyc3ByYXk8L3RleHQ+PGNpcmNsZSBjeD0iMzk4LjYiIGN5PSI0NTkiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSI0MDguNiIgeT0iNDY0IiBmb250LXNpemU9IjEzIj4yLjcxMzM8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjQ5MyIgeDI9Ijk0MCIgeTI9IjQ5MyIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSI0OTgiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPk1lYW4gR2lybHM8L3RleHQ+PGNpcmNsZSBjeD0iNDA4LjIiIGN5PSI0OTMiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSI0MTguMiIgeT0iNDk4IiBmb250LXNpemU9IjEzIj4yLjkxNjc8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjUyNyIgeDI9Ijk0MCIgeTI9IjUyNyIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSI1MzIiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPlN3ZWVuZXkgVG9kZDwvdGV4dD48Y2lyY2xlIGN4PSI0MTUuMyIgY3k9IjUyNyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjQyNS4zIiB5PSI1MzIiIGZvbnQtc2l6ZT0iMTMiPjMuMDY4PC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSI1NjEiIHgyPSI5NDAiIHkyPSI1NjEiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iNTY2IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5JbnRvIHRoZSBXb29kczwvdGV4dD48Y2lyY2xlIGN4PSI0NzEuMyIgY3k9IjU2MSIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjQ4MS4zIiB5PSI1NjYiIGZvbnQtc2l6ZT0iMTMiPjQuMjYyPC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSI1OTUiIHgyPSI5NDAiIHkyPSI1OTUiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iNjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5XaWNrZWQ8L3RleHQ+PGNpcmNsZSBjeD0iNTA3LjkiIGN5PSI1OTUiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSI1MTcuOSIgeT0iNjAwIiBmb250LXNpemU9IjEzIj41LjA0MjwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iNjI5IiB4Mj0iOTQwIiB5Mj0iNjI5IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjYzNCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+TGVzIE1pc8OpcmFibGVzPC90ZXh0PjxjaXJjbGUgY3g9IjYxMS45IiBjeT0iNjI5IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iNjIxLjkiIHk9IjYzNCIgZm9udC1zaXplPSIxMyI+Ny4yNTk8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjY2MyIgeDI9Ijk0MCIgeTI9IjY2MyIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSI2NjgiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPk1hbW1hIE1pYSE8L3RleHQ+PGNpcmNsZSBjeD0iOTA4LjYiIGN5PSI2NjMiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSI5MTguNiIgeT0iNjY4IiBmb250LXNpemU9IjEzIj4xMy41ODQ2PC90ZXh0PjxsaW5lIHgxPSIzODguNiIgeTE9IjYwIiB4Mj0iMzg4LjYiIHkyPSI2NzUiIHN0cm9rZT0iIzczNTdhNiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSI3IDUiLz48dGV4dCB4PSIzOTQuNiIgeT0iNTMiIGZpbGw9IiM3MzU3YTYiIGZvbnQtc2l6ZT0iMTQiPnRocmVzaG9sZDogMi41PC90ZXh0Pgo8dGV4dCB4PSI0MCIgeT0iNzY3IiBmb250LXNpemU9IjEyIiBmaWxsPSIjNWY2OTYzIj5uPTE4IMK3IG1pc3Npbmc9MCDCtyBkZXBlbmRlbmNlOiBub3QgYXNzZXNzZWQgwrcgcXVhbnRpbGVzOiBuZWFyZXN0X3JhbmsgwrcgYW5hbHlzaXNfYmNhNTlhYWQ3MmE3NGFjMzwvdGV4dD48L2c+PC9zdmc+" alt="Ordered conservative worldwide-gross multiples, with the 2.5x strong-proxy threshold marked." />
-<figcaption aria-hidden="true">Ordered conservative worldwide-gross
-multiples, with the 2.5x strong-proxy threshold marked.</figcaption>
-</figure>
-<p>The ordered view shows three features that a single average
-conceals.</p>
-<p>First, the lower group is not clustered just below a plausible
-break-even line. Eight films fall below 1.0x, and five of those are at
-or below 0.76x. <em>Cyrano</em> is much lower at 0.21x. These are
-material theatrical shortfalls relative to production cost.</p>
-<p>Second, the center is thin. Only <em>Jersey Boys</em>,
-<em>Annie</em>, and <em>Dreamgirls</em> sit between production-budget
-recovery and the 2.5x proxy. The conventional median is the midpoint of
-<em>Jersey Boys</em>’ conservative 1.15x and <em>Annie</em>’s 1.76x,
-yielding 1.45x. Flyvbjerg’s nearest-rank P50 is 1.15x; both conventions
-are retained in the audit record.</p>
-<p>Third, the upper tail is very long. <em>Mamma Mia!</em> returned
-13.58 times its reported production budget in worldwide box office.
-<em>Les Misérables</em> reached 7.26x, while <em>Wicked</em> reached
-5.04x. Those outcomes demonstrate genuine upside, but they should be
-modeled as breakout scenarios rather than blended into a typical
-case.</p>
-<figure>
-<img role="img" aria-label="Empirical cumulative distribution of the conservative gross multiple." src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTQwIiB2aWV3Qm94PSIwIDAgOTAwIDU0MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsbGVkYnk9InRpdGxlIGRlc2MiPgo8dGl0bGUgaWQ9InRpdGxlIj5FbXBpcmljYWwgY3VtdWxhdGl2ZSBkaXN0cmlidXRpb246IENvbnNlcnZhdGl2ZSB3b3JsZHdpZGUgZ3Jvc3MgbXVsdGlwbGU8L3RpdGxlPjxkZXNjIGlkPSJkZXNjIj5BdWRpdGVkIHJlZmVyZW5jZS1jbGFzcyBwbG90IGZvciBhbmFseXNpc19iY2E1OWFhZDcyYTc0YWMzPC9kZXNjPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmIi8+PGcgZm9udC1mYW1pbHk9Ii1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250LFNlZ29lIFVJLHNhbnMtc2VyaWYiIGZpbGw9IiMyMDI1MjIiPgo8dGV4dCB4PSI0MCIgeT0iMzYiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSI2MDAiPkVtcGlyaWNhbCBjdW11bGF0aXZlIGRpc3RyaWJ1dGlvbjogQ29uc2VydmF0aXZlIHdvcmxkd2lkZSBncm9zcyBtdWx0aXBsZTwvdGV4dD4KPHRleHQgeD0iNDAiIHk9IjU4IiBmb250LXNpemU9IjE0IiBmaWxsPSIjNWY2OTYzIj5tZXRyaWM6IGdyb3NzX211bHRpcGxlX2xvdyB2MTwvdGV4dD4KPHBhdGggZD0iTSA4NS4wIDQzMC4wIEwgMTE5LjUgNDMwLjAgTCAxMTkuNSA0MTAuMCBMIDE0My40IDQxMC4wIEwgMTQzLjQgMzkwLjAgTCAxNDMuOCAzOTAuMCBMIDE0My44IDM3MC4wIEwgMTQ0LjEgMzcwLjAgTCAxNDQuMSAzNTAuMCBMIDE0Ny41IDM1MC4wIEwgMTQ3LjUgMzMwLjAgTCAxNDcuOCAzMzAuMCBMIDE0Ny44IDMxMC4wIEwgMTQ5LjQgMzEwLjAgTCAxNDkuNCAyOTAuMCBMIDE1MS4wIDI5MC4wIEwgMTUxLjAgMjcwLjAgTCAxNjguMSAyNzAuMCBMIDE2OC4xIDI1MC4wIEwgMTk5LjIgMjUwLjAgTCAxOTkuMiAyMzAuMCBMIDIwOC45IDIzMC4wIEwgMjA4LjkgMjEwLjAgTCAyNDguNyAyMTAuMCBMIDI0OC43IDE5MC4wIEwgMjU5LjIgMTkwLjAgTCAyNTkuMiAxNzAuMCBMIDI2Ny4xIDE3MC4wIEwgMjY3LjEgMTUwLjAgTCAzMjguNyAxNTAuMCBMIDMyOC43IDEzMC4wIEwgMzY5LjAgMTMwLjAgTCAzNjkuMCAxMTAuMCBMIDQ4My42IDExMC4wIEwgNDgzLjYgOTAuMCBMIDgxMC41IDkwLjAgTCA4MTAuNSA3MC4wIEwgODQ1LjAgNzAuMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMWY1YjQ5IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iMjM3LjciIHkxPSI3MCIgeDI9IjIzNy43IiB5Mj0iNDMwIiBzdHJva2U9IiM3MzU3YTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNyA1Ii8+PHRleHQgeD0iMjQzLjciIHk9Ijg4IiBmaWxsPSIjNzM1N2E2IiBmb250LXNpemU9IjE0Ij50aHJlc2hvbGQ6IDIuNTwvdGV4dD48bGluZSB4MT0iODUuMCIgeTE9IjQzMCIgeDI9Ijg1LjAiIHkyPSI0MzYiIHN0cm9rZT0iIzM0NDEzYiIvPjx0ZXh0IHg9Ijg1LjAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMyI+LTA8L3RleHQ+PGxpbmUgeDE9Ijc5IiB5MT0iNDMwLjAiIHgyPSI4NSIgeTI9IjQzMC4wIiBzdHJva2U9IiMzNDQxM2IiLz48dGV4dCB4PSI3MyIgeT0iNDM0LjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTMiPjAuMDwvdGV4dD48bGluZSB4MT0iMjM3LjAiIHkxPSI0MzAiIHgyPSIyMzcuMCIgeTI9IjQzNiIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iMjM3LjAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMyI+MjwvdGV4dD48bGluZSB4MT0iNzkiIHkxPSIzNTguMCIgeDI9Ijg1IiB5Mj0iMzU4LjAiIHN0cm9rZT0iIzM0NDEzYiIvPjx0ZXh0IHg9IjczIiB5PSIzNjIuMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxMyI+MC4yPC90ZXh0PjxsaW5lIHgxPSIzODkuMCIgeTE9IjQzMCIgeDI9IjM4OS4wIiB5Mj0iNDM2IiBzdHJva2U9IiMzNDQxM2IiLz48dGV4dCB4PSIzODkuMCIgeT0iNDU1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEzIj41PC90ZXh0PjxsaW5lIHgxPSI3OSIgeTE9IjI4Ni4wIiB4Mj0iODUiIHkyPSIyODYuMCIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iNzMiIHk9IjI5MC4wIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjEzIj4wLjQ8L3RleHQ+PGxpbmUgeDE9IjU0MS4wIiB5MT0iNDMwIiB4Mj0iNTQxLjAiIHkyPSI0MzYiIHN0cm9rZT0iIzM0NDEzYiIvPjx0ZXh0IHg9IjU0MS4wIiB5PSI0NTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTMiPjg8L3RleHQ+PGxpbmUgeDE9Ijc5IiB5MT0iMjE0LjAiIHgyPSI4NSIgeTI9IjIxNC4wIiBzdHJva2U9IiMzNDQxM2IiLz48dGV4dCB4PSI3MyIgeT0iMjE4LjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTMiPjAuNjwvdGV4dD48bGluZSB4MT0iNjkzLjAiIHkxPSI0MzAiIHgyPSI2OTMuMCIgeTI9IjQzNiIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iNjkzLjAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMyI+MTE8L3RleHQ+PGxpbmUgeDE9Ijc5IiB5MT0iMTQyLjAiIHgyPSI4NSIgeTI9IjE0Mi4wIiBzdHJva2U9IiMzNDQxM2IiLz48dGV4dCB4PSI3MyIgeT0iMTQ2LjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTMiPjAuODwvdGV4dD48bGluZSB4MT0iODQ1LjAiIHkxPSI0MzAiIHgyPSI4NDUuMCIgeTI9IjQzNiIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iODQ1LjAiIHk9IjQ1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMyI+MTQ8L3RleHQ+PGxpbmUgeDE9Ijc5IiB5MT0iNzAuMCIgeDI9Ijg1IiB5Mj0iNzAuMCIgc3Ryb2tlPSIjMzQ0MTNiIi8+PHRleHQgeD0iNzMiIHk9Ijc0LjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTMiPjEuMDwvdGV4dD4KPHRleHQgeD0iNDAiIHk9IjUxNSIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzVmNjk2MyI+bj0xOCDCtyBtaXNzaW5nPTAgwrcgZGVwZW5kZW5jZTogbm90IGFzc2Vzc2VkIMK3IHF1YW50aWxlczogbmVhcmVzdF9yYW5rIMK3IGFuYWx5c2lzX2JjYTU5YWFkNzJhNzRhYzM8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Empirical cumulative distribution of the conservative gross multiple." />
-<figcaption aria-hidden="true">Empirical cumulative distribution of the
-conservative gross multiple.</figcaption>
-</figure>
-<p>The empirical distribution places 44.4% of cases below 1.0x and 61.1%
-below 2.5x. Equivalently, 38.9% reach the strong-proxy zone. With only
-18 films, each case changes the frequency by 5.6 percentage points; the
-step function is more honest than a smoothed curve.</p>
-<h2 id="budget-range-sensitivity">Budget-range sensitivity</h2>
-<p>Six films have ranged production budgets. Preserving those ranges
-answers an important robustness question: are classifications artifacts
-of choosing a favorable budget estimate?</p>
-<p>At the main boundaries, they are not:</p>
-<table>
-<colgroup>
-<col style="width: 27%" />
-<col style="width: 36%" />
-<col style="width: 36%" />
-</colgroup>
-<thead>
-<tr>
-<th>Scenario boundary</th>
-<th style="text-align: right;">Conservative budget assumption</th>
-<th style="text-align: right;">Optimistic budget assumption</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Gross below 1.0x</td>
-<td style="text-align: right;">8/18 (44.4%)</td>
-<td style="text-align: right;">8/18 (44.4%)</td>
-</tr>
-<tr>
-<td>Gross at least 2.0x</td>
-<td style="text-align: right;">7/18 (38.9%)</td>
-<td style="text-align: right;">9/18 (50.0%)</td>
-</tr>
-<tr>
-<td>Gross at least 2.5x</td>
-<td style="text-align: right;">7/18 (38.9%)</td>
-<td style="text-align: right;">7/18 (38.9%)</td>
-</tr>
-</tbody>
-</table>
-<p>Only the looser 2.0x threshold is sensitive. <em>Dreamgirls</em>
-moves from 1.94x to 2.07x, and <em>Annie</em> moves from 1.76x to 2.11x.
-Neither reaches 2.5x even under its low budget estimate. All eight
-below-budget films remain below 1.0x under their most favorable budget
-bound.</p>
-<figure>
-<img role="img" aria-label="Ordered optimistic gross multiples. The primary 2.5x classifications remain unchanged." src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9Ijc5MiIgdmlld0JveD0iMCAwIDEwMDAgNzkyIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+Cjx0aXRsZSBpZD0idGl0bGUiPk9yZGVyZWQgb2JzZXJ2YXRpb25zOiBPcHRpbWlzdGljIHdvcmxkd2lkZSBncm9zcyBtdWx0aXBsZTwvdGl0bGU+PGRlc2MgaWQ9ImRlc2MiPkF1ZGl0ZWQgcmVmZXJlbmNlLWNsYXNzIHBsb3QgZm9yIGFuYWx5c2lzXzAyZTNiZWJjZjBiNDQ3NTM8L2Rlc2M+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmYiLz48ZyBmb250LWZhbWlseT0iLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsU2Vnb2UgVUksc2Fucy1zZXJpZiIgZmlsbD0iIzIwMjUyMiI+Cjx0ZXh0IHg9IjQwIiB5PSIzNiIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9IjYwMCI+T3JkZXJlZCBvYnNlcnZhdGlvbnM6IE9wdGltaXN0aWMgd29ybGR3aWRlIGdyb3NzIG11bHRpcGxlPC90ZXh0Pgo8dGV4dCB4PSI0MCIgeT0iNTgiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM1ZjY5NjMiPm1ldHJpYzogZ3Jvc3NfbXVsdGlwbGVfaGlnaCB2MTwvdGV4dD4KPGxpbmUgeDE9IjI1MCIgeTE9Ijg1IiB4Mj0iOTQwIiB5Mj0iODUiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iOTAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkN5cmFubzwvdGV4dD48Y2lyY2xlIGN4PSIyODEuNCIgY3k9Ijg1IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMjkxLjQiIHk9IjkwIiBmb250LXNpemU9IjEzIj4wLjIxMzM8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjExOSIgeDI9Ijk0MCIgeTI9IjExOSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIxMjQiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPk5pbmU8L3RleHQ+PGNpcmNsZSBjeD0iMzAzLjAiIGN5PSIxMTkiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSIzMTMuMCIgeT0iMTI0IiBmb250LXNpemU9IjEzIj4wLjY3NTwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMTUzIiB4Mj0iOTQwIiB5Mj0iMTUzIiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjE1OCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+RGVhciBFdmFuIEhhbnNlbjwvdGV4dD48Y2lyY2xlIGN4PSIzMDQuNSIgY3k9IjE1MyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjMxNC41IiB5PSIxNTgiIGZvbnQtc2l6ZT0iMTMiPjAuNzA3NDwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMTg3IiB4Mj0iOTQwIiB5Mj0iMTg3IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjE5MiIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+V2VzdCBTaWRlIFN0b3J5PC90ZXh0PjxjaXJjbGUgY3g9IjMwNy4wIiBjeT0iMTg3IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMzE3LjAiIHk9IjE5MiIgZm9udC1zaXplPSIxMyI+MC43NjwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMjIxIiB4Mj0iOTQwIiB5Mj0iMjIxIiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjIyNiIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+VGhlIENvbG9yIFB1cnBsZTwvdGV4dD48Y2lyY2xlIGN4PSIzMDcuMiIgY3k9IjIyMSIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjMxNy4yIiB5PSIyMjYiIGZvbnQtc2l6ZT0iMTMiPjAuNzY0NDwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iMjU1IiB4Mj0iOTQwIiB5Mj0iMjU1IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjI2MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+Um9jayBvZiBBZ2VzPC90ZXh0PjxjaXJjbGUgY3g9IjMwOC41IiBjeT0iMjU1IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMzE4LjUiIHk9IjI2MCIgZm9udC1zaXplPSIxMyI+MC43OTI8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjI4OSIgeDI9Ijk0MCIgeTI9IjI4OSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIyOTQiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkluIHRoZSBIZWlnaHRzPC90ZXh0PjxjaXJjbGUgY3g9IjMwOS45IiBjeT0iMjg5IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMzE5LjkiIHk9IjI5NCIgZm9udC1zaXplPSIxMyI+MC44MjE4PC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSIzMjMiIHgyPSI5NDAiIHkyPSIzMjMiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iMzI4IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5DYXRzPC90ZXh0PjxjaXJjbGUgY3g9IjMxNS42IiBjeT0iMzIzIiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iMzI1LjYiIHk9IjMyOCIgZm9udC1zaXplPSIxMyI+MC45NDM3PC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSIzNTciIHgyPSI5NDAiIHkyPSIzNTciIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iMzYyIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5KZXJzZXkgQm95czwvdGV4dD48Y2lyY2xlIGN4PSIzNTAuNiIgY3k9IjM1NyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjM2MC42IiB5PSIzNjIiIGZvbnQtc2l6ZT0iMTMiPjEuNjk8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjM5MSIgeDI9Ijk0MCIgeTI9IjM5MSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSIzOTYiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkRyZWFtZ2lybHM8L3RleHQ+PGNpcmNsZSBjeD0iMzY4LjYiIGN5PSIzOTEiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSIzNzguNiIgeT0iMzk2IiBmb250LXNpemU9IjEzIj4yLjA3MjwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iNDI1IiB4Mj0iOTQwIiB5Mj0iNDI1IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjQzMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+QW5uaWU8L3RleHQ+PGNpcmNsZSBjeD0iMzcwLjIiIGN5PSI0MjUiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSIzODAuMiIgeT0iNDMwIiBmb250LXNpemU9IjEzIj4yLjEwNjI8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjQ1OSIgeDI9Ijk0MCIgeTI9IjQ1OSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSI0NjQiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkhhaXJzcHJheTwvdGV4dD48Y2lyY2xlIGN4PSIzOTguNiIgY3k9IjQ1OSIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjQwOC42IiB5PSI0NjQiIGZvbnQtc2l6ZT0iMTMiPjIuNzEzMzwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iNDkzIiB4Mj0iOTQwIiB5Mj0iNDkzIiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjQ5OCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+TWVhbiBHaXJsczwvdGV4dD48Y2lyY2xlIGN4PSI0MDguMiIgY3k9IjQ5MyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjQxOC4yIiB5PSI0OTgiIGZvbnQtc2l6ZT0iMTMiPjIuOTE2NzwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iNTI3IiB4Mj0iOTQwIiB5Mj0iNTI3IiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjUzMiIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+U3dlZW5leSBUb2RkPC90ZXh0PjxjaXJjbGUgY3g9IjQxNS4zIiBjeT0iNTI3IiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iNDI1LjMiIHk9IjUzMiIgZm9udC1zaXplPSIxMyI+My4wNjg8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjU2MSIgeDI9Ijk0MCIgeTI9IjU2MSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSI1NjYiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPkludG8gdGhlIFdvb2RzPC90ZXh0PjxjaXJjbGUgY3g9IjQ3MS4zIiBjeT0iNTYxIiByPSI2IiBmaWxsPSIjMWY1YjQ5Ii8+PHRleHQgeD0iNDgxLjMiIHk9IjU2NiIgZm9udC1zaXplPSIxMyI+NC4yNjI8L3RleHQ+PGxpbmUgeDE9IjI1MCIgeTE9IjU5NSIgeDI9Ijk0MCIgeTI9IjU5NSIgc3Ryb2tlPSIjZTNlOGU1Ii8+PHRleHQgeD0iMjM4IiB5PSI2MDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiPldpY2tlZDwvdGV4dD48Y2lyY2xlIGN4PSI1MDcuOSIgY3k9IjU5NSIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjUxNy45IiB5PSI2MDAiIGZvbnQtc2l6ZT0iMTMiPjUuMDQyPC90ZXh0PjxsaW5lIHgxPSIyNTAiIHkxPSI2MjkiIHgyPSI5NDAiIHkyPSI2MjkiIHN0cm9rZT0iI2UzZThlNSIvPjx0ZXh0IHg9IjIzOCIgeT0iNjM0IiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LXNpemU9IjE0Ij5MZXMgTWlzw6lyYWJsZXM8L3RleHQ+PGNpcmNsZSBjeD0iNjExLjkiIGN5PSI2MjkiIHI9IjYiIGZpbGw9IiMxZjViNDkiLz48dGV4dCB4PSI2MjEuOSIgeT0iNjM0IiBmb250LXNpemU9IjEzIj43LjI1OTwvdGV4dD48bGluZSB4MT0iMjUwIiB5MT0iNjYzIiB4Mj0iOTQwIiB5Mj0iNjYzIiBzdHJva2U9IiNlM2U4ZTUiLz48dGV4dCB4PSIyMzgiIHk9IjY2OCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCI+TWFtbWEgTWlhITwvdGV4dD48Y2lyY2xlIGN4PSI5MDguNiIgY3k9IjY2MyIgcj0iNiIgZmlsbD0iIzFmNWI0OSIvPjx0ZXh0IHg9IjkxOC42IiB5PSI2NjgiIGZvbnQtc2l6ZT0iMTMiPjEzLjU4NDY8L3RleHQ+PGxpbmUgeDE9IjM4OC42IiB5MT0iNjAiIHgyPSIzODguNiIgeTI9IjY3NSIgc3Ryb2tlPSIjNzM1N2E2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjcgNSIvPjx0ZXh0IHg9IjM5NC42IiB5PSI1MyIgZmlsbD0iIzczNTdhNiIgZm9udC1zaXplPSIxNCI+dGhyZXNob2xkOiAyLjU8L3RleHQ+Cjx0ZXh0IHg9IjQwIiB5PSI3NjciIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM1ZjY5NjMiPm49MTggwrcgbWlzc2luZz0wIMK3IGRlcGVuZGVuY2U6IG5vdCBhc3Nlc3NlZCDCtyBxdWFudGlsZXM6IG5lYXJlc3RfcmFuayDCtyBhbmFseXNpc18wMmUzYmViY2YwYjQ0NzUzPC90ZXh0PjwvZz48L3N2Zz4=" alt="Ordered optimistic gross multiples. The primary 2.5x classifications remain unchanged." />
-<figcaption aria-hidden="true">Ordered optimistic gross multiples. The
-primary 2.5x classifications remain unchanged.</figcaption>
-</figure>
-<p>This is analytically useful: the main conclusion does not depend on
-midpoint choices. Budget uncertainty matters for borderline
-interpretations, but it does not erase the observed polarization.</p>
-<h2 id="release-period-context">Release-period context</h2>
-<p>The results differ sharply across the two visible time groups in this
-seed cohort:</p>
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 21%" />
-<col style="width: 21%" />
-<col style="width: 21%" />
-<col style="width: 21%" />
-</colgroup>
-<thead>
-<tr>
-<th>Release period</th>
-<th style="text-align: right;">Below 1.0x</th>
-<th style="text-align: right;">1.0–2.5x</th>
-<th style="text-align: right;">At least 2.5x</th>
-<th style="text-align: right;">Conservative median</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2006–2019</td>
-<td style="text-align: right;">3/11</td>
-<td style="text-align: right;">3/11</td>
-<td style="text-align: right;">5/11</td>
-<td style="text-align: right;">1.94x</td>
-</tr>
-<tr>
-<td>2021–2024</td>
-<td style="text-align: right;">5/7</td>
-<td style="text-align: right;">0/7</td>
-<td style="text-align: right;">2/7</td>
-<td style="text-align: right;">0.76x</td>
-</tr>
-</tbody>
-</table>
-<p>This is not evidence that time itself caused weaker performance.
-Three of the later releases—<em>In the Heights</em>, <em>Dear Evan
-Hansen</em>, and <em>West Side Story</em>—were 2021 films operating amid
-pandemic disruption, altered attendance patterns, and, in some cases,
-simultaneous streaming. <em>Cyrano</em> followed in early 2022. The
-later group also includes both <em>The Color Purple</em> below budget
-and the breakout outcomes <em>Mean Girls</em> and <em>Wicked</em>.</p>
-<p>The correct decision lesson is contextual rather than causal: release
-regime belongs in the target specification. Pooling pandemic
-day-and-date releases with conventional exclusive theatrical releases
-without showing the cluster can obscure comparability. Conversely,
-deleting 2021 films after seeing their outcomes would select on a
-post-hoc explanation. They remain in the primary reference class and are
-shown separately as sensitivity.</p>
-<h2 id="budget-exposure">Budget exposure</h2>
-<p>The films with upper reported production budgets of at least $80
-million are <em>Dreamgirls</em>, <em>Nine</em>, <em>Cats</em>, <em>West
-Side Story</em>, <em>The Color Purple</em>, and <em>Wicked</em>. Four of
-the six grossed less than production budget, one was indeterminate, and
-one—<em>Wicked</em>—was a major success.</p>
-<p>That pattern should not be read as a causal estimate of budget size:
-genre, title, release period, creative execution, marketing, and
-audience scale all co-vary. It does, however, show the financing
-consequence of polarization. A large budget does not merely scale the
-central outcome; it increases absolute capital at risk while the
-possibility of a breakout remains title-specific.</p>
-<p>A decision-maker should therefore ask whether added production
-spending moves the probability distribution or merely magnifies the same
-uncertain multiple. The current data cannot answer that causally, but it
-can prevent the budget from being justified by the misleading 2.73x
-category mean.</p>
-<h2 id="what-a-greenlight-model-should-do">What a greenlight model
-should do</h2>
-<p>The reference class is most useful as an input to a film-specific
-economic waterfall. A serious model should include:</p>
-<ul>
-<li>domestic and international box-office scenarios;</li>
-<li>market-specific distributor rental rates;</li>
-<li>production-budget range and contingency;</li>
-<li>prints, advertising, publicity, and distribution overhead;</li>
-<li>financing costs, residuals, and talent participations;</li>
-<li>premium VOD, home entertainment, streaming, television, and music
-revenue;</li>
-<li>timing of cash flows; and</li>
-<li>downside exposure under alternative release strategies.</li>
-</ul>
-<p>The historical distribution suggests at least four scenarios for such
-a model:</p>
-<table>
-<colgroup>
-<col style="width: 30%" />
-<col style="width: 40%" />
-<col style="width: 30%" />
-</colgroup>
-<thead>
-<tr>
-<th>Scenario</th>
-<th style="text-align: right;">Historical anchor</th>
-<th>Interpretation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Severe downside</td>
-<td style="text-align: right;">0.2–0.8x</td>
-<td>Gross materially below production budget</td>
-</tr>
-<tr>
-<td>Central</td>
-<td style="text-align: right;">about 1.5–1.9x</td>
-<td>Typical by median convention; profitability unresolved</td>
-</tr>
-<tr>
-<td>Strong</td>
-<td style="text-align: right;">2.5–5.0x</td>
-<td>Robust theatrical recovery</td>
-</tr>
-<tr>
-<td>Breakout</td>
-<td style="text-align: right;">above 5.0x</td>
-<td>Rare franchise-scale upside</td>
-</tr>
-</tbody>
-</table>
-<p>Scenario probabilities should not simply copy 8/18, 3/18, and 7/18
-into an investment model. The seed cohort is small and not yet
-exhaustive. Instead, those shares should challenge the inside view: if a
-proposal assumes a 3x or 5x result as its base case, the burden is to
-identify pre-release evidence that supports placing the film in the
-upper historical tail.</p>
-<p>Useful target-specific adjustment factors include source-musical
-audience scale, international familiarity, cast and filmmaker draw,
-family versus adult positioning, release date, competitive slate,
-planned theatrical exclusivity, marketing commitment, production-cost
-discipline, and the economics of music rights. Each adjustment should be
-stated explicitly rather than folded into an uninspectable intuition
-that “this title is different.”</p>
-<h2 id="evidence-quality-and-audit-trail">Evidence quality and audit
-trail</h2>
-<p>Wikipedia is used as best-available tertiary evidence for film
-identity, stage-musical provenance, theatrical release, reported
-production budget, and worldwide box office. These film pages typically
-cite box-office databases, trade reporting, studio materials, and
-classification records. Wikipedia is appropriate for a first-pass
-auditable reference class, but it is not treated as infallible or as
-evidence of absence.</p>
-<p>Every source has a registered identity and retrieval time. Budget
-lows and highs are separate observations. Gross multiples remain
-candidates until their inputs and calculations are inspected and
-explicitly accepted. Every film has an observed coverage state for both
-multiple bounds. A missing budget or gross would remain missing rather
-than becoming zero or a negative finding.</p>
-<p>The Flyvbjerg workspace contains:</p>
-<ul>
-<li>one versioned decision target and a written cohort rule;</li>
-<li>18 film cases and 18 registered Wikipedia source identities;</li>
-<li>90 reported or calculated financial observations;</li>
-<li>explicit acceptance decisions for every observation;</li>
-<li>five versioned metric definitions;</li>
-<li>locked conservative and optimistic analyses;</li>
-<li>threshold and target-location results; and</li>
-<li>deterministic SVG plots with JSON receipts and analysis
-identifiers.</li>
-</ul>
-<p>No EDSL Job was constructed or executed, and no paid model call was
-used.</p>
-<h2 id="limitations-and-next-step">Limitations and next step</h2>
-<p>The principal limitation is that this is a documented seed cohort,
-not an independently enumerated census. Famous successes and failures
-may be easier to recall and may have richer Wikipedia pages. Complete
-measurement of 18 selected films does not prove complete discovery of
-the eligible class.</p>
-<p>The common metric also stops well short of true profitability.
-Nominal-dollar ratios are internally coherent within each film, but
-comparing absolute budgets across years would require inflation
-adjustment. Release strategies differ, and the cohort is too small to
-estimate the independent effects of budget, period, genre, distributor,
-or stage success.</p>
-<p>The highest-value next step is a fixed enumeration audit followed by
-collection of reported net profit or loss estimates where available.
-Those estimates should be added as a separate metric with explicit
-coverage states—not inferred for films whose pages provide only budget
-and gross. With a larger cohort, the analysis could then predeclare
-strata for pandemic release strategy, budget band, family orientation,
-jukebox versus original score, and prior stage-market scale.</p>
-<p>Until then, the defensible conclusion is narrower but
-decision-relevant: theatrical stage-musical adaptations have substantial
-demonstrated upside, but the typical observed gross multiple does not
-itself establish profitability, and nearly half of this seed cohort
-failed to match production cost at the worldwide box office.</p>
-<h2 id="reproduction-note">Reproduction note</h2>
-<p>The authoritative records are stored under <code>.flyvbjerg/</code>.
-The readable cohort and measurement policy is in <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/definition.md">definition.md</a>, and workflow limitations are in
-<a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/friction-log.md">friction-log.md</a>. At report generation,
-<code>flyvbjerg validate</code> accepted the workspace records and
-<code>flyvbjerg next</code> reported no unresolved intake.</p>
+<div id="progress"></div>
+<nav aria-label="Tutorial contents">
+  <a class="brand" href="#top">Flyvbjerg <span>Reference-class tutorial</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false">Show tutorial contents</button>
+  <div class="part">Define before measuring</div>
+  <a href="#orientation">1. Frame the decision</a>
+  <a href="#workspace">2. Start a workspace</a>
+  <a href="#cohort">3. Freeze membership</a>
+  <a href="#research">4. Research outside Flyvbjerg</a>
+  <a href="#sources">5. Register sources</a>
+  <a href="#cases">6. Create film cases</a>
+  <div class="part">From evidence to outside view</div>
+  <a href="#metrics">7. Define metrics</a>
+  <a href="#observations">8. Add candidates</a>
+  <a href="#decisions">9. Decide explicitly</a>
+  <a href="#coverage">10. Preserve missingness</a>
+  <a href="#analysis">11. Freeze an analysis</a>
+  <a href="#thresholds">12. Test thresholds</a>
+  <a href="#plots">13. Plot with receipts</a>
+  <a href="#files">14. Inspect the ledger</a>
+  <a href="#lessons">15. Use the result</a>
+  <div class="small">Primary worked example using 18 theatrical adaptations of stage musicals. The <a href="upwork-product-launches.html">Upwork tutorial</a> remains available as a secondary example.</div>
+</nav>
+
+<main><article id="top">
+  <header>
+    <div class="eyebrow">Expected Parrot · Auditable outside view</div>
+    <h1>Do theatrical adaptations of stage musicals make money?</h1>
+    <p class="dek">A worked CLI tutorial using Wikipedia-reported production budgets and worldwide box office. We select films before seeing outcomes, preserve budget ranges, and refuse to call a gross multiple accounting profit.</p>
+    <img class="hero-art" src="flyvbjerg-art.png" alt="An Expected Parrot assembling a Danish historical reference class inside EDSL brackets" width="3364" height="1740">
+  </header>
+
+  <div class="callout warning"><strong>Worked tutorial.</strong> Commands mirror the validated <a href="https://github.com/expectedparrot/flyvbjerg/tree/main/simulations/theatrical-musicals">theatrical-musicals simulation</a>. Long generated identifiers and repetitive output are shortened, but the analytical values are real. Flyvbjerg organizes registered evidence; the coding agent performs all browsing and research.</div>
+
+  <section class="contents">
+    <h2>What we are testing</h2>
+    <ol>
+      <li><a href="#cohort">Can membership be fixed before outcomes?</a></li>
+      <li><a href="#research">Can research remain outside the package?</a></li>
+      <li><a href="#metrics">Can budget ranges survive measurement?</a></li>
+      <li><a href="#decisions">Can calculated values remain candidates?</a></li>
+      <li><a href="#coverage">Can missing avoid becoming zero?</a></li>
+      <li><a href="#thresholds">Can a proxy remain distinct from profit?</a></li>
+      <li><a href="#plots">Can every chart identify its analysis?</a></li>
+      <li><a href="#lessons">Can the result improve a greenlight decision?</a></li>
+    </ol>
+  </section>
+
+  <section id="orientation">
+    <h2><span class="chapter">1</span>Frame the decision before assembling data</h2>
+    <p>A producer sees a known title, proven songs, awards, and an existing audience. That inside view matters, but it does not answer the outside-view question:</p>
+    <div class="callout"><strong>Decision target.</strong> What base-rate range and downside allowance should a producer or financier use for a new theatrically released adaptation of a stage musical?</div>
+    <p>The unit is one film adaptation. The observable outcome is worldwide theatrical gross relative to reported production budget. It is useful but incomplete: cinemas retain part of gross, production budgets usually omit marketing, and ancillary revenue is absent.</p>
+    <div class="flow">
+      <div class="step"><b>Define</b><span>Decision, unit, membership, and exclusions.</span></div>
+      <div class="step"><b>Research</b><span>Agent finds provenance and financial fields.</span></div>
+      <div class="step"><b>Register</b><span>Sources, cases, metrics, and candidates.</span></div>
+      <div class="step"><b>Decide</b><span>Accept evidence and state coverage.</span></div>
+      <div class="step"><b>Analyze</b><span>Lock, threshold, plot, and interpret.</span></div>
+    </div>
+  </section>
+
+  <section id="workspace">
+    <h2><span class="chapter">2</span>Start a workspace and version the target</h2>
+    <pre class="command"><code>mkdir theatrical-musicals
+cd theatrical-musicals
+flyvbjerg init
+flyvbjerg target create theatrical_musical \
+  --name "Theatrical musical adaptation economics" \
+  --from target.json
+flyvbjerg collection new theatrical_musicals \
+  "US theatrical stage-musical film adaptations, 2006–2025 seed cohort"
+flyvbjerg next</code></pre>
+    <details><summary>Show representative next step</summary><pre class="output"><code>{
+  "command": "flyvbjerg next",
+  "status": "ok",
+  "data": {"target_count": 1, "collection_count": 1, "unresolved_intake_count": 0},
+  "next_steps": [{
+    "id": "register_evidence",
+    "command": "flyvbjerg source add theatrical_musicals --url URL"
+  }]
+}</code></pre></details>
+    <p>The target is versioned. The new collection is exploratory; its title alone does not make it a valid reference class.</p>
+  </section>
+
+  <section id="cohort">
+    <h2><span class="chapter">3</span>Freeze membership before collecting outcomes</h2>
+    <p>Include English-language feature films directly adapted from a previously produced stage musical, released theatrically in the United States from 2006 through 2025 by an established distributor. Exclude original screen musicals, animation, concert and television films, streaming-first releases, and sequels that do not directly adapt the stage work.</p>
+    <div class="grid">
+      <div class="card"><h3>Included</h3><p><em>Hairspray</em>, <em>Les Misérables</em>, <em>Cats</em>, <em>In the Heights</em>, <em>Wicked</em>, and other films satisfying stage provenance and release rules.</p></div>
+      <div class="card"><h3>Excluded</h3><p><em>La La Land</em> is an original screen musical. <em>Mamma Mia! Here We Go Again</em> is a sequel rather than a direct adaptation of the stage book.</p></div>
+    </div>
+    <div class="callout danger"><strong>Do not require observed outcomes for membership.</strong> If an eligible film lacks a budget or gross, retain its case and mark that measurement missing. Otherwise data availability becomes a hidden selection rule.</div>
+  </section>
+
+  <section id="research">
+    <h2><span class="chapter">4</span>The coding agent performs the research</h2>
+    <p>The agent searches and reads Wikipedia film histories using its own tools. Flyvbjerg never follows URLs, downloads pages, or turns source silence into evidence.</p>
+    <table><thead><tr><th>Agent action</th><th>Flyvbjerg action</th></tr></thead><tbody>
+      <tr><td>Find candidate adaptations</td><td>None</td></tr>
+      <tr><td>Check stage provenance and US theatrical release</td><td>Store a case identity</td></tr>
+      <tr><td>Read budget bounds and worldwide gross</td><td>Store candidates linked to the source</td></tr>
+      <tr><td>Find conflict or omission</td><td>Keep unresolved or record an absence state</td></tr>
+      <tr><td>Calculate gross multiples</td><td>Preserve candidates and evidence decisions</td></tr>
+    </tbody></table>
+    <p>Wikipedia is good best-available evidence for this first pass. A high-stakes investment should verify contested financial values with studio records, trade reporting, and commercial box-office data.</p>
+  </section>
+
+  <section id="sources">
+    <h2><span class="chapter">5</span>Register source identities without fetching</h2>
+    <pre class="command"><code>flyvbjerg source add theatrical_musicals \
+  --url "https://en.wikipedia.org/wiki/Mamma_Mia!_(film)" \
+  --title "Mamma Mia! — Wikipedia" \
+  --kind encyclopedia --source-id wiki_mamma_mia
+
+flyvbjerg source add theatrical_musicals \
+  --url "https://en.wikipedia.org/wiki/Cats_(2019_film)" \
+  --title "Cats — Wikipedia" \
+  --kind encyclopedia --source-id wiki_cats</code></pre>
+    <details><summary>Show one source identity</summary><pre class="output"><code>{
+  "source_id": "wiki_mamma_mia",
+  "url": "https://en.wikipedia.org/wiki/Mamma_Mia!_(film)",
+  "title": "Mamma Mia! — Wikipedia",
+  "kind": "encyclopedia",
+  "retrieved": "2026-08-14T02:36:45Z"
+}</code></pre></details>
+    <div class="callout"><strong>A URL is not a capture.</strong> If the agent has a permitted local file, <code>flyvbjerg capture add</code> can hash and preserve it. Flyvbjerg still never downloads it.</div>
+  </section>
+
+  <section id="cases">
+    <h2><span class="chapter">6</span>Create persistent film cases</h2>
+    <pre class="command"><code>flyvbjerg case add theatrical_musicals \
+  --id mamma_mia --name "Mamma Mia!" --type theatrical_film
+flyvbjerg case add theatrical_musicals \
+  --id cats --name "Cats" --type theatrical_film
+flyvbjerg case add theatrical_musicals \
+  --id wicked --name "Wicked" --type theatrical_film</code></pre>
+    <p>The seed has 18 film cases, from <em>Dreamgirls</em> through <em>Wicked</em>. Identity is separate from measurement: a later source correction updates evidence attached to a film, not the film itself.</p>
+    <div class="diagram">theatrical_musicals
+├── dreamgirls
+├── hairspray
+├── mamma_mia
+├── les_miserables
+├── cats
+├── in_the_heights
+├── wicked
+└── ... 11 more film identities</div>
+  </section>
+
+  <section id="metrics">
+    <h2><span class="chapter">7</span>Define metrics before assigning values</h2>
+    <p>Five versioned metrics preserve reported ranges instead of inventing midpoints:</p>
+    <div class="artifact"><code>budget_low_musd</code><p>Lower production-budget bound, nominal $m.</p></div>
+    <div class="artifact"><code>budget_high_musd</code><p>Upper production-budget bound, nominal $m.</p></div>
+    <div class="artifact"><code>worldwide_gross_musd</code><p>Reported worldwide theatrical gross, nominal $m.</p></div>
+    <div class="artifact"><code>gross_multiple_low</code><p>Conservative multiple: gross ÷ high budget.</p></div>
+    <div class="artifact"><code>gross_multiple_high</code><p>Optimistic multiple: gross ÷ low budget.</p></div>
+    <pre class="command"><code>flyvbjerg metric add theatrical_musicals gross_multiple_low \
+  --kind ratio --role outcome --unit x --from metric-multiple-low.json
+flyvbjerg metric add theatrical_musicals gross_multiple_high \
+  --kind ratio --role outcome --unit x --from metric-multiple-high.json</code></pre>
+    <div class="callout warning"><strong>Zero policy.</strong> Missing or malformed inputs remain missing. A failed lookup or division is never recorded as zero gross or a negative outcome.</div>
+  </section>
+
+  <section id="observations">
+    <h2><span class="chapter">8</span>Add reported and calculated candidates</h2>
+    <p><em>Cats</em> has an $80–100m reported budget and $75.5m worldwide gross. Store the range and both resulting multiples:</p>
+    <pre class="command"><code>flyvbjerg observation add theatrical_musicals \
+  --subject-kind case --subject cats --metric budget_low_musd \
+  --value 80 --source wiki_cats --period 2019 --method reported
+flyvbjerg observation add theatrical_musicals \
+  --subject-kind case --subject cats --metric budget_high_musd \
+  --value 100 --source wiki_cats --period 2019 --method reported
+flyvbjerg observation add theatrical_musicals \
+  --subject-kind case --subject cats --metric worldwide_gross_musd \
+  --value 75.5 --source wiki_cats --period 2019 --method reported
+flyvbjerg observation add theatrical_musicals \
+  --subject-kind case --subject cats --metric gross_multiple_low \
+  --value 0.755 --source wiki_cats --period 2019 --method calculated
+flyvbjerg observation add theatrical_musicals \
+  --subject-kind case --subject cats --metric gross_multiple_high \
+  --value 0.9437 --source wiki_cats --period 2019 --method calculated</code></pre>
+    <p>All five remain candidates. Deterministic arithmetic can still use the wrong source, units, bound, or formula.</p>
+  </section>
+
+  <section id="decisions">
+    <h2><span class="chapter">9</span>Accept evidence explicitly</h2>
+    <pre class="command"><code>flyvbjerg observation decide theatrical_musicals OBSERVATION_ID \
+  --accept \
+  --reason "Reported field supported by the registered page; range bounds preserved separately."
+
+flyvbjerg observation decide theatrical_musicals CALCULATED_ID \
+  --accept \
+  --reason "Inspected calculation from reported gross and the upper budget bound."</code></pre>
+    <details><summary>Show representative decision</summary><pre class="output"><code>{
+  "subject_kind": "observation",
+  "subject_id": "obs_...",
+  "decision": "accepted",
+  "reason": "Inspected calculation from reported gross and the upper budget bound."
+}</code></pre></details>
+    <p>The workspace has 90 observations—five per film—and an explicit review decision for each. A rejection would preserve the candidate and its exclusion reason.</p>
+  </section>
+
+  <section id="coverage">
+    <h2><span class="chapter">10</span>Make the denominator inspectable</h2>
+    <pre class="command"><code>flyvbjerg coverage set theatrical_musicals \
+  --subject-kind case --subject cats --metric gross_multiple_low \
+  --state observed \
+  --reason "Accepted multiple with complete reported inputs."</code></pre>
+    <p>All 18 seed films have observed ratio bounds. That does not prove every eligible film would. An expanded enumeration may produce <code>not_found</code>, <code>conflicted</code>, or other explicit absence states.</p>
+    <div class="callout danger"><strong>Complete measurement is not complete discovery.</strong> The denominator is 18 observed seed cases, not a claimed census of all qualifying releases.</div>
+  </section>
+
+  <section id="analysis">
+    <h2><span class="chapter">11</span>Freeze accepted evidence into an analysis</h2>
+    <pre class="command"><code>flyvbjerg analysis create theatrical_musicals \
+  --name "Conservative worldwide gross multiple" \
+  --metric gross_multiple_low \
+  --target theatrical_musical --target-version 1</code></pre>
+    <details><summary>Show the locked distribution</summary><pre class="output"><code>{
+  "analysis_id": "analysis_bca59aad72a74ac3",
+  "n_subjects": 18,
+  "dependence_status": "not_assessed",
+  "n_clusters": null,
+  "distribution": {
+    "min": 0.2133,
+    "median": 1.45435,
+    "max": 13.5846,
+    "mean": 2.7269,
+    "quantiles": {"0.25": 0.755, "0.5": 1.1536, "0.75": 3.068},
+    "quantile_convention": "nearest_rank"
+  }
+}</code></pre></details>
+    <p>The 2.73x mean is pulled upward by <em>Mamma Mia!</em> at 13.58x. The conventional median and nearest-rank P50 are both visible; neither is silently substituted for the other.</p>
+  </section>
+
+  <section id="thresholds">
+    <h2><span class="chapter">12</span>Evaluate thresholds without renaming the outcome</h2>
+    <p>Below 1.0x is a strong theatrical downside signal. From 1.0x to under 2.5x is economically indeterminate. At least 2.5x is a strong theatrical-recovery proxy—not audited profit.</p>
+    <pre class="command"><code>flyvbjerg threshold analysis_bca59aad72a74ac3 \
+  --operator lt --value 1.0
+flyvbjerg threshold analysis_bca59aad72a74ac3 \
+  --operator ge --value 2.5
+flyvbjerg locate analysis_bca59aad72a74ac3 \
+  --value 2.5 --label "Strong theatrical-recovery proxy"</code></pre>
+    <table><thead><tr><th>Zone</th><th>Observed films</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td class="bad">Below 1.0x</td><td>8/18 (44.4%)</td><td>Gross did not match production budget.</td></tr>
+      <tr><td>1.0x–2.5x</td><td>3/18 (16.7%)</td><td>Profit unresolved by common fields.</td></tr>
+      <tr><td class="good">At least 2.5x</td><td>7/18 (38.9%)</td><td>Strong theatrical recovery proxy.</td></tr>
+    </tbody></table>
+    <p>At a looser 2.0x boundary, budget ranges move the count from 7/18 to 9/18. At 1.0x and 2.5x, the classifications are unchanged by budget uncertainty.</p>
+  </section>
+
+  <section id="plots">
+    <h2><span class="chapter">13</span>Generate deterministic plots with receipts</h2>
+    <pre class="command"><code>flyvbjerg plot analysis_bca59aad72a74ac3 \
+  --kind ordered --threshold 2.5 \
+  --output plots/conservative-multiple-ordered.svg
+flyvbjerg plot analysis_bca59aad72a74ac3 \
+  --kind ecdf --threshold 2.5 \
+  --output plots/conservative-multiple-ecdf.svg</code></pre>
+    <img class="hero-art" src="musical-conservative-multiple-ordered.svg" alt="Ordered conservative gross multiples for 18 theatrical musical adaptations" width="1000" height="792">
+    <p>The chart exposes the barbell: eight cases below 1.0x and a long upper tail reaching 13.58x. Each SVG has a JSON receipt recording the analysis ID, parameters, timestamp, and content hash.</p>
+  </section>
+
+  <section id="files">
+    <h2><span class="chapter">14</span>Inspect the evidence ledger</h2>
+    <div class="diagram">simulations/theatrical-musicals/
+├── definition.md              cohort and proxy policy
+├── target.json                decision target
+├── metric-*.json              metric inputs
+├── README.md                  concise result
+├── REPORT.md / REPORT.html    decision report
+├── plots/                     SVGs and receipts
+└── .flyvbjerg/                local auditable workspace
+    ├── targets/
+    └── collections/theatrical_musicals/
+        ├── intake/sources/    18 source identities
+        ├── cases/             18 film identities
+        ├── metrics/           versioned definitions
+        ├── observations/      90 evidence records
+        ├── decisions/         explicit reviews
+        ├── coverage/          denominator states
+        └── analysis-sets/     frozen distributions</div>
+    <pre class="command"><code>flyvbjerg validate
+flyvbjerg next</code></pre>
+    <details><summary>Show validation result</summary><pre class="output"><code>{
+  "command": "flyvbjerg validate",
+  "status": "ok",
+  "data": {"valid": true, "json_records": 264}
+}</code></pre></details>
+  </section>
+
+  <section id="lessons">
+    <h2><span class="chapter">15</span>Use the result as an outside view—not a verdict</h2>
+    <table><thead><tr><th>Analytical danger</th><th>Design response</th></tr></thead><tbody>
+      <tr><td>Remembering only hits and notorious bombs</td><td>Freeze membership from provenance and release facts.</td></tr>
+      <tr><td>Calling box-office gross studio profit</td><td>Name the proxy and use transparent thresholds.</td></tr>
+      <tr><td>Choosing a favorable budget midpoint</td><td>Preserve both bounds and analyze both.</td></tr>
+      <tr><td>Letting blockbusters define the typical case</td><td>Show ordered values, medians, and empirical quantiles.</td></tr>
+      <tr><td>Deleting pandemic films after weak outcomes</td><td>Retain eligible cases; show release period as sensitivity.</td></tr>
+      <tr><td>Interpreting absent data as failure</td><td>Use coverage states; missing is never zero.</td></tr>
+      <tr><td>Calling a seed list a population base rate</td><td>Carry the enumeration limitation into the decision.</td></tr>
+    </tbody></table>
+    <p>A greenlight model should add distributor rentals, marketing, financing, participations, ancillary revenue, and cash-flow timing. The historical distribution challenges an inside-view forecast; it does not provide audited probabilities of net profit.</p>
+    <div class="callout"><strong>Best next step.</strong> Audit the cohort against an independent enumeration, then add reported net profit or loss as a separate metric with explicit coverage. Never infer it when a source provides only budget and gross.</div>
+  </section>
+
+  <footer><p>For a deeper example of intake, entity resolution, lifecycle events, relationships, and a collection that correctly fails to support one common metric, continue to the <a href="upwork-product-launches.html">Upwork product-launch tutorial</a>.</p></footer>
+</article></main>
+
+<script>
+  const nav=document.querySelector('nav'),toggle=document.querySelector('.nav-toggle'),progress=document.getElementById('progress');
+  toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Hide tutorial contents':'Show tutorial contents'});
+  nav.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{if(matchMedia('(max-width: 960px)').matches){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.textContent='Show tutorial contents'}}));
+  document.querySelectorAll('pre').forEach(pre=>{const code=pre.querySelector('code');if(!code)return;const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copy';b.setAttribute('aria-label','Copy code');b.addEventListener('click',async()=>{await navigator.clipboard.writeText(code.innerText);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)});pre.appendChild(b)});
+  addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.width=(h?scrollY/h*100:0)+'%'},{passive:true});
+</script>
 </body>
 </html>
