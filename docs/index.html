@@ -24,65 +24,60 @@
 <nav aria-label="Tutorial contents">
   <a class="brand" href="#top">Flyvbjerg <span>Reference-class tutorial</span></a>
   <button class="nav-toggle" type="button" aria-expanded="false">Show tutorial contents</button>
-  <div class="part">Define before measuring</div>
-  <a href="#orientation">1. Frame the decision</a>
-  <a href="#workspace">2. Start a workspace</a>
-  <a href="#cohort">3. Freeze membership</a>
-  <a href="#research">4. Research outside Flyvbjerg</a>
-  <a href="#sources">5. Register sources</a>
-  <a href="#cases">6. Create film cases</a>
-  <div class="part">From evidence to outside view</div>
-  <a href="#metrics">7. Define metrics</a>
-  <a href="#observations">8. Add candidates</a>
-  <a href="#decisions">9. Decide explicitly</a>
-  <a href="#coverage">10. Preserve missingness</a>
-  <a href="#analysis">11. Freeze an analysis</a>
-  <a href="#thresholds">12. Test thresholds</a>
-  <a href="#plots">13. Plot with receipts</a>
-  <a href="#files">14. Inspect the ledger</a>
-  <a href="#lessons">15. Use the result</a>
+  <div class="part">Start with the decision</div>
+  <a href="#orientation">1. Why use an outside view?</a>
+  <a href="#workspace">2. Describe the decision</a>
+  <a href="#cohort">3. Decide what counts</a>
+  <a href="#research">4. Find comparable cases</a>
+  <a href="#sources">5. Record where facts came from</a>
+  <a href="#cases">6. Give every case an identity</a>
+  <div class="part">Turn history into evidence</div>
+  <a href="#metrics">7. Use common measurements</a>
+  <a href="#observations">8. Record candidate values</a>
+  <a href="#decisions">9. Review the evidence</a>
+  <a href="#coverage">10. Preserve what is unknown</a>
+  <a href="#analysis">11. Create the outside view</a>
+  <a href="#thresholds">12. Stress-test the conclusion</a>
+  <a href="#plots">13. See the distribution</a>
+  <a href="#files">14. Reproduce and audit it</a>
+  <a href="#lessons">15. Use it in a decision</a>
   <div class="small">Primary worked example using 18 theatrical adaptations of stage musicals. The <a href="upwork-product-launches.html">Upwork tutorial</a> remains available as a secondary example.</div>
 </nav>
 
 <main><article id="top">
   <header>
-    <div class="eyebrow">Expected Parrot · Auditable outside view</div>
+    <div class="eyebrow">Expected Parrot · A worked decision example</div>
     <h1>Do theatrical adaptations of stage musicals make money?</h1>
-    <p class="dek">A worked CLI tutorial using Wikipedia-reported production budgets and worldwide box office. We select films before seeing outcomes, preserve budget ranges, and refuse to call a gross multiple accounting profit.</p>
+    <p class="dek">A practical introduction to using comparable past cases when evaluating a new proposal—and to keeping the resulting evidence honest, inspectable, and useful.</p>
     <img class="hero-art" src="flyvbjerg-art.png" alt="An Expected Parrot assembling a Danish historical reference class inside EDSL brackets" width="3364" height="1740">
   </header>
 
-  <div class="callout warning"><strong>Worked tutorial.</strong> Commands mirror the validated <a href="https://github.com/expectedparrot/flyvbjerg/tree/main/simulations/theatrical-musicals">theatrical-musicals simulation</a>. Long generated identifiers and repetitive output are shortened, but the analytical values are real. Flyvbjerg organizes registered evidence; the coding agent performs all browsing and research.</div>
+  <div class="callout"><strong>The basic idea.</strong> When someone proposes a new project, the plan is usually built from details unique to that project: the team, the creative vision, the market opportunity, and the operating model. Flyvbjerg complements that inside view with a simpler question: <em>what happened when other people attempted genuinely comparable things?</em></div>
 
   <section class="contents">
-    <h2>What we are testing</h2>
-    <ol>
-      <li><a href="#cohort">Can membership be fixed before outcomes?</a></li>
-      <li><a href="#research">Can research remain outside the package?</a></li>
-      <li><a href="#metrics">Can budget ranges survive measurement?</a></li>
-      <li><a href="#decisions">Can calculated values remain candidates?</a></li>
-      <li><a href="#coverage">Can missing avoid becoming zero?</a></li>
-      <li><a href="#thresholds">Can a proxy remain distinct from profit?</a></li>
-      <li><a href="#plots">Can every chart identify its analysis?</a></li>
-      <li><a href="#lessons">Can the result improve a greenlight decision?</a></li>
-    </ol>
+    <h2>What Flyvbjerg adds</h2>
+    <p>A spreadsheet can calculate a median. The harder problem is deciding which historical cases belong in the comparison, finding the same measurement for each case, preserving disagreements and missing values, and showing which conclusions change when reasonable assumptions change.</p>
+    <div class="grid">
+      <div class="card"><h3>A disciplined comparison</h3><p>Define what counts as comparable before looking at success or failure. This prevents a memorable hit, notorious failure, or convenient data source from quietly determining the sample.</p></div>
+      <div class="card"><h3>Evidence with a memory</h3><p>Keep the source, candidate value, review decision, missing-data state, and metric definition attached to every case. A later correction does not erase what was previously believed.</p></div>
+      <div class="card"><h3>An honest outside view</h3><p>Summarize the full historical distribution rather than selecting a flattering average. Preserve ranges, skew, downside frequency, and dependence among related cases.</p></div>
+      <div class="card"><h3>Conclusions that can be challenged</h3><p>Compare reasonable analytical choices and identify exactly which cases switch classifications. Decision-makers can see what is robust and what depends on an assumption.</p></div>
+    </div>
+    <p>This tutorial follows one question from beginning to end: if a producer is considering another film adaptation of a stage musical, what should the history of similar films contribute to the greenlight decision?</p>
   </section>
 
   <section id="orientation">
-    <h2><span class="chapter">1</span>Frame the decision before assembling data</h2>
-    <p>A producer sees a known title, proven songs, awards, and an existing audience. That inside view matters, but it does not answer the outside-view question:</p>
+    <h2><span class="chapter">1</span>Why use an outside view?</h2>
+    <p>Imagine a producer considering a film version of a successful stage musical. The proposal may emphasize a known title, proven songs, awards, stars, and an existing audience. Those details matter—but almost every proposal has a persuasive story about why this case is special.</p>
+    <p>An outside view begins elsewhere. It identifies past projects that faced the same basic decision, records what happened across the whole group, and asks where the new proposal sits in that distribution. It does not replace project-specific judgment. It supplies a historical baseline that the project-specific story must explain and, when appropriate, overcome.</p>
     <div class="callout"><strong>Decision target.</strong> What base-rate range and downside allowance should a producer or financier use for a new theatrically released adaptation of a stage musical?</div>
-    <p>The unit is one film adaptation. The observable outcome is worldwide theatrical gross relative to reported production budget. It is useful but incomplete: cinemas retain part of gross, production budgets usually omit marketing, and ancillary revenue is absent.</p>
-    <p><strong>The workflow is:</strong> define the decision and membership rule; research provenance and financial fields; register sources, cases, metrics, and candidates; decide which evidence to accept and state its coverage; then lock, analyze, and interpret the resulting reference class.</p>
+    <p>Here, one comparable case is one film adaptation. The common outcome is worldwide theatrical gross relative to reported production budget. That measurement is available for many films and reveals downside and upside—but it is not the same thing as studio profit. A useful system should help maintain that distinction rather than bury it.</p>
+    <p><strong>What the package does:</strong> it gives a coding agent a structured place to assemble comparable cases, record evidence, make review decisions, preserve unknowns, freeze a historical distribution, and test whether the decision changes under reasonable alternative assumptions.</p>
   </section>
 
   <section id="workspace">
-    <h2><span class="chapter">2</span>Start a workspace and version the target</h2>
-    <p>The checked-in <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/cohort.json"><code>cohort.json</code></a> is the canonical input. To execute the entire tutorial against a new workspace, run:</p>
-    <pre class="command"><code>python simulations/theatrical-musicals/rebuild.py \
-  /tmp/theatrical-musicals-audit</code></pre>
-    <p>The runner prints every Flyvbjerg command, calls <code>flyvbjerg next</code> after each material stage, and ends with validation and distribution summaries. It performs no browsing and never constructs or executes an EDSL Job.</p>
-    <p>The corresponding opening stage is:</p>
+    <h2><span class="chapter">2</span>Describe the decision before gathering evidence</h2>
+    <p>Start by telling Flyvbjerg what decision the historical evidence is meant to inform. This keeps the research anchored to a real choice rather than becoming a collection of interesting film facts.</p>
     <pre class="command"><code>mkdir theatrical-musicals
 cd theatrical-musicals
 flyvbjerg init
@@ -101,17 +96,17 @@ flyvbjerg next</code></pre>
     "command": "flyvbjerg source add theatrical_musicals --url URL"
   }]
 }</code></pre></details>
-    <p>The target is versioned. The new collection is exploratory; its title alone does not make it a valid reference class.</p>
+    <p>The target records the proposed decision and its unresolved questions. The collection is the working set of historical evidence. At this point it is exploratory: calling a group “comparable” does not yet make it defensible.</p>
   </section>
 
   <section id="cohort">
-    <h2><span class="chapter">3</span>Freeze membership before collecting outcomes</h2>
+    <h2><span class="chapter">3</span>Decide what counts as comparable</h2>
     <p>Include English-language feature films directly adapted from a previously produced stage musical, released theatrically in the United States from 2006 through 2025 by an established distributor. Exclude original screen musicals, animation, concert and television films, streaming-first releases, and sequels that do not directly adapt the stage work.</p>
     <div class="grid">
       <div class="card"><h3>Included</h3><p><em>Hairspray</em>, <em>Les Misérables</em>, <em>Cats</em>, <em>In the Heights</em>, <em>Wicked</em>, and other films satisfying stage provenance and release rules.</p></div>
       <div class="card"><h3>Excluded</h3><p><em>La La Land</em> is an original screen musical. <em>Mamma Mia! Here We Go Again</em> is a sequel rather than a direct adaptation of the stage book.</p></div>
     </div>
-    <p>Enumeration is itself ledger data. The fixture records 20 candidates before measurement: 18 inclusions and two exclusions. The runner places every candidate in intake, resolves inclusions to cases, and defers exclusions with stable reason codes such as <code>original_screen_musical</code>. Excluded rows contain no budget or gross fields.</p>
+    <p>Keep a record of every title considered, including exclusions. Here we considered 20 candidates before collecting financial results: 18 qualified and two did not. <em>La La Land</em> remains in the audit trail with the reason it was excluded; it does not simply disappear. Notice that the excluded record needs no budget or box-office result—the decision is based only on whether the film fits the definition.</p>
     <pre class="command"><code>flyvbjerg intake add theatrical_musicals wiki_la_la_land \
   membership_candidate \
   "Original screen musical rather than an adaptation" \
@@ -123,8 +118,8 @@ flyvbjerg next</code></pre>
   </section>
 
   <section id="research">
-    <h2><span class="chapter">4</span>The coding agent performs the research</h2>
-    <p>The agent searches and reads Wikipedia film histories using its own tools. Flyvbjerg never follows URLs, downloads pages, or turns source silence into evidence.</p>
+    <h2><span class="chapter">4</span>Find the comparable cases and their histories</h2>
+    <p>A coding agent searches and reads Wikipedia film histories using its research tools. Flyvbjerg is the evidence ledger, not the researcher: it does not follow URLs or silently convert whatever a search happens to return into data.</p>
     <table><thead><tr><th>Agent action</th><th>Flyvbjerg action</th></tr></thead><tbody>
       <tr><td>Find candidate adaptations</td><td>None</td></tr>
       <tr><td>Check stage provenance and US theatrical release</td><td>Store a case identity</td></tr>
@@ -136,7 +131,7 @@ flyvbjerg next</code></pre>
   </section>
 
   <section id="sources">
-    <h2><span class="chapter">5</span>Register source identities without fetching</h2>
+    <h2><span class="chapter">5</span>Record where every fact came from</h2>
     <pre class="command"><code>flyvbjerg source add theatrical_musicals \
   --url "https://en.wikipedia.org/wiki/Mamma_Mia!_(film)" \
   --title "Mamma Mia! — Wikipedia" \
@@ -157,7 +152,7 @@ flyvbjerg source add theatrical_musicals \
   </section>
 
   <section id="cases">
-    <h2><span class="chapter">6</span>Create persistent film cases</h2>
+    <h2><span class="chapter">6</span>Give every historical case a stable identity</h2>
     <pre class="command"><code>flyvbjerg case add theatrical_musicals \
   --id mamma_mia --name "Mamma Mia!" --type theatrical_film
 flyvbjerg case add theatrical_musicals \
@@ -177,7 +172,7 @@ flyvbjerg case add theatrical_musicals \
   </section>
 
   <section id="metrics">
-    <h2><span class="chapter">7</span>Define metrics before assigning values</h2>
+    <h2><span class="chapter">7</span>Use the same measurements across cases</h2>
     <p>Five versioned metrics preserve reported ranges instead of inventing midpoints:</p>
     <div class="artifact"><code>budget_low_musd</code><p>Lower production-budget bound, nominal $m.</p></div>
     <div class="artifact"><code>budget_high_musd</code><p>Upper production-budget bound, nominal $m.</p></div>
@@ -192,7 +187,7 @@ flyvbjerg metric add theatrical_musicals gross_multiple_high \
   </section>
 
   <section id="observations">
-    <h2><span class="chapter">8</span>Add reported and calculated candidates</h2>
+    <h2><span class="chapter">8</span>Record possible values without treating them as truth</h2>
     <p><em>Cats</em> has an $80–100m reported budget and $75.5m worldwide gross. Store the range and both resulting multiples:</p>
     <pre class="command"><code>flyvbjerg observation add theatrical_musicals \
   --subject-kind case --subject cats --metric budget_low_musd \
@@ -213,7 +208,7 @@ flyvbjerg observation add theatrical_musicals \
   </section>
 
   <section id="decisions">
-    <h2><span class="chapter">9</span>Accept evidence explicitly</h2>
+    <h2><span class="chapter">9</span>Review the evidence explicitly</h2>
     <pre class="command"><code>flyvbjerg observation decide theatrical_musicals OBSERVATION_ID \
   --accept \
   --reason "Reported field supported by the registered page; range bounds preserved separately."
@@ -231,7 +226,7 @@ flyvbjerg observation decide theatrical_musicals CALCULATED_ID \
   </section>
 
   <section id="coverage">
-    <h2><span class="chapter">10</span>Make the denominator inspectable</h2>
+    <h2><span class="chapter">10</span>Preserve what is missing or unknown</h2>
     <pre class="command"><code>flyvbjerg coverage set theatrical_musicals \
   --subject-kind case --subject cats --metric gross_multiple_low \
   --state observed \
@@ -241,7 +236,7 @@ flyvbjerg observation decide theatrical_musicals CALCULATED_ID \
   </section>
 
   <section id="analysis">
-    <h2><span class="chapter">11</span>Freeze accepted evidence into an analysis</h2>
+    <h2><span class="chapter">11</span>Turn the accepted history into an outside view</h2>
     <pre class="command"><code>flyvbjerg analysis create theatrical_musicals \
   --name "Conservative worldwide gross multiple" \
   --metric gross_multiple_low \
@@ -264,7 +259,7 @@ flyvbjerg observation decide theatrical_musicals CALCULATED_ID \
   </section>
 
   <section id="thresholds">
-    <h2><span class="chapter">12</span>Evaluate thresholds without renaming the outcome</h2>
+    <h2><span class="chapter">12</span>Stress-test the decision conclusion</h2>
     <p>Below 1.0x is a strong theatrical downside signal. From 1.0x to under 2.5x is economically indeterminate. At least 2.5x is a strong theatrical-recovery proxy—not audited profit.</p>
     <pre class="command"><code>flyvbjerg threshold analysis_bca59aad72a74ac3 \
   --operator lt --value 1.0
@@ -300,7 +295,7 @@ flyvbjerg next</code></pre>
   </section>
 
   <section id="plots">
-    <h2><span class="chapter">13</span>Generate deterministic plots with receipts</h2>
+    <h2><span class="chapter">13</span>See the full distribution—not just an average</h2>
     <pre class="command"><code>flyvbjerg plot analysis_bca59aad72a74ac3 \
   --kind ordered --threshold 2.5 \
   --output plots/conservative-multiple-ordered.svg
@@ -312,7 +307,12 @@ flyvbjerg plot analysis_bca59aad72a74ac3 \
   </section>
 
   <section id="files">
-    <h2><span class="chapter">14</span>Inspect the evidence ledger</h2>
+    <h2><span class="chapter">14</span>Reproduce and audit the work</h2>
+    <p>The analytical story above is the user-facing result. Underneath it, Flyvbjerg preserves enough structure to answer practical challenges: Which source supported this value? Was it reviewed? Which films were excluded, and why? Did a corrected budget change the conclusion?</p>
+    <p>The checked-in <a href="https://github.com/expectedparrot/flyvbjerg/blob/main/simulations/theatrical-musicals/cohort.json"><code>cohort.json</code></a> is the canonical input for this worked example. A maintainer or skeptical reviewer can reconstruct the entire workspace with one command:</p>
+    <pre class="command"><code>python simulations/theatrical-musicals/rebuild.py \
+  /tmp/theatrical-musicals-audit</code></pre>
+    <p>The rebuild performs no browsing or paid model execution. It replays the public Flyvbjerg commands, checks the workflow after each material stage, validates the resulting ledger, and regenerates the comparison artifacts.</p>
     <div class="diagram">simulations/theatrical-musicals/
 ├── definition.md              cohort and proxy policy
 ├── target.json                decision target
@@ -323,24 +323,26 @@ flyvbjerg plot analysis_bca59aad72a74ac3 \
 └── .flyvbjerg/                local auditable workspace
     ├── targets/
     └── collections/theatrical_musicals/
-        ├── intake/sources/    18 source identities
+        ├── intake/sources/    20 source identities
+        ├── intake/items/      20 membership candidates
         ├── cases/             18 film identities
         ├── metrics/           versioned definitions
         ├── observations/      90 evidence records
         ├── decisions/         explicit reviews
         ├── coverage/          denominator states
-        └── analysis-sets/     frozen distributions</div>
+        ├── analysis-sets/     frozen distributions
+        └── comparison-sets/   sensitivity records</div>
     <pre class="command"><code>flyvbjerg validate
 flyvbjerg next</code></pre>
     <details><summary>Show validation result</summary><pre class="output"><code>{
   "command": "flyvbjerg validate",
   "status": "ok",
-  "data": {"valid": true, "json_records": 264}
+  "data": {"valid": true, "json_records": 362}
 }</code></pre></details>
   </section>
 
   <section id="lessons">
-    <h2><span class="chapter">15</span>Use the result as an outside view—not a verdict</h2>
+    <h2><span class="chapter">15</span>Use the outside view in the actual decision</h2>
     <table><thead><tr><th>Analytical danger</th><th>Design response</th></tr></thead><tbody>
       <tr><td>Remembering only hits and notorious bombs</td><td>Freeze membership from provenance and release facts.</td></tr>
       <tr><td>Calling box-office gross studio profit</td><td>Name the proxy and use transparent thresholds.</td></tr>
